@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { empresa } from '../data/sitio';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+}
+const {
+  titulo,
+  descripcion = `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}.`,
+} = Astro.props;
+const tituloCompleto = titulo ? `${titulo} · ${empresa.nombre}` : `${empresa.nombre} · ${empresa.lema}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="icon" type="image/svg+xml" href="/marca/isotipo.svg" />
+    <meta name="theme-color" content="#151d61" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body class="min-h-dvh flex flex-col">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,58 @@
+---
+import { navegacion, empresa } from '../data/sitio';
+---
+
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-ink-faint/40">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
+    <a href="/#inicio" class="flex items-center" aria-label={`${empresa.nombre}, ir al inicio`}>
+      <img src="/marca/logo-horizontal.svg" alt="" width="220" height="60" class="h-12 w-auto" />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8" aria-label="Principal">
+      {navegacion.map((item) => (
+        <a href={item.href} class="font-display font-semibold text-sm uppercase tracking-wide text-navy hover:text-teal transition-colors">
+          {item.etiqueta}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      id="menu-boton"
+      type="button"
+      class="md:hidden inline-flex items-center justify-center size-11 rounded-md text-navy hover:bg-paper"
+      aria-controls="menu-movil"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  </div>
+
+  <nav id="menu-movil" class="md:hidden hidden border-t border-ink-faint/40 bg-white" aria-label="Principal móvil">
+    <ul class="px-4 py-3 flex flex-col">
+      {navegacion.map((item) => (
+        <li>
+          <a href={item.href} class="block py-3 font-display font-semibold text-navy hover:text-teal">{item.etiqueta}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const boton = document.getElementById('menu-boton');
+  const menu = document.getElementById('menu-movil');
+  boton?.addEventListener('click', () => {
+    const abierto = menu?.classList.toggle('hidden') === false;
+    boton.setAttribute('aria-expanded', String(abierto));
+    boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+  });
+  menu?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      boton?.setAttribute('aria-expanded', 'false');
+    }),
+  );
+</script>

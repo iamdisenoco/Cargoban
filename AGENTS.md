@@ -15,7 +15,12 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - La contraseña se lee de la variable de entorno `JON_CLAVE`. Nunca se escribe en el repo.
 
 ## Stack
-- Pendiente de decidir (ver `ESTADO.md`).
+- Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Hosting previsto: Cloudflare Pages.
+- `npm run dev` para desarrollar, `npm run build` compila a `dist/`, `npm run check` hace el chequeo de tipos.
+- Contenido editable en `src/data/sitio.ts`. Lo marcado PROVISIONAL espera confirmación de Cargoban.
+- Marca: tokens en `src/styles/global.css`, logos en `public/marca/`, reglas en `docs/marca.md`.
+- Estilos base (body, h1…) siempre dentro de `@layer base`; fuera de la capa pisan las utilidades de Tailwind.
+- Antes de dar un bloque por terminado: `npm run build`, `npm run check` y capturas con Chromium en escritorio y móvil.
 
 ## Reglas aprendidas
 - (vacío por ahora)

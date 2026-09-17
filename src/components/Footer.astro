@@ -1,0 +1,41 @@
+---
+import { empresa, navegacion } from '../data/sitio';
+const anio = new Date().getFullYear();
+---
+
+<footer class="bg-navy text-white">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 grid gap-12 md:grid-cols-3">
+    <div>
+      <img src="/marca/logo-vertical-blanco.svg" alt={`${empresa.nombre}, ${empresa.lema}`} width="200" height="123" class="h-28 w-auto" />
+      <p class="mt-6 text-white/80 text-sm leading-relaxed max-w-xs">
+        Más de {empresa.anios} años operando carga en {empresa.sedes.join(' y ')}.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="font-display text-white text-sm uppercase tracking-wider">Navegación</h2>
+      <ul class="mt-4 space-y-2">
+        {navegacion.map((item) => (
+          <li><a href={item.href} class="text-white/80 hover:text-green transition-colors">{item.etiqueta}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="font-display text-white text-sm uppercase tracking-wider">Sedes</h2>
+      <ul class="mt-4 space-y-4 text-white/80">
+        {empresa.sedes.map((sede) => (
+          <li>
+            <p class="font-semibold text-white">{sede}</p>
+            <p class="text-sm">Dirección y teléfono por confirmar.</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/15">
+    <p class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 text-xs text-white/60">
+      © {anio} {empresa.nombre}. Todos los derechos reservados.
+    </p>
+  </div>
+</footer>

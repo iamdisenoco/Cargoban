@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+@import "@fontsource-variable/inter";
+
+/* Tokens de marca Cargoban. Valores RGB oficiales del manual de aplicación de marca. */
+@theme {
+  --color-navy: #151d61;
+  --color-navy-dark: #0f1547;
+  --color-teal: #0599ba;
+  --color-teal-dark: #047b96;
+  --color-green: #a8cf45;
+  --color-green-dark: #8fb531;
+  --color-ink: #262626;      /* K85 */
+  --color-ink-soft: #737373; /* K55 */
+  --color-ink-faint: #b3b3b3;/* K30 */
+  --color-paper: #f5f7fa;
+
+  --font-display: "Poppins", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-white text-ink font-sans antialiased; }
+  h1, h2, h3, h4 { @apply font-display text-navy; text-wrap: balance; }
+}
