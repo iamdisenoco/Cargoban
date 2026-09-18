@@ -1,41 +1,61 @@
 ---
-import { empresa, navegacion } from '../data/sitio';
+import { empresa, navegacion, sedes } from '../data/sitio';
 const anio = new Date().getFullYear();
 ---
 
-<footer class="bg-navy text-white">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 grid gap-12 md:grid-cols-3">
-    <div>
-      <img src="/marca/logo-vertical-blanco.svg" alt={`${empresa.nombre}, ${empresa.lema}`} width="200" height="123" class="h-28 w-auto" />
-      <p class="mt-6 text-white/80 text-sm leading-relaxed max-w-xs">
-        Más de {empresa.anios} años operando carga en {empresa.sedes.join(' y ')}.
-      </p>
-    </div>
+<footer class="border-t border-white/10 bg-navy-950">
+  <div class="contenedor py-16 lg:py-20">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <img
+          src="/marca/logo-vertical-blanco.svg"
+          alt={`${empresa.nombre}, ${empresa.lema}`}
+          width="200"
+          height="123"
+          class="h-24 w-auto"
+        />
+        <p class="mt-7 max-w-sm text-white/60">
+          Operador logístico y portuario con más de {empresa.anios} años de experiencia
+          en {empresa.sedes.join(' y ')}.
+        </p>
+      </div>
 
-    <div>
-      <h2 class="font-display text-white text-sm uppercase tracking-wider">Navegación</h2>
-      <ul class="mt-4 space-y-2">
-        {navegacion.map((item) => (
-          <li><a href={item.href} class="text-white/80 hover:text-green transition-colors">{item.etiqueta}</a></li>
-        ))}
-      </ul>
-    </div>
+      <nav class="lg:col-span-3" aria-label="Pie de página">
+        <h2 class="etiqueta text-white/40">Navegación</h2>
+        <ul class="mt-6 space-y-3">
+          {navegacion.map((item) => (
+            <li>
+              <a href={item.href} class="text-white/80 transition-colors hover:text-green">
+                {item.etiqueta}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
-    <div>
-      <h2 class="font-display text-white text-sm uppercase tracking-wider">Sedes</h2>
-      <ul class="mt-4 space-y-4 text-white/80">
-        {empresa.sedes.map((sede) => (
-          <li>
-            <p class="font-semibold text-white">{sede}</p>
-            <p class="text-sm">Dirección y teléfono por confirmar.</p>
-          </li>
-        ))}
-      </ul>
+      <div class="lg:col-span-4">
+        <h2 class="etiqueta text-white/40">Sedes</h2>
+        <ul class="mt-6 space-y-6">
+          {sedes.map((sede) => (
+            <li>
+              <p class="font-display font-semibold text-white">{sede.ciudad}</p>
+              <p class="text-sm text-white/55">{sede.region}</p>
+              {sede.direccion ? (
+                <p class="mt-1 text-sm text-white/70">{sede.direccion}</p>
+              ) : (
+                <p class="mt-1 text-sm text-white/40">Dirección por confirmar</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
-  <div class="border-t border-white/15">
-    <p class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 text-xs text-white/60">
-      © {anio} {empresa.nombre}. Todos los derechos reservados.
-    </p>
+
+  <div class="border-t border-white/10">
+    <div class="contenedor flex flex-col gap-3 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {anio} {empresa.nombre}. Todos los derechos reservados.</p>
+      <p>{empresa.lema}</p>
+    </div>
   </div>
 </footer>

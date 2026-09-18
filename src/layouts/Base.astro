@@ -8,11 +8,15 @@ interface Props {
   titulo?: string;
   descripcion?: string;
 }
+
 const {
   titulo,
-  descripcion = `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}.`,
+  descripcion = `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}. Operaciones portuarias, logística extraportuaria, almacenamiento y alquiler de equipos.`,
 } = Astro.props;
-const tituloCompleto = titulo ? `${titulo} · ${empresa.nombre}` : `${empresa.nombre} · ${empresa.lema}`;
+
+const tituloCompleto = titulo
+  ? `${titulo} · ${empresa.nombre}`
+  : `${empresa.nombre} · ${empresa.lema}`;
 ---
 
 <!doctype html>
@@ -22,15 +26,28 @@ const tituloCompleto = titulo ? `${titulo} · ${empresa.nombre}` : `${empresa.no
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
+    <link rel="canonical" href={Astro.site?.href} />
     <link rel="icon" type="image/svg+xml" href="/marca/isotipo.svg" />
-    <meta name="theme-color" content="#151d61" />
+    <meta name="theme-color" content="#070b26" />
+
+    <meta property="og:site_name" content={empresa.nombre} />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
-  <body class="min-h-dvh flex flex-col">
+
+  <body class="min-h-dvh">
+    <a
+      href="#inicio"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-green focus:px-5 focus:py-3 focus:font-display focus:font-semibold focus:text-navy-950"
+    >
+      Saltar al contenido
+    </a>
+
     <Header />
-    <main class="flex-1">
+    <main>
       <slot />
     </main>
     <Footer />

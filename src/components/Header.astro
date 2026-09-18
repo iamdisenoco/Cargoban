@@ -2,57 +2,113 @@
 import { navegacion, empresa } from '../data/sitio';
 ---
 
-<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-ink-faint/40">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">
-    <a href="/#inicio" class="flex items-center" aria-label={`${empresa.nombre}, ir al inicio`}>
-      <img src="/marca/logo-horizontal.svg" alt="" width="220" height="60" class="h-12 w-auto" />
+<header
+  id="cabecera"
+  class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
+  data-solido="false"
+>
+  <div class="contenedor flex h-20 items-center justify-between gap-6 lg:h-24">
+    <a href="#inicio" class="shrink-0" aria-label={`${empresa.nombre}, ir al inicio`}>
+      <img
+        src="/marca/logo-horizontal-blanco.svg"
+        alt=""
+        width="220"
+        height="60"
+        class="h-9 w-auto lg:h-11"
+      />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8" aria-label="Principal">
+    <nav class="hidden items-center gap-10 lg:flex" aria-label="Principal">
       {navegacion.map((item) => (
-        <a href={item.href} class="font-display font-semibold text-sm uppercase tracking-wide text-navy hover:text-teal transition-colors">
+        <a
+          href={item.href}
+          class="group relative font-display text-sm font-medium text-white/85 transition-colors hover:text-white"
+        >
           {item.etiqueta}
+          <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-green transition-all duration-300 ease-suave group-hover:w-full"></span>
         </a>
       ))}
     </nav>
 
-    <button
-      id="menu-boton"
-      type="button"
-      class="md:hidden inline-flex items-center justify-center size-11 rounded-md text-navy hover:bg-paper"
-      aria-controls="menu-movil"
-      aria-expanded="false"
-      aria-label="Abrir menú"
-    >
-      <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-      </svg>
-    </button>
-  </div>
+    <div class="flex items-center gap-3">
+      <a
+        href="#contacto"
+        class="hidden rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 md:inline-flex"
+      >
+        Cotizar operación
+      </a>
 
-  <nav id="menu-movil" class="md:hidden hidden border-t border-ink-faint/40 bg-white" aria-label="Principal móvil">
-    <ul class="px-4 py-3 flex flex-col">
-      {navegacion.map((item) => (
-        <li>
-          <a href={item.href} class="block py-3 font-display font-semibold text-navy hover:text-teal">{item.etiqueta}</a>
-        </li>
-      ))}
-    </ul>
-  </nav>
+      <button
+        id="menu-boton"
+        type="button"
+        class="inline-flex size-11 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 lg:hidden"
+        aria-controls="menu-movil"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Abrir menú</span>
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+          <path stroke-linecap="round" d="M3 7h18M3 12h18M3 17h18" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </header>
 
+<!-- Menú móvil a pantalla completa -->
+<div
+  id="menu-movil"
+  class="fixed inset-0 z-40 hidden bg-navy-950/98 backdrop-blur-xl lg:hidden"
+>
+  <nav class="contenedor flex h-full flex-col justify-center gap-2" aria-label="Principal móvil">
+    {navegacion.map((item, i) => (
+      <a
+        href={item.href}
+        class="flex items-baseline gap-5 border-b border-white/10 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl"
+      >
+        <span class="font-sans text-xs text-green">{String(i + 1).padStart(2, '0')}</span>
+        {item.etiqueta}
+      </a>
+    ))}
+    <a
+      href="#contacto"
+      class="mt-8 inline-flex justify-center rounded-full bg-green px-8 py-4 font-display text-base font-semibold text-navy-950"
+    >
+      Cotizar operación
+    </a>
+  </nav>
+</div>
+
 <script>
+  const cabecera = document.getElementById('cabecera');
   const boton = document.getElementById('menu-boton');
   const menu = document.getElementById('menu-movil');
-  boton?.addEventListener('click', () => {
-    const abierto = menu?.classList.toggle('hidden') === false;
-    boton.setAttribute('aria-expanded', String(abierto));
-    boton.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+
+  // La cabecera se vuelve sólida en cuanto se deja el hero.
+  const centinela = document.getElementById('centinela-hero');
+  if (centinela && cabecera) {
+    new IntersectionObserver(
+      ([entrada]) => {
+        const solido = !entrada.isIntersecting;
+        cabecera.dataset.solido = String(solido);
+        cabecera.classList.toggle('bg-navy-950/85', solido);
+        cabecera.classList.toggle('backdrop-blur-lg', solido);
+        cabecera.classList.toggle('border-b', solido);
+        cabecera.classList.toggle('border-white/10', solido);
+      },
+      { rootMargin: '-80px 0px 0px 0px' },
+    ).observe(centinela);
+  }
+
+  function alternarMenu(abrir: boolean) {
+    menu?.classList.toggle('hidden', !abrir);
+    boton?.setAttribute('aria-expanded', String(abrir));
+    boton?.querySelector('.sr-only')?.replaceChildren(abrir ? 'Cerrar menú' : 'Abrir menú');
+    document.body.style.overflow = abrir ? 'hidden' : '';
+  }
+
+  boton?.addEventListener('click', () => alternarMenu(menu?.classList.contains('hidden') ?? true));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => alternarMenu(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) alternarMenu(false);
   });
-  menu?.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => {
-      menu.classList.add('hidden');
-      boton?.setAttribute('aria-expanded', 'false');
-    }),
-  );
 </script>

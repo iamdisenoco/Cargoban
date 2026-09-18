@@ -2,7 +2,19 @@
 
 Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actualiza al terminar.
 
-## Situación actual (2026-09-17)
+## Situación actual (2026-09-18)
+- Bloque 1 rediseñado tras el rechazo de Jon al primer diseño ("está muy anticuado").
+  El PR #1 no estaba mergeado, así que el rediseño va sobre la misma rama y actualiza ese PR:
+  no se apila un PR nuevo.
+- Dirección visual nueva, tomada de las piezas de Instagram de Cargoban que entregó Jon:
+  fondo oscuro, titulares grandes, verde como acento único, numeración visible, grano de película.
+- Tipografía cambiada de Poppins a Jost Variable, más fiel al Century Gothic del logo.
+- Servicios y tipos de carga ahora salen de la lámina 3/5 del carrusel de Instagram: son datos
+  reales de Cargoban, no texto de relleno.
+- Falta el banco de fotos de Cargoban. Es lo que más va a cambiar el resultado.
+  Instrucciones de entrega en `public/fotos/LEEME.md`.
+
+## Situación anterior (2026-09-17)
 - Bloque 0 hecho: `main` creada con `AGENTS.md` y `ESTADO.md`.
 - Bloque 1 (este PR): scaffold Astro + Tailwind, tokens de marca, logos SVG extraídos del manual,
   layout (header, footer, menú móvil) y página de inicio de una sola página con anclas.
@@ -38,3 +50,5 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
 ## Bitácora
 - 2026-09-17: se crea el repo y la rama `claude/nuevo-sitio-web-g9z253`.
 - 2026-09-17: se crea `main`. Jon entrega el manual de marca y el brief. Bloque 1 construido y verificado.
+- 2026-09-18: Jon rechaza el diseño por anticuado y entrega piezas de Instagram como referencia.
+  Rediseño completo sobre la misma rama. Verificado en escritorio y móvil.

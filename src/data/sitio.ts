@@ -1,59 +1,130 @@
 /**
- * Contenido del sitio. Todo lo marcado PROVISIONAL debe ser confirmado o
- * reemplazado por Cargoban antes de publicar. Ver ESTADO.md.
+ * Contenido del sitio Cargoban.
+ *
+ * FUENTES:
+ * - Brief de Jon (17/09/2026): operador logístico y portuario, +50 años, Urabá y Santa Marta.
+ * - Piezas de Instagram de Cargoban entregadas por Jon (carrusel "Nuestros servicios", 5 láminas).
+ *   De ahí salen los servicios de carga y los tipos de carga: son datos REALES de la empresa.
+ *
+ * Lo marcado PROVISIONAL espera confirmación de Cargoban. Ver ESTADO.md.
  */
+
 export const empresa = {
   nombre: 'Cargoban',
   lema: 'Operador logístico y portuario',
-  anios: 50, // "más de 50 años" según brief de Jon
+  anios: 50,
   sedes: ['Urabá', 'Santa Marta'],
   dominio: 'www.cargobanoperador.com',
-  // PROVISIONAL: datos de contacto pendientes
+  // PROVISIONAL: datos de contacto pendientes de Cargoban.
   telefono: '',
   correo: '',
-  direcciones: {
-    uraba: '',
-    santaMarta: '',
-  },
 };
 
 export const navegacion = [
-  { etiqueta: 'Inicio', href: '/#inicio' },
-  { etiqueta: 'Nosotros', href: '/#nosotros' },
-  { etiqueta: 'Servicios', href: '/#servicios' },
-  { etiqueta: 'Clientes', href: '/#clientes' },
-  { etiqueta: 'Contacto', href: '/#contacto' },
+  { etiqueta: 'Nosotros', href: '#nosotros' },
+  { etiqueta: 'Servicios', href: '#servicios' },
+  { etiqueta: 'Carga', href: '#carga' },
+  { etiqueta: 'Clientes', href: '#clientes' },
+  { etiqueta: 'Contacto', href: '#contacto' },
 ];
 
-// PROVISIONAL: categorías típicas de un operador portuario. Cargoban debe confirmar el portafolio real.
+/**
+ * Servicios. Los de "Carga" vienen de la lámina 3/5 del carrusel de Instagram.
+ * Los de operación portuaria y alquiler son PROVISIONALES: Cargoban debe confirmarlos.
+ */
 export const servicios = [
   {
+    numero: '01',
     titulo: 'Operaciones portuarias',
-    descripcion:
-      'Estiba y desestiba, tarja y trazabilidad de carga, consolidación y desconsolidación, operación de maquinaria portuaria.',
+    resumen: 'Estiba, desestiba y manejo de carga a bordo y en muelle.',
+    detalle:
+      'Operamos directamente en muelle con personal propio y procedimientos establecidos, cuidando la carga en cada movimiento entre el buque y el patio.',
+    // PROVISIONAL: lista por confirmar con Cargoban.
+    items: [
+      'Estiba y desestiba de carga',
+      'Operadores de maquinaria portuaria',
+      'Tarja y trazabilidad de carga',
+      'Trincado y destrincado de contenedores',
+      'Movimiento de vehículos en buques Ro-Ro',
+      'Apoyo en inspecciones de autoridades',
+    ],
+    provisional: true,
   },
   {
-    titulo: 'Operaciones terrestres',
-    descripcion:
-      'Cargue y descargue, consolidación y desconsolidación de contenedores, movimiento de carga en patio.',
+    numero: '02',
+    titulo: 'Logística extraportuaria',
+    resumen: 'Todo lo que pasa con la carga una vez sale del puerto.',
+    detalle:
+      'Movemos, guardamos y preparamos la carga fuera del terminal, con control y trazabilidad de punta a punta.',
+    // Fuente: lámina 3/5 del carrusel de Instagram de Cargoban.
+    items: [
+      'Transporte terrestre',
+      'Almacenaje',
+      'Consolidación',
+      'Desconsolidación',
+      'Distribución, re-empaque y etiquetado',
+    ],
+    provisional: false,
   },
   {
+    numero: '03',
     titulo: 'Almacenamiento',
-    descripcion: 'Bodegaje y almacenamiento de carga con control y trazabilidad.',
+    resumen: 'Bodegaje de carga nacionalizada en Urabá.',
+    detalle:
+      'Espacio para guardar la carga después de nacionalizada, con control de inventario y seguimiento de cada movimiento.',
+    items: ['Carga nacionalizada', 'Control de inventario', 'Trazabilidad de movimientos'],
+    provisional: true,
   },
   {
+    numero: '04',
     titulo: 'Alquiler de equipos',
-    descripcion: 'Montacargas, pallet jacks y equipos de apoyo para operación de carga.',
+    resumen: 'Equipos disponibles para apoyar la operación.',
+    detalle:
+      'Ponemos a disposición los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
+    // PROVISIONAL: inventario real de equipos por confirmar.
+    items: ['Montacargas', 'Pallet jacks', 'Equipos de apoyo a la operación'],
+    provisional: true,
   },
 ];
 
-// PROVISIONAL: lista de clientes pendiente de Cargoban (nombres y logos).
+/** Tipos de carga. Fuente: lámina 3/5 del carrusel de Instagram de Cargoban. */
+export const tiposDeCarga = [
+  'Refrigerados',
+  'Congelados',
+  'Perecederos',
+  'Sacos',
+  'Proyectos',
+  'Maquinaria',
+  'Vehículos',
+  'Granel',
+];
+
+export const razones = [
+  {
+    titulo: 'Medio siglo en el oficio',
+    texto:
+      'Más de 50 años operando carga nos enseñaron que la experiencia no se improvisa. Está en la gente que mueve el contenedor.',
+  },
+  {
+    titulo: 'La carga llega como salió',
+    texto:
+      'Procedimientos establecidos y personal con experiencia para que cada movimiento sea el mismo movimiento, siempre.',
+  },
+  {
+    titulo: 'Usted sabe dónde está su carga',
+    texto: 'Tarja y trazabilidad de cada movimiento, del muelle a la bodega.',
+  },
+  {
+    titulo: 'Dos puertos, una operación',
+    texto: 'Presencia propia en Urabá y Santa Marta, dos puntos clave del Caribe colombiano.',
+  },
+];
+
+/** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
 export const clientes: { nombre: string; logo?: string }[] = [];
 
-// PROVISIONAL: razones de valor. Redactar con Cargoban.
-export const porQue = [
-  { titulo: 'Más de 50 años de experiencia', texto: 'Trayectoria continua en operación logística y portuaria en Colombia.' },
-  { titulo: 'Seguridad y cuidado de la carga', texto: 'Procedimientos operativos establecidos y personal con experiencia.' },
-  { titulo: 'Control y trazabilidad', texto: 'Seguimiento de cada movimiento de carga durante la operación.' },
-  { titulo: 'Presencia en Urabá y Santa Marta', texto: 'Operación en dos zonas portuarias clave del Caribe colombiano.' },
+/** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
+export const sedes = [
+  { ciudad: 'Urabá', region: 'Antioquia, Colombia', direccion: '', telefono: '' },
+  { ciudad: 'Santa Marta', region: 'Magdalena, Colombia', direccion: '', telefono: '' },
 ];
