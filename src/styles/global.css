@@ -87,6 +87,7 @@
   :focus-visible {
     outline: 2px solid var(--color-green);
     outline-offset: 3px;
+    transition: none;
   }
 }
 
@@ -103,20 +104,24 @@
     letter-spacing: 0.22em;
   }
 
-  /* Píldora verde del sistema gráfico de la marca. */
-  .pastilla {
-    @apply inline-flex items-center rounded-full bg-green px-4 py-1 text-navy-950;
+
+
+  /*
+    Paneles apilados de la sección de servicios.
+    El apilado solo se activa cuando la ventana es lo bastante alta para mostrar
+    el panel completo: si no, una tarjeta fijada tapa el final de la anterior y
+    hay contenido que no se puede leer nunca. Fuera de esa condición las tarjetas
+    quedan en flujo normal, una debajo de otra, y se leen enteras.
+  */
+  .panel-apilado {
+    position: static;
   }
 
-  /* Capa oscura sobre fotografía. El manual exige que el logo y el texto
-     mantengan lectura sobre foto; este degradado lo garantiza. */
-  .velo-foto::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to top, var(--color-navy-950) 2%, transparent 55%),
-      linear-gradient(to right, rgb(7 11 38 / 0.92) 0%, rgb(7 11 38 / 0.55) 45%, rgb(7 11 38 / 0.25) 100%);
+  @media (min-width: 64rem) and (min-height: 48rem) {
+    .panel-apilado {
+      position: sticky;
+      top: var(--desplazamiento-apilado, 8rem);
+    }
   }
 
   /* Fondo de respaldo cuando todavía no hay fotografía de Cargoban.

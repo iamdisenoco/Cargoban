@@ -21,7 +21,7 @@ const anio = new Date().getFullYear();
       </div>
 
       <nav class="lg:col-span-3" aria-label="Pie de página">
-        <h2 class="etiqueta text-white/40">Navegación</h2>
+        <p class="etiqueta text-white/60">Navegación</p>
         <ul class="mt-6 space-y-3">
           {navegacion.map((item) => (
             <li>
@@ -34,17 +34,13 @@ const anio = new Date().getFullYear();
       </nav>
 
       <div class="lg:col-span-4">
-        <h2 class="etiqueta text-white/40">Sedes</h2>
+        <p class="etiqueta text-white/60">Sedes</p>
         <ul class="mt-6 space-y-6">
           {sedes.map((sede) => (
             <li>
               <p class="font-display font-semibold text-white">{sede.ciudad}</p>
               <p class="text-sm text-white/55">{sede.region}</p>
-              {sede.direccion ? (
-                <p class="mt-1 text-sm text-white/70">{sede.direccion}</p>
-              ) : (
-                <p class="mt-1 text-sm text-white/40">Dirección por confirmar</p>
-              )}
+              {sede.direccion && <p class="mt-1 text-sm text-white/70">{sede.direccion}</p>}
             </li>
           ))}
         </ul>
@@ -53,7 +49,7 @@ const anio = new Date().getFullYear();
   </div>
 
   <div class="border-t border-white/10">
-    <div class="contenedor flex flex-col gap-3 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+    <div class="contenedor flex flex-col gap-3 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
       <p>© {anio} {empresa.nombre}. Todos los derechos reservados.</p>
       <p>{empresa.lema}</p>
     </div>

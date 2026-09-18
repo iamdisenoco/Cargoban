@@ -79,15 +79,18 @@ const foto: string | null = null;
         { cifra: String(tiposDeCarga.length), texto: 'tipos de carga que manejamos' },
       ].map((dato) => (
         <div class="bg-navy-950/60 px-6 py-5 backdrop-blur-sm">
-          <dt class="font-display text-4xl font-bold leading-none text-white lg:text-5xl">
+          <dt class="text-sm text-white/65">{dato.texto}</dt>
+          <dd class="cifra mt-1 font-display text-4xl font-bold leading-none text-white lg:text-5xl">
             {dato.cifra}
-          </dt>
-          <dd class="mt-2 text-sm text-white/60">{dato.texto}</dd>
+          </dd>
         </div>
       ))}
     </dl>
   </div>
 
-  <!-- Centinela para que la cabecera sepa cuándo volverse sólida -->
-  <div id="centinela-hero" class="absolute bottom-0 h-px w-full" aria-hidden="true"></div>
+  <!--
+    Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio.
+    Mientras parte de esa franja se vea, la cabecera queda transparente.
+  -->
+  <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
 </section>

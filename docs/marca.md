@@ -9,9 +9,13 @@ Fuente: `docs/manual-de-marca-cargoban.pdf` (32 páginas). Este resumen recoge l
 | Turquesa | `#0599ba` | 5, 153, 186 | Estructura: etiquetas de sección, líneas, luz de fondo |
 | Verde | `#a8cf45` | 168, 207, 69 | Acento único y escaso. Botón principal y palabra destacada |
 
-Derivados propios del sitio, no del manual: `navy-900 #0b1038` y `navy-950 #070b26`,
-oscurecimientos del azul de marca que sirven como campo de fondo. El manual no los prohíbe:
-son fondo, no logotipo.
+Derivados propios del sitio, no del manual:
+- `navy-900 #0b1038` y `navy-950 #070b26`: oscurecimientos del azul de marca usados como
+  campo de fondo. El manual no los prohíbe: son fondo, no logotipo.
+- `teal-400 #2bb4d4`: aclarado del turquesa oficial. Necesario porque el turquesa `#0599ba`
+  sobre fondo azul muy oscuro no alcanza el contraste mínimo de accesibilidad en texto
+  pequeño. Se usa solo en texto y líneas finas, nunca en el logotipo.
+- `green-300 #c2e070`: aclarado del verde, solo para el estado de ratón encima de un botón.
 
 Regla de dosificación: el verde no se reparte por toda la página. Ocupa una fracción mínima
 de la superficie. Es lo que le da fuerza.

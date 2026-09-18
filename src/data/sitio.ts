@@ -14,17 +14,23 @@ export const empresa = {
   lema: 'Operador logístico y portuario',
   anios: 50,
   sedes: ['Urabá', 'Santa Marta'],
-  dominio: 'www.cargobanoperador.com',
   // PROVISIONAL: datos de contacto pendientes de Cargoban.
   telefono: '',
   correo: '',
 };
 
+/** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
+export const clientes: { nombre: string; logo?: string }[] = [];
+
+/**
+ * La sección de clientes solo existe si hay clientes que mostrar.
+ * Una sección vacía con una nota de trabajo interno es peor que no tenerla.
+ */
 export const navegacion = [
   { etiqueta: 'Nosotros', href: '#nosotros' },
   { etiqueta: 'Servicios', href: '#servicios' },
   { etiqueta: 'Carga', href: '#carga' },
-  { etiqueta: 'Clientes', href: '#clientes' },
+  ...(clientes.length > 0 ? [{ etiqueta: 'Clientes', href: '#clientes' }] : []),
   { etiqueta: 'Contacto', href: '#contacto' },
 ];
 
@@ -62,7 +68,7 @@ export const servicios = [
       'Almacenaje',
       'Consolidación',
       'Desconsolidación',
-      'Distribución, re-empaque y etiquetado',
+      'Distribución, reempaque y etiquetado',
     ],
     provisional: false,
   },
@@ -82,7 +88,7 @@ export const servicios = [
     detalle:
       'Ponemos a disposición los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
     // PROVISIONAL: inventario real de equipos por confirmar.
-    items: ['Montacargas', 'Pallet jacks', 'Equipos de apoyo a la operación'],
+    items: ['Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
     provisional: true,
   },
 ];
@@ -120,11 +126,10 @@ export const razones = [
   },
 ];
 
-/** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
-export const clientes: { nombre: string; logo?: string }[] = [];
-
 /** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
 export const sedes = [
-  { ciudad: 'Urabá', region: 'Antioquia, Colombia', direccion: '', telefono: '' },
-  { ciudad: 'Santa Marta', region: 'Magdalena, Colombia', direccion: '', telefono: '' },
+  // Urabá es una subregión de Antioquia, no un municipio. Confirmar con Cargoban
+  // el municipio exacto de la sede (Turbo, Apartadó o Necoclí) antes de publicar.
+  { ciudad: 'Urabá', region: 'Antioquia', direccion: '', telefono: '' },
+  { ciudad: 'Santa Marta', region: 'Magdalena', direccion: '', telefono: '' },
 ];

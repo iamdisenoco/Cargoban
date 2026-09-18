@@ -5,7 +5,6 @@ import { navegacion, empresa } from '../data/sitio';
 <header
   id="cabecera"
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
-  data-solido="false"
 >
   <div class="contenedor flex h-20 items-center justify-between gap-6 lg:h-24">
     <a href="#inicio" class="shrink-0" aria-label={`${empresa.nombre}, ir al inicio`}>
@@ -33,7 +32,7 @@ import { navegacion, empresa } from '../data/sitio';
     <div class="flex items-center gap-3">
       <a
         href="#contacto"
-        class="hidden rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 md:inline-flex"
+        class="hidden rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 lg:inline-flex"
       >
         Cotizar operación
       </a>
@@ -45,9 +44,28 @@ import { navegacion, empresa } from '../data/sitio';
         aria-controls="menu-movil"
         aria-expanded="false"
       >
-        <span class="sr-only">Abrir menú</span>
-        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+        <span class="sr-only" id="menu-boton-texto">Abrir menú</span>
+        <svg
+          id="menu-icono-abrir"
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          aria-hidden="true"
+        >
           <path stroke-linecap="round" d="M3 7h18M3 12h18M3 17h18" />
+        </svg>
+        <svg
+          id="menu-icono-cerrar"
+          class="hidden size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
         </svg>
       </button>
     </div>
@@ -58,6 +76,9 @@ import { navegacion, empresa } from '../data/sitio';
 <div
   id="menu-movil"
   class="fixed inset-0 z-40 hidden bg-navy-950/98 backdrop-blur-xl lg:hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menú de navegación"
 >
   <nav class="contenedor flex h-full flex-col justify-center gap-2" aria-label="Principal móvil">
     {navegacion.map((item, i) => (
@@ -81,34 +102,75 @@ import { navegacion, empresa } from '../data/sitio';
 <script>
   const cabecera = document.getElementById('cabecera');
   const boton = document.getElementById('menu-boton');
+  const botonTexto = document.getElementById('menu-boton-texto');
+  const iconoAbrir = document.getElementById('menu-icono-abrir');
+  const iconoCerrar = document.getElementById('menu-icono-cerrar');
   const menu = document.getElementById('menu-movil');
 
-  // La cabecera se vuelve sólida en cuanto se deja el hero.
-  const centinela = document.getElementById('centinela-hero');
+  /*
+    La cabecera se vuelve sólida en cuanto el contenido empieza a pasar por detrás.
+    El centinela ocupa exactamente la franja que cubre la cabecera al inicio de la
+    página: mientras una parte de esa franja siga a la vista, no hemos bajado lo
+    suficiente. No depende de la altura del hero, que cambia con el contenido.
+  */
+  const centinela = document.getElementById('centinela-cabecera');
   if (centinela && cabecera) {
-    new IntersectionObserver(
-      ([entrada]) => {
-        const solido = !entrada.isIntersecting;
-        cabecera.dataset.solido = String(solido);
-        cabecera.classList.toggle('bg-navy-950/85', solido);
-        cabecera.classList.toggle('backdrop-blur-lg', solido);
-        cabecera.classList.toggle('border-b', solido);
-        cabecera.classList.toggle('border-white/10', solido);
-      },
-      { rootMargin: '-80px 0px 0px 0px' },
-    ).observe(centinela);
+    new IntersectionObserver(([entrada]) => {
+      const solido = !entrada.isIntersecting;
+      cabecera.classList.toggle('bg-navy-950/90', solido);
+      cabecera.classList.toggle('backdrop-blur-lg', solido);
+      cabecera.classList.toggle('border-b', solido);
+      cabecera.classList.toggle('border-white/10', solido);
+    }).observe(centinela);
+  }
+
+  // Elementos que pueden recibir foco dentro del menú abierto.
+  function enfocables(): HTMLElement[] {
+    return Array.from(menu?.querySelectorAll<HTMLElement>('a[href], button') ?? []);
   }
 
   function alternarMenu(abrir: boolean) {
     menu?.classList.toggle('hidden', !abrir);
     boton?.setAttribute('aria-expanded', String(abrir));
-    boton?.querySelector('.sr-only')?.replaceChildren(abrir ? 'Cerrar menú' : 'Abrir menú');
+    iconoAbrir?.classList.toggle('hidden', abrir);
+    iconoCerrar?.classList.toggle('hidden', !abrir);
+    if (botonTexto) botonTexto.textContent = abrir ? 'Cerrar menú' : 'Abrir menú';
     document.body.style.overflow = abrir ? 'hidden' : '';
+    if (abrir) enfocables()[0]?.focus();
+    else boton?.focus();
   }
 
   boton?.addEventListener('click', () => alternarMenu(menu?.classList.contains('hidden') ?? true));
   menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => alternarMenu(false)));
+
+  // Tocar el fondo cierra el menú: en un teléfono no hay tecla de escape.
+  menu?.addEventListener('click', (e) => {
+    if (e.target === menu) alternarMenu(false);
+  });
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) alternarMenu(false);
+    if (!menu || menu.classList.contains('hidden')) return;
+
+    if (e.key === 'Escape') {
+      alternarMenu(false);
+      return;
+    }
+
+    // El foco no se escapa del menú abierto mientras se tabula.
+    if (e.key === 'Tab') {
+      const lista = enfocables();
+      if (lista.length === 0) return;
+      const primero = lista[0];
+      const ultimo = lista[lista.length - 1];
+      const activo = document.activeElement;
+
+      if (e.shiftKey && (activo === primero || !menu.contains(activo))) {
+        e.preventDefault();
+        ultimo.focus();
+      } else if (!e.shiftKey && (activo === ultimo || !menu.contains(activo))) {
+        e.preventDefault();
+        primero.focus();
+      }
+    }
   });
 </script>

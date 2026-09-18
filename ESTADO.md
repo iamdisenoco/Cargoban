@@ -13,6 +13,18 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   reales de Cargoban, no texto de relleno.
 - Falta el banco de fotos de Cargoban. Es lo que más va a cambiar el resultado.
   Instrucciones de entrega en `public/fotos/LEEME.md`.
+- Revisión con ojos frescos hecha por una sesión distinta a la que escribió el código.
+  Encontró cinco defectos graves, todos corregidos: la cabecera se volvía sólida al revés
+  y el logo se imprimía sobre el contenido; el apilado de servicios ocultaba contenido de
+  forma permanente en pantallas de poca altura; seis textos no pasaban el contraste mínimo
+  de accesibilidad; el menú móvil dejaba escapar el foco del teclado; y varias notas de
+  trabajo interno eran visibles para el visitante.
+
+## Bloqueante para publicar
+El sitio no se puede publicar sin datos de contacto. Hoy los botones de "Cotizar operación"
+y "Hablar con nosotros" llevan a una sección sin correo, sin teléfono y sin formulario.
+Hace falta de Cargoban: correo, teléfono, direcciones de las dos sedes y el municipio exacto
+de la sede de Urabá (Urabá es una subregión, no un municipio; el puerto es Turbo).
 
 ## Situación anterior (2026-09-17)
 - Bloque 0 hecho: `main` creada con `AGENTS.md` y `ESTADO.md`.
@@ -29,7 +41,7 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
 ## Decisiones cerradas
 - Stack: Astro + Tailwind, estático, hosting en Cloudflare Pages.
 - Marca: manual oficial en `docs/manual-de-marca-cargoban.pdf`, resumen en `docs/marca.md`.
-- Tipografía web: Poppins (títulos) e Inter (texto), autoalojadas.
+- Tipografía web: Jost Variable (títulos) y Archivo Variable (texto), autoalojadas.
 
 ## Decisiones abiertas (esperan a Jon o a Cargoban)
 1. **Logo horizontal en el header.** El manual exige aprobación de la compañía para usarlo. Por defecto se mantiene.
