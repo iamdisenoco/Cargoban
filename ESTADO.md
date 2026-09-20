@@ -20,6 +20,14 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   de accesibilidad; el menú móvil dejaba escapar el foco del teclado; y varias notas de
   trabajo interno eran visibles para el visitante.
 
+## Vista previa navegable
+https://claude.ai/artifact/FSfdXdcU27yrwas1WburRu
+Es el sitio compilado, servido como página real: se puede recorrer, abrir el menú y ver
+las animaciones. Es privado de la cuenta de Jon; para que lo vea alguien de Cargoban hay
+que compartirlo desde el menú de la propia página.
+Se actualiza volviendo a publicar desde la sesión: `npm run build`, se pasan las rutas
+absolutas a relativas y se republica esa misma dirección.
+
 ## Bloqueante para publicar
 El sitio no se puede publicar sin datos de contacto. Hoy los botones de "Cotizar operación"
 y "Hablar con nosotros" llevan a una sección sin correo, sin teléfono y sin formulario.

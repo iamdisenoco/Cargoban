@@ -29,6 +29,10 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.
 - Al interpolar en Astro, cuidado con el espacio antes de `{variable}`: un salto de línea
   entre la palabra y la llave se colapsa y las pega ("más de50 años").
+- El build sale a `dist/recursos/`, no a `_astro/`: el guion bajo inicial rompe en varios
+  alojamientos. Configurado en `astro.config.mjs`.
+- Para una vista previa navegable hay que pasar las rutas absolutas del build a relativas
+  (`/recursos/` y `/marca/` pierden la barra inicial, y en el CSS las fuentes quedan `./`).
 - Antes de dar un bloque por terminado: `npm run build`, `npm run check` y capturas con Chromium en escritorio y móvil.
 
 ## Reglas aprendidas
