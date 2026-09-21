@@ -2,7 +2,20 @@
 
 Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actualiza al terminar.
 
-## Situación actual (2026-09-18)
+## Situación actual (2026-09-21)
+- **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.
+- La rama `claude/nuevo-sitio-web-g9z253` se reinició desde `main` para el siguiente bloque.
+  Lo que venga es un PR nuevo: el #1 está cerrado y no se reutiliza.
+- Sigue pendiente de Jon cambiar la rama por defecto del repo a `main` en GitHub
+  (Settings › Branches). Hoy la rama por defecto sigue siendo la de trabajo.
+
+## Qué falta para el bloque 2
+El bloque 2 era conectar Cloudflare Pages, pero eso necesita la cuenta de Jon.
+Mientras tanto, lo que más rinde es el contenido real, y está todo bloqueado por Cargoban:
+fotografías, datos de contacto, municipio de la sede de Urabá, lista de clientes y
+aprobación del logotipo horizontal. Sin eso el sitio no se puede publicar.
+
+## Situación al cerrar el bloque 1 (2026-09-18)
 - Bloque 1 rediseñado tras el rechazo de Jon al primer diseño ("está muy anticuado").
   El PR #1 no estaba mergeado, así que el rediseño va sobre la misma rama y actualiza ese PR:
   no se apila un PR nuevo.
