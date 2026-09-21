@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "@fontsource-variable/jost";
+@import "@fontsource-variable/archivo";
+
+/*
+  Tokens de marca Cargoban.
+  Colores RGB oficiales del manual de aplicación de marca (docs/marca.md).
+*/
+@theme {
+  --color-navy: #151d61;
+  --color-navy-900: #0b1038;
+  --color-navy-950: #070b26;
+  --color-teal: #0599ba;
+  --color-teal-400: #2bb4d4;
+  --color-green: #a8cf45;
+  --color-green-300: #c2e070;
+  --color-ink: #16181d;
+  --color-ink-soft: #6b7280;
+  --color-ink-faint: #b3b3b3;
+  --color-paper: #f4f6f8;
+
+  /* Jost es una geométrica derivada de Futura, la familia a la que pertenece
+     Century Gothic (la fuente del logo). Variable: un archivo cubre todos los pesos.
+     Archivo es la grotesca de texto: legible en párrafos, listas y datos. */
+  --font-display: "Jost Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Escala tipográfica fluida: se adapta al ancho sin saltos por breakpoint. */
+  --text-hero: clamp(2.75rem, 1.2rem + 7vw, 8rem);
+  --text-titulo: clamp(2rem, 1rem + 4vw, 4.5rem);
+  --text-subtitulo: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  --text-cuerpo-lg: clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
+
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Transición nativa entre páginas. Mejora progresiva: donde no hay soporte,
+   la navegación funciona igual que siempre. No añade JavaScript. */
+@view-transition {
+  navigation: auto;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-navy-950 text-white font-sans antialiased;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display font-semibold;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Cifras alineadas en columna: los números no bailan al cambiar de valor. */
+  dt, .cifra, time { font-variant-numeric: tabular-nums; }
+
+  /*
+    Grano de película sobre todo el sitio.
+    Unifica fotografías de distinta calidad y quita el aspecto plano de los
+    fondos digitales. Se genera con un filtro SVG en línea: pesa menos de 1 KB
+    y no necesita descargar ninguna imagen.
+  */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--color-green);
+    color: var(--color-navy-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+    transition: none;
+  }
+}
+
+@layer components {
+  /* Contenedor con margen lateral coherente en todo el sitio. */
+  .contenedor {
+    @apply mx-auto w-full max-w-[90rem] px-5 sm:px-8 lg:px-14;
+  }
+
+  /* Etiqueta de sección: texto corto, mayúsculas, tracking amplio.
+     Toma el gesto de las piezas de Instagram de Cargoban. */
+  .etiqueta {
+    @apply font-display font-semibold text-xs uppercase;
+    letter-spacing: 0.22em;
+  }
+
+
+
+  /*
+    Paneles apilados de la sección de servicios.
+    El apilado solo se activa cuando la ventana es lo bastante alta para mostrar
+    el panel completo: si no, una tarjeta fijada tapa el final de la anterior y
+    hay contenido que no se puede leer nunca. Fuera de esa condición las tarjetas
+    quedan en flujo normal, una debajo de otra, y se leen enteras.
+  */
+  .panel-apilado {
+    position: static;
+  }
+
+  @media (min-width: 64rem) and (min-height: 48rem) {
+    .panel-apilado {
+      position: sticky;
+      top: var(--desplazamiento-apilado, 8rem);
+    }
+  }
+
+  /* Fondo de respaldo cuando todavía no hay fotografía de Cargoban.
+     Se ve terminado, no se ve como un hueco vacío. */
+  .fondo-marca {
+    background-color: var(--color-navy-950);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgb(5 153 186 / 0.35), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 90% 20%, rgb(21 29 97 / 0.9), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 70% 100%, rgb(168 207 69 / 0.14), transparent 60%);
+  }
+}
+
+@layer utilities {
+  /* Aparición al entrar en pantalla.
+     Por defecto el contenido es visible: si el navegador no soporta
+     scroll-driven animations, no se oculta nada. */
+  .revelar {
+    opacity: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .revelar {
+        animation: aparecer linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 28%;
+      }
+    }
+  }
+
+  @keyframes aparecer {
+    from {
+      opacity: 0;
+      transform: translateY(2.5rem);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+
+  /* Desplazamiento lento del fondo del hero mientras se baja. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .parallax-lento {
+        animation: desplazar linear both;
+        animation-timeline: view();
+        animation-range: cover;
+      }
+    }
+  }
+
+  @keyframes desplazar {
+    from { transform: translateY(-6%) scale(1.08); }
+    to { transform: translateY(6%) scale(1.08); }
+  }
+
+  /* Cinta de tipos de carga en movimiento continuo. */
+  .cinta {
+    animation: correr 38s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cinta { animation: none; }
+  }
+
+  @keyframes correr {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}

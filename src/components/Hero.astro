@@ -1,0 +1,96 @@
+---
+import { empresa, tiposDeCarga } from '../data/sitio';
+
+/**
+ * Fotografía de fondo del hero.
+ * Cuando Cargoban entregue su banco de imágenes, se pone la ruta aquí
+ * (por ejemplo '/fotos/muelle.jpg') y el fondo de marca pasa a segundo plano.
+ */
+const foto: string | null = null;
+---
+
+<section id="inicio" class="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
+  <!-- Capa de fondo -->
+  <div class="absolute inset-0 -z-10 fondo-marca">
+    {foto && (
+      <img
+        src={foto}
+        alt=""
+        class="parallax-lento size-full object-cover"
+        fetchpriority="high"
+        decoding="async"
+      />
+    )}
+    <!-- Textura derivada del símbolo, permitida por el manual de marca -->
+    <div
+      class="absolute inset-0 opacity-[0.07] mix-blend-overlay"
+      style="background-image:url('/marca/isotipo-blanco.svg');background-size:clamp(90px,11vw,180px);background-repeat:repeat"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="absolute inset-0"
+      style="background:linear-gradient(to top,var(--color-navy-950) 3%,transparent 45%)"
+      aria-hidden="true"
+    >
+    </div>
+  </div>
+
+  <div class="contenedor pb-16 pt-32 lg:pb-24">
+    <p class="etiqueta flex items-center gap-3 text-green">
+      <span class="h-px w-10 bg-green"></span>
+      {empresa.lema}
+    </p>
+
+    <h1 class="mt-7 max-w-[16ch] font-display font-bold text-white" style="font-size:var(--text-hero)">
+      Operamos la <span class="text-green">carga</span> que mueve al Caribe
+    </h1>
+
+    <div class="mt-10 flex flex-col gap-10 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between">
+      <p class="max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">
+        Medio siglo moviendo carga en {empresa.sedes.join(' y ')}. Personal propio,
+        procedimientos establecidos y trazabilidad en cada movimiento.
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a
+          href="#servicios"
+          class="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green"
+        >
+          Ver servicios
+          <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <a
+          href="#contacto"
+          class="inline-flex items-center rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
+        >
+          Hablar con nosotros
+        </a>
+      </div>
+    </div>
+
+    <!-- Datos de la operación. Solo hechos verificables, sin cifras inventadas. -->
+    <dl class="mt-14 grid gap-px overflow-hidden rounded-xl bg-white/10 sm:grid-cols-3">
+      {[
+        { cifra: `+${empresa.anios}`, texto: 'años de experiencia' },
+        { cifra: String(empresa.sedes.length), texto: `sedes: ${empresa.sedes.join(' y ')}` },
+        { cifra: String(tiposDeCarga.length), texto: 'tipos de carga que manejamos' },
+      ].map((dato) => (
+        <div class="bg-navy-950/60 px-6 py-5 backdrop-blur-sm">
+          <dt class="text-sm text-white/65">{dato.texto}</dt>
+          <dd class="cifra mt-1 font-display text-4xl font-bold leading-none text-white lg:text-5xl">
+            {dato.cifra}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+
+  <!--
+    Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio.
+    Mientras parte de esa franja se vea, la cabecera queda transparente.
+  -->
+  <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
+</section>

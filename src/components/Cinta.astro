@@ -1,0 +1,24 @@
+---
+import { tiposDeCarga } from '../data/sitio';
+
+// Se duplica la lista para que el desplazamiento sea continuo sin cortes.
+const secuencia = [...tiposDeCarga, ...tiposDeCarga];
+---
+
+<div class="border-y border-white/10 bg-navy-900 py-5 lg:py-6">
+  <div class="flex overflow-hidden" aria-hidden="true">
+    <ul class="cinta flex shrink-0 items-center gap-10 pr-10 lg:gap-16 lg:pr-16">
+      {secuencia.map((tipo) => (
+        <li class="flex shrink-0 items-center gap-10 font-display text-lg font-medium text-white/70 lg:gap-16 lg:text-2xl">
+          {tipo}
+          <span class="size-1.5 shrink-0 rotate-45 bg-white/30"></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Versión accesible y legible por buscadores, sin movimiento -->
+  <p class="sr-only">
+    Tipos de carga que manejamos: {tiposDeCarga.join(', ')}.
+  </p>
+</div>
