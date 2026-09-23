@@ -24,6 +24,9 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
     que al final caen una tras otra y destapan la página, con los valores de cargokite
     (ver `docs/referencias/cargokite.md`). El titular del hero entra mientras cae el telón.
     Dura ~4,8 s en total. Sigue saliendo una vez por sesión y solo en la portada.
+    Revisado con ojos frescos: nadie queda trancado en ningún cierre (botón, Escape, clic,
+    rueda, también durante la caída), sin rendijas entre columnas. Encontró que el h1
+    entraba casi entero debajo del telón; ahora arranca 0,6 s después de que empieza a caer.
   - Revisión con ojos frescos hecha por un subagente aparte. Encontró cuatro defectos,
     corregidos: los titulares ganaban un 15 % de alto, salían en blanco al imprimir, la rueda
     que cierra el intro movía la página y el texto de cada titular iba duplicado (se copiaba
