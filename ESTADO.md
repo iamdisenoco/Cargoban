@@ -3,11 +3,18 @@
 Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actualiza al terminar.
 
 ## Situación actual (2026-09-23)
-- **Bloque 2 en curso: animación de apertura con la brújula.** Hecha y verificada en Chromium.
+- **Bloque 2 MERGEADO en `main`** (PR #2, commit d1c6494). `main` compila y pasa `astro check`.
+  La rama `claude/nuevo-sitio-web-g9z253` se reinició desde `main`: lo que venga es un PR nuevo.
+- **Bloque siguiente: traer los movimientos de cargokite a Cargoban.** El análisis de la
+  referencia está en `docs/referencias/cargokite.md`. Por dónde empezar, en este orden:
+  desplazamiento suave (Lenis, pesa poco y es lo que más cambia la sensación), titulares que
+  entran por palabras (se hace con CSS, sin SplitText), y los tiempos de entrada de cada
+  sección. Three.js y Swiper no: están descartados y el documento dice por qué.
+- **Bloque 2, lo que quedó hecho: animación de apertura con la brújula.** Verificada en Chromium.
   Se dibuja el bisel, la aguja busca el norte, se forma el arco y el logotipo queda armado.
-  Dura unos 3 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en
-  `IntroBrujula.astro`. Se salta con clic, con cualquier tecla o con la rueda, se muestra una
-  sola vez por sesión y no se muestra a quien pidió menos movimiento.
+  Dura 3,5 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en
+  `IntroBrujula.astro`. Se salta con clic, con Escape o con la rueda, sale una sola vez por
+  sesión, solo en la portada, y no se le muestra a quien pidió menos movimiento.
 - **Revisión con ojos frescos hecha** por una sesión distinta a la que escribió el código.
   Confirmó que nadie se queda trancado, que el sitio se ve entero sin JavaScript y que el
   logotipo no se muestra rotado en ningún fotograma. Encontró y se corrigieron: el intro se
@@ -34,11 +41,10 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
 - Sigue pendiente de Jon cambiar la rama por defecto del repo a `main` en GitHub
   (Settings › Branches). Hoy la rama por defecto sigue siendo la de trabajo.
 
-## Qué falta para el bloque 2
-El bloque 2 era conectar Cloudflare Pages, pero eso necesita la cuenta de Jon.
-Mientras tanto, lo que más rinde es el contenido real, y está todo bloqueado por Cargoban:
-fotografías, datos de contacto, municipio de la sede de Urabá, lista de clientes y
-aprobación del logotipo horizontal. Sin eso el sitio no se puede publicar.
+## Qué necesita cuenta de Jon o datos de Cargoban
+Conectar Cloudflare Pages necesita la cuenta de Jon. El contenido real está todo bloqueado
+por Cargoban: fotografías, datos de contacto, municipio de la sede de Urabá, lista de
+clientes y aprobación del logotipo horizontal. Sin eso el sitio no se puede publicar.
 
 ## Situación al cerrar el bloque 1 (2026-09-18)
 - Bloque 1 rediseñado tras el rechazo de Jon al primer diseño ("está muy anticuado").
@@ -105,13 +111,15 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
    lista y logos de clientes, direcciones, teléfonos, correo y fotografías propias de la operación.
    Todo lo PROVISIONAL está marcado en `src/data/sitio.ts`.
 
-## Plan de bloques propuesto
-- Bloque 0: arranque del repo (este PR).
-- Bloque 1: scaffold, marca, layout y página de inicio (este PR).
-- Bloque 2: conectar el repo a Cloudflare Pages (requiere la cuenta de Jon) y obtener URL de vista previa.
-- Bloque 3: contenido real de Cargoban: nosotros, servicios detallados, clientes, fotografías.
-- Bloque 4: contacto con formulario funcional.
-- Bloque 5: SEO, rendimiento, y conexión del dominio `www.cargobanoperador.com` al final.
+## Plan de bloques
+- Bloque 0: arranque del repo. HECHO.
+- Bloque 1: scaffold, marca, layout y página de inicio. MERGEADO (PR #1).
+- Bloque 2: animación de apertura con la brújula. MERGEADO (PR #2).
+- Bloque 3: los movimientos de cargokite (ver `docs/referencias/cargokite.md`). SIGUIENTE.
+- Bloque 4: conectar el repo a Cloudflare Pages (requiere la cuenta de Jon).
+- Bloque 5: contenido real de Cargoban: nosotros, servicios detallados, clientes, fotografías.
+- Bloque 6: contacto con formulario funcional.
+- Bloque 7: SEO, rendimiento, y conexión del dominio `www.cargobanoperador.com` al final.
 
 ## Bitácora
 - 2026-09-17: se crea el repo y la rama `claude/nuevo-sitio-web-g9z253`.
@@ -120,5 +128,7 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
   Rediseño completo sobre la misma rama. Verificado en escritorio y móvil.
 - 2026-09-21: bloque 1 mergeado en `main` (PR #1).
 - 2026-09-23: Jon pide los movimientos de cargokite.com y una animación de apertura con la
-  brújula que forme el logo. Se construye la brújula. La referencia y la carpeta de Drive
-  quedan bloqueadas por la política de red del entorno y por la cuenta del enlace.
+  brújula que forme el logo. Se construye la brújula, la revisa una sesión aparte con ojos
+  frescos, se corrigen los siete defectos que encontró y se mergea como bloque 2 (PR #2).
+  Jon abre la red del entorno; con eso se analiza cargokite bajando su HTML y su JavaScript.
+  Sigue sin poder verse en movimiento, y la carpeta de Drive sigue en otra cuenta.
