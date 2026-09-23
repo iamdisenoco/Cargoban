@@ -24,6 +24,23 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Animaciones de scroll (`animation-timeline`) siempre dentro de `@supports` y de
   `prefers-reduced-motion: no-preference`, y con el estado final como estado por defecto.
   Firefox estable todavía no las activa: si se ocultan por defecto, ahí no se ve nada.
+- La animación de apertura (`src/components/IntroBrujula.astro`) nace oculta con `hidden` y
+  solo su propio script la muestra. Si el JavaScript falla, el visitante ve el sitio, no una
+  pantalla en negro. Nunca al revés.
+- Los trazos del logo no se copian a mano dentro del código: se leen del SVG oficial en tiempo
+  de compilación y el build falla si ese archivo cambia de forma. Así el logo que queda al final
+  del intro es exactamente el logo aprobado.
+- Para verificar una animación en Chromium hay que congelarla (`animation-delay` negativo más
+  `animation-play-state: paused`). Con capturas a reloj corriendo, cada captura arrastra el reloj
+  y las marcas de tiempo salen desplazadas: se leen fotogramas que no son los que dicen ser.
+- El SVG del logo se trae con `import ... from '…svg?raw'`, no con `fs` y `process.cwd()`:
+  en el build de Astro el componente se empaqueta y las rutas relativas dejan de valer.
+- Para abrir un sitio externo con Chromium hace falta que confíe en el CA del proxy del
+  entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
+  arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
+  el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
+- `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
+  usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
 - El verde de marca es acento escaso. Si aparece en todas las secciones, pierde fuerza.
 - Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.
