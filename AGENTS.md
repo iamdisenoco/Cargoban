@@ -24,6 +24,15 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Animaciones de scroll (`animation-timeline`) siempre dentro de `@supports` y de
   `prefers-reduced-motion: no-preference`, y con el estado final como estado por defecto.
   Firefox estable todavía no las activa: si se ocultan por defecto, ahí no se ve nada.
+- La animación de apertura (`src/components/IntroBrujula.astro`) nace oculta con `hidden` y
+  solo su propio script la muestra. Si el JavaScript falla, el visitante ve el sitio, no una
+  pantalla en negro. Nunca al revés.
+- Los trazos del logo no se copian a mano dentro del código: se leen del SVG oficial en tiempo
+  de compilación y el build falla si ese archivo cambia de forma. Así el logo que queda al final
+  del intro es exactamente el logo aprobado.
+- Para verificar una animación en Chromium hay que congelarla (`animation-delay` negativo más
+  `animation-play-state: paused`). Con capturas a reloj corriendo, cada captura arrastra el reloj
+  y las marcas de tiempo salen desplazadas: se leen fotogramas que no son los que dicen ser.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
 - El verde de marca es acento escaso. Si aparece en todas las secciones, pierde fuerza.
 - Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.

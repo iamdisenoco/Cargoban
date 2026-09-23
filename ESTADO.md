@@ -2,7 +2,21 @@
 
 Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actualiza al terminar.
 
-## Situación actual (2026-09-21)
+## Situación actual (2026-09-23)
+- **Bloque 2 en curso: animación de apertura con la brújula.** Hecha y verificada en Chromium.
+  Se dibuja el bisel, la aguja busca el norte, se forma el arco y el logotipo queda armado.
+  Dura unos 3 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en
+  `IntroBrujula.astro`. Se salta con clic, con cualquier tecla o con la rueda, se muestra una
+  sola vez por sesión y no se muestra a quien pidió menos movimiento.
+- **Dos cosas bloqueadas por el entorno, no por falta de trabajo:**
+  1. `cargokite.com` (la referencia que mandó Jon) no se puede abrir desde aquí: la política de
+     red de este entorno responde 403 a todo lo que no sea npm, PyPI, GitHub y la API de Anthropic.
+     Se arregla abriendo la red del entorno en claude.ai/code, o mandando capturas o una grabación.
+  2. La carpeta de Drive de Jon tampoco: el enlace lleva `/u/3/`, o sea que vive en otra cuenta de
+     Google distinta de `jon@iaconlala.com`, que es la que tiene el conector. Se arregla
+     compartiendo la carpeta con `jon@iaconlala.com`, o adjuntando los archivos al chat.
+
+## Situación anterior (2026-09-21)
 - **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.
 - La rama `claude/nuevo-sitio-web-g9z253` se reinició desde `main` para el siguiente bloque.
   Lo que venga es un PR nuevo: el #1 está cerrado y no se reutiliza.
@@ -85,3 +99,7 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
 - 2026-09-17: se crea `main`. Jon entrega el manual de marca y el brief. Bloque 1 construido y verificado.
 - 2026-09-18: Jon rechaza el diseño por anticuado y entrega piezas de Instagram como referencia.
   Rediseño completo sobre la misma rama. Verificado en escritorio y móvil.
+- 2026-09-21: bloque 1 mergeado en `main` (PR #1).
+- 2026-09-23: Jon pide los movimientos de cargokite.com y una animación de apertura con la
+  brújula que forme el logo. Se construye la brújula. La referencia y la carpeta de Drive
+  quedan bloqueadas por la política de red del entorno y por la cuenta del enlace.

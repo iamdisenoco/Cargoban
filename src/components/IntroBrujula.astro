@@ -1,0 +1,299 @@
+---
+/**
+ * Animación de apertura: una brújula que se convierte en el logo de Cargoban.
+ *
+ * El símbolo de Cargoban es una brújula (el manual de marca, página 3, lo muestra
+ * junto a la fotografía de una): el arco es la caja y las dos cuñas verde y turquesa
+ * son las dos mitades de la aguja. La animación parte de eso: se dibuja el bisel,
+ * la aguja busca el norte, se forma el arco y el logotipo completo queda armado.
+ *
+ * Los trazos NO se copian a mano: se leen del SVG oficial del logo horizontal, para
+ * que el logo que queda al final del intro sea exactamente el logo aprobado y no una
+ * versión redibujada. Si ese archivo cambia, el build falla en vez de dibujar mal.
+ *
+ * Nota de marca: el manual prohíbe rotar el logotipo. Aquí solo giran las dos cuñas
+ * de la aguja, y solo hasta asentarse en su posición correcta; el logotipo completo
+ * nunca se muestra rotado. Conviene que Cargoban lo confirme.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+const archivo = path.join(process.cwd(), 'public/marca/logo-horizontal-blanco.svg');
+const trazos = fs.readFileSync(archivo, 'utf8').match(/<path[\s\S]*?\/>/g) ?? [];
+
+if (trazos.length !== 12) {
+  throw new Error(
+    `IntroBrujula: se esperaban 12 trazos en logo-horizontal-blanco.svg y hay ${trazos.length}. ` +
+      'Si el logo cambió, hay que volver a medir qué trazos son la palabra, el arco y la aguja.',
+  );
+}
+
+// 0–8 son las letras de CARGOBAN, 9 es el arco del símbolo, 10 y 11 la aguja.
+const palabra = trazos.slice(0, 9).join('\n');
+const arco = trazos[9];
+const aguja = trazos.slice(10).join('\n');
+
+/*
+  Medidas tomadas con getBBox() sobre el SVG real, no estimadas:
+  símbolo 452.99–545.00 x 465.60–562.84  →  centro (499.00, 514.22)
+  El viewBox original (165.85 462.60 382.16 104.61) se amplía para que quepa el bisel.
+*/
+const centro = { x: 499.0, y: 514.22 };
+const vista = { x: 165.85, y: 444, ancho: 404, alto: 140 };
+const radioBisel = 62;
+
+// Marcas del bisel: 16 rumbos, más largas las cuatro cardinales.
+const marcas = Array.from({ length: 16 }, (_, i) => {
+  const angulo = ((i * 22.5 - 90) * Math.PI) / 180;
+  const cardinal = i % 4 === 0;
+  const dentro = cardinal ? 50.5 : 54.5;
+  const fuera = 58;
+  return {
+    x1: +(centro.x + Math.cos(angulo) * dentro).toFixed(2),
+    y1: +(centro.y + Math.sin(angulo) * dentro).toFixed(2),
+    x2: +(centro.x + Math.cos(angulo) * fuera).toFixed(2),
+    y2: +(centro.y + Math.sin(angulo) * fuera).toFixed(2),
+    cardinal,
+  };
+});
+---
+
+<div id="intro" class="intro" hidden>
+  <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
+
+  <svg
+    class="intro__svg"
+    viewBox={`${vista.x} ${vista.y} ${vista.ancho} ${vista.alto}`}
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g class="intro__bisel">
+      <circle
+        class="intro__anillo"
+        cx={centro.x}
+        cy={centro.y}
+        r={radioBisel}
+        fill="none"
+        stroke="rgb(255 255 255 / 0.22)"
+        stroke-width="0.9"
+        pathLength="100"
+      />
+      {marcas.map((m) => (
+        <line
+          x1={m.x1}
+          y1={m.y1}
+          x2={m.x2}
+          y2={m.y2}
+          stroke={m.cardinal ? 'rgb(255 255 255 / 0.55)' : 'rgb(255 255 255 / 0.2)'}
+          stroke-width={m.cardinal ? 1.4 : 0.8}
+          stroke-linecap="round"
+        />
+      ))}
+    </g>
+
+    <g class="intro__palabra" set:html={palabra} />
+    <g class="intro__arco" set:html={arco} />
+    <g class="intro__aguja" set:html={aguja} />
+  </svg>
+</div>
+
+<style>
+  /*
+    Un solo mando para el ritmo: subirlo alarga toda la animación, bajarlo la acorta.
+    Todas las duraciones y esperas de abajo se multiplican por él.
+  */
+  .intro {
+    --r: 1;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--color-navy-950);
+    animation: intro-salir calc(0.5s * var(--r)) ease-in calc(2.65s * var(--r)) both;
+  }
+
+  .intro[hidden] {
+    display: none;
+  }
+
+  .intro__svg {
+    /* --z es cuánto se amplía la brújula antes de recomponerse como logotipo. */
+    --z: 2;
+    width: clamp(15rem, 84vw, 44rem);
+    aspect-ratio: 404 / 140;
+    /*
+      Estado de partida: el símbolo, ampliado y llevado al centro de la pantalla.
+      Los porcentajes salen de la medida real del símbolo dentro del viewBox:
+      origen (499.00 - 165.85) / 404 = 82.463 %, (514.22 - 444) / 140 = 50.157 %.
+      El desplazamiento lo lleva al centro horizontal del propio SVG.
+    */
+    transform-origin: 82.463% 50.157%;
+    animation: intro-armar calc(0.6s * var(--r)) var(--ease-suave) calc(1.65s * var(--r)) both;
+  }
+
+  .intro__bisel {
+    animation: intro-desvanecer calc(0.45s * var(--r)) ease-in calc(1.7s * var(--r)) both;
+  }
+
+  .intro__anillo {
+    stroke-dasharray: 100;
+    transform-box: fill-box;
+    transform-origin: center;
+    rotate: -90deg;
+    animation: intro-trazar calc(0.5s * var(--r)) ease-out both;
+  }
+
+  .intro__bisel line {
+    opacity: 0;
+    animation: intro-aparecer calc(0.4s * var(--r)) ease-out calc(0.25s * var(--r)) forwards;
+  }
+
+  /* La aguja gira sobre su propio centro, que coincide con el centro del símbolo. */
+  .intro__aguja {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: intro-buscar-norte calc(1.1s * var(--r)) cubic-bezier(0.16, 1, 0.3, 1)
+      calc(0.15s * var(--r)) both;
+  }
+
+  .intro__arco {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: intro-arco calc(0.5s * var(--r)) var(--ease-suave) calc(1.2s * var(--r)) both;
+  }
+
+  .intro__palabra {
+    transform-box: fill-box;
+    transform-origin: right center;
+    animation: intro-palabra calc(0.5s * var(--r)) var(--ease-suave) calc(1.95s * var(--r)) both;
+  }
+
+  /* En pantalla de teléfono la brújula necesita ampliarse más para tener presencia. */
+  @media (max-width: 40rem) {
+    .intro__svg { --z: 2.6; }
+  }
+
+  .intro__saltar {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 1;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    padding: 0.55rem 1.1rem;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgb(255 255 255 / 0.7);
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .intro__saltar:hover {
+    color: #fff;
+    border-color: rgb(255 255 255 / 0.6);
+  }
+
+  @keyframes intro-trazar {
+    from { stroke-dashoffset: 100; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes intro-aparecer {
+    to { opacity: 1; }
+  }
+
+  /* Dos vueltas y media antes de asentarse: la aguja busca y encuentra el norte. */
+  @keyframes intro-buscar-norte {
+    from { opacity: 0; transform: rotate(-880deg) scale(0.82); }
+    12% { opacity: 1; }
+    to { opacity: 1; transform: rotate(0deg) scale(1); }
+  }
+
+  @keyframes intro-arco {
+    from { opacity: 0; transform: scale(1.14); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes intro-palabra {
+    from { opacity: 0; transform: translateX(-6%); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* El símbolo vuelve a su tamaño y a su sitio dentro del logotipo horizontal. */
+  @keyframes intro-armar {
+    from { transform: translate(-32.463%, -0.157%) scale(var(--z)); }
+    to { transform: none; }
+  }
+
+  @keyframes intro-desvanecer {
+    to { opacity: 0; }
+  }
+
+  @keyframes intro-salir {
+    to { opacity: 0; visibility: hidden; }
+  }
+</style>
+
+<script is:inline>
+  /*
+    El intro está oculto por defecto: si este script no corre, el sitio se ve
+    igual y nadie se queda mirando una pantalla en blanco. Solo se muestra
+    cuando se decide mostrarlo, y nunca si la persona pidió menos movimiento.
+  */
+  (function () {
+    var intro = document.getElementById('intro');
+    if (!intro) return;
+
+    var menosMovimiento =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Una vez por sesión: quien vuelve a la página en la misma visita no lo repite.
+    var yaVisto = false;
+    try {
+      yaVisto = sessionStorage.getItem('cargoban:intro') === '1';
+    } catch (e) {
+      /* navegación privada o cookies bloqueadas: se muestra igual */
+    }
+
+    if (menosMovimiento || yaVisto) return;
+
+    try {
+      sessionStorage.setItem('cargoban:intro', '1');
+    } catch (e) {}
+
+    intro.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+
+    var cerrado = false;
+    function cerrar() {
+      if (cerrado) return;
+      cerrado = true;
+      intro.hidden = true;
+      document.documentElement.style.overflow = '';
+      document.removeEventListener('keydown', porTecla);
+    }
+
+    function porTecla() {
+      cerrar();
+    }
+
+    document.getElementById('intro-saltar')?.addEventListener('click', cerrar);
+    intro.addEventListener('click', cerrar);
+    document.addEventListener('keydown', porTecla);
+    window.addEventListener('wheel', cerrar, { once: true, passive: true });
+    window.addEventListener('touchmove', cerrar, { once: true, passive: true });
+
+    // Al terminar el fundido de salida, el intro se retira del documento.
+    intro.addEventListener('animationend', function (e) {
+      if (e.target === intro) cerrar();
+    });
+
+    // Red de seguridad: si alguna animación no dispara, el intro se quita igual.
+    setTimeout(cerrar, 4200);
+  })();
+</script>
