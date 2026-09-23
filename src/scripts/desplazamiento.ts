@@ -59,9 +59,10 @@ if (!menosMovimiento.matches) {
     e.preventDefault();
     history.pushState(null, '', `#${id}`);
 
-    // force: el menú móvil suelta el bloqueo en este mismo clic, y el observador
-    // todavía no ha tenido tiempo de reanudar Lenis.
-    lenis.scrollTo(destino, { force: true });
+    // El menú móvil suelta el bloqueo en este mismo clic. Se reanuda Lenis ya:
+    // si lo reanudara el fotograma de `sincronizar`, su reset() cortaría el viaje.
+    if (!bloqueado()) lenis.start();
+    lenis.scrollTo(destino);
 
     if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
     destino.focus({ preventScroll: true });
