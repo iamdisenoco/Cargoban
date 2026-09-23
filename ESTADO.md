@@ -57,11 +57,18 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   1. **Ver cargokite en movimiento.** El Chromium de Playwright no confía en el CA del proxy y
      las dos formas de arreglarlo las bloquea el clasificador de permisos. Sabemos con qué está
      hecha, no cómo se siente. Hace falta desbloquear eso o una grabación de pantalla de Jon.
-  2. **La carpeta de Drive** (Jon la volvió a mandar el 23/09: `19lEZjOIVqrTwM3oCBeMlCaQgvPN8H830`,
-     fotos y videos). Se probó: el conector responde "not found" y el enlace pide iniciar sesión,
-     o sea que no es pública ni está compartida con la cuenta del conector. El enlace lleva `/u/3/`: vive en otra cuenta de Google distinta de
-     `jon@iaconlala.com`, que es la del conector. Se arregla compartiéndola con esa dirección,
-     o adjuntando los archivos al chat.
+  2. **La carpeta de Drive: DESBLOQUEADA el 23/09.** Jon la abrió por enlace (`19lEZjOIVqrTwM3oCBeMlCaQgvPN8H830`).
+     Se baja con `curl -L "https://drive.usercontent.google.com/download?id=<ID>&export=download&confirm=t"`.
+     Contiene:
+     - **12 fotos de Cargoban en Santa Marta** (9504×6336, 20–36 MB cada una): izaje de llantas
+       OTR, contenedores, charla de seguridad con la cuadrilla, reefer, sacos. Son de Cargoban
+       y se pueden usar. Van en el bloque de contenido, reducidas a tamaño web.
+     - **2 videos de Puerto Antioquia** («100 buques» y «Neo Panamax CMA CGM Dignity», 720p,
+       39 y 52 s): tomas de dron del puerto y un vocero de Puerto Antioquia. **No son de Cargoban.**
+       Jon pidió clips cortos sin la marca de agua; se le dijo que no se recorta la marca de agua
+       de un video ajeno. Opciones abiertas: pedir a Puerto Antioquia las tomas limpias o permiso
+       escrito (recomendado), o usar fragmentos con la marca visible y crédito.
+     Hasta que se resuelva, los videos no entran en el sitio.
 
 ## Situación anterior (2026-09-21)
 - **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.
