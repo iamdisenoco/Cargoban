@@ -45,6 +45,23 @@ const tituloCompleto = titulo
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={`${empresa.nombre}, ${empresa.lema}`} />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      /*
+        Oculta los titulares antes del primer pintado para que entren palabra por
+        palabra (ver src/scripts/titulares.ts). Si al terminar la carga ese módulo
+        no llegó a correr, se deshace: el texto nunca se queda oculto.
+      */
+      (function () {
+        var html = document.documentElement;
+        if (!('IntersectionObserver' in window)) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        html.classList.add('titulares-listos');
+        window.addEventListener('load', function () {
+          if (html.dataset.titulares !== 'activos') html.classList.remove('titulares-listos');
+        });
+      })();
+    </script>
   </head>
 
   <body class="min-h-dvh">
@@ -62,5 +79,10 @@ const tituloCompleto = titulo
       <slot />
     </main>
     <Footer />
+
+    <script>
+      import '../scripts/desplazamiento';
+      import '../scripts/titulares';
+    </script>
   </body>
 </html>

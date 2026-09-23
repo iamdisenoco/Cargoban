@@ -319,6 +319,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
 
     intro.hidden = false;
     document.documentElement.style.overflow = 'hidden';
+    // Aviso para quien espera al intro (los titulares del hero, ver titulares.ts).
+    document.documentElement.dataset.intro = 'abierto';
 
     /*
       Mientras el intro tapa la pantalla, el resto del documento queda inerte:
@@ -351,6 +353,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
       for (var i = 0; i < inertes.length; i++) inertes[i].inert = false;
       document.removeEventListener('keydown', porTecla);
       document.removeEventListener('DOMContentLoaded', aislarFondo);
+      delete document.documentElement.dataset.intro;
+      document.dispatchEvent(new Event('intro:cerrado'));
     }
 
     // Solo Escape cierra con el teclado: si cerrara cualquier tecla, el primer

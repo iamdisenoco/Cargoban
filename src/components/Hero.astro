@@ -1,4 +1,5 @@
 ---
+import Titular from './Titular.astro';
 import { empresa, tiposDeCarga } from '../data/sitio';
 
 /**
@@ -42,9 +43,12 @@ const foto: string | null = null;
       {empresa.lema}
     </p>
 
-    <h1 class="mt-7 max-w-[16ch] font-display font-bold text-white" style="font-size:var(--text-hero)">
-      Operamos la <span class="text-green">carga</span> que mueve al Caribe
-    </h1>
+    <Titular
+      as="h1"
+      texto="Operamos la *carga* que mueve al Caribe"
+      class="mt-7 max-w-[16ch] font-display font-bold text-white"
+      style="font-size:var(--text-hero)"
+    />
 
     <div class="mt-10 flex flex-col gap-10 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between">
       <p class="max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">

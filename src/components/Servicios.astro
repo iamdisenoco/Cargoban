@@ -1,4 +1,5 @@
 ---
+import Titular from './Titular.astro';
 import { servicios } from '../data/sitio';
 ---
 
@@ -10,9 +11,11 @@ import { servicios } from '../data/sitio';
           <span class="h-px w-10 bg-teal-400"></span>
           Servicios
         </p>
-        <h2 class="mt-6 max-w-[14ch] text-white" style="font-size:var(--text-titulo)">
-          De la bodega del buque a la puerta del cliente
-        </h2>
+        <Titular
+          texto="De la bodega del buque a la puerta del cliente"
+          class="mt-6 max-w-[14ch] text-white"
+          style="font-size:var(--text-titulo)"
+        />
       </div>
       <p class="max-w-md text-white/65">
         Cuatro frentes de operación que se sostienen entre sí. La carga no cambia de manos
