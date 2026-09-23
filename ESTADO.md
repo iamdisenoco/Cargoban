@@ -22,7 +22,9 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   - Revisión con ojos frescos hecha por un subagente aparte. Encontró cuatro defectos,
     corregidos: los titulares ganaban un 15 % de alto, salían en blanco al imprimir, la rueda
     que cierra el intro movía la página y el texto de cada titular iba duplicado (se copiaba
-    dos veces). Costo aceptado: en una recarga sin intro, el h1 no se pinta hasta que llega
+    dos veces). El revisor volvió a pasar sus pruebas y cazó una regresión del propio arreglo
+    (desde el menú móvil, las anclas se quedaban a mitad de camino), también corregida.
+    Costo aceptado: en una recarga sin intro, el h1 no se pinta hasta que llega
     el JavaScript. Pendiente de probar con VoiceOver o NVDA reales el `aria-label` de los
     titulares.
 - **Defecto previo, sin arreglar:** con el móvil en horizontal (844×390) el menú mide 433 px
@@ -47,7 +49,9 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   1. **Ver cargokite en movimiento.** El Chromium de Playwright no confía en el CA del proxy y
      las dos formas de arreglarlo las bloquea el clasificador de permisos. Sabemos con qué está
      hecha, no cómo se siente. Hace falta desbloquear eso o una grabación de pantalla de Jon.
-  2. **La carpeta de Drive.** El enlace lleva `/u/3/`: vive en otra cuenta de Google distinta de
+  2. **La carpeta de Drive** (Jon la volvió a mandar el 23/09: `19lEZjOIVqrTwM3oCBeMlCaQgvPN8H830`,
+     fotos y videos). Se probó: el conector responde "not found" y el enlace pide iniciar sesión,
+     o sea que no es pública ni está compartida con la cuenta del conector. El enlace lleva `/u/3/`: vive en otra cuenta de Google distinta de
      `jon@iaconlala.com`, que es la del conector. Se arregla compartiéndola con esa dirección,
      o adjuntando los archivos al chat.
 
