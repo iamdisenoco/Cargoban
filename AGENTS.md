@@ -36,13 +36,11 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - El SVG del logo se trae con `import ... from '…svg?raw'`, no con `fs` y `process.cwd()`:
   en el build de Astro el componente se empaqueta y las rutas relativas dejan de valer.
 - Para abrir un sitio externo con Chromium hace falta que confíe en el CA del proxy del
-  entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
-  arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
-  el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
-  El 23/09 se probó de nuevo: la sesión ya trae NSS configurado según `/root/.ccr/README.md`,
-  pero el Chromium de Playwright sigue dando `ERR_CERT_AUTHORITY_INVALID`, y pasarle la huella
-  del CA con `--ignore-certificate-errors-spki-list` también lo bloquea el clasificador.
-  No insistir: se pide a Jon una grabación de pantalla.
+  entorno; el Chromium de Playwright no lee ese almacén (`ERR_CERT_AUTHORITY_INVALID`).
+  Jon lo autorizó expresamente el 23/09 y funciona así, sin apagar la verificación:
+  `SPKI=$(openssl x509 -in /root/.ccr/agent-proxy-ca.crt -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)`
+  y `chromium.launch({ args: ['--ignore-certificate-errors-spki-list=' + SPKI], proxy: { server: process.env.HTTPS_PROXY } })`.
+  Sin esa autorización en la conversación, el clasificador de permisos lo bloquea: se pide a Jon.
 - Desplazamiento suave con Lenis (`src/scripts/desplazamiento.ts`). Todo lo que bloquee el
   scroll lo hace con `overflow: hidden` en el `style` de `<html>` o de `<body>`: Lenis vigila
   esos dos atributos y se detiene. Un bloqueo hecho de otra forma deja la rueda moviendo la
@@ -68,4 +66,7 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Antes de dar un bloque por terminado: `npm run build`, `npm run check` y capturas con Chromium en escritorio y móvil.
 
 ## Reglas aprendidas
-- (vacío por ahora)
+- Una referencia visual se estudia **viéndola en el navegador** antes de construir, no solo
+  leyendo su código. Con el código se sacaron los tiempos de cargokite, pero no su forma
+  (fondo claro, tipografía de peso medio, hero fijo, sección horizontal), y Jon dijo
+  «no se me parece». Primero se mira y se captura; después se construye.
