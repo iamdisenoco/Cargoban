@@ -183,14 +183,17 @@
   /*
     Titulares palabra por palabra (componente Titular.astro).
     Cada palabra es una ventana con overflow oculto y la palabra sube desde abajo.
-    El relleno con margen negativo agranda la ventana sin mover el texto, para no
-    cortar tildes arriba ni la cola de la g y la p abajo.
+    El relleno con margen negativo agranda la ventana para no cortar tildes arriba
+    ni la cola de la g y la p abajo. `vertical-align: top` es lo que evita que
+    mueva el texto: un inline-block con overflow oculto apoya la línea base en su
+    borde inferior, y sin esto cada línea del titular crece un 15 %.
     Por defecto no hay nada oculto: lo oculta `titulares-listos`, que solo se pone
     cuando hay un script que lo va a mostrar (ver Base.astro).
   */
   .titular .palabra {
     display: inline-block;
     overflow: hidden;
+    vertical-align: top;
     padding-block: 0.12em 0.16em;
     margin-block: -0.12em -0.16em;
   }
@@ -207,6 +210,14 @@
 
   .titulares-listos .titular.titular-visible .palabra-in {
     transform: none;
+  }
+
+  /* Al imprimir no hay scroll que los haga entrar: todos visibles. */
+  @media print {
+    .titulares-listos .titular .palabra-in {
+      transform: none;
+      transition: none;
+    }
   }
 
   /* Desplazamiento lento del fondo del hero mientras se baja. */

@@ -24,7 +24,17 @@ if (!menosMovimiento.matches) {
   const bloqueado = () =>
     html.style.overflow === 'hidden' || document.body.style.overflow === 'hidden';
 
-  const sincronizar = () => (bloqueado() ? lenis.stop() : lenis.start());
+  /*
+    Reanudar espera un fotograma. La rueda que cierra el intro quita el bloqueo
+    dentro de ese mismo evento; si Lenis se reanudara ya, procesaría esa misma
+    rueda y la página bajaría al cerrar el intro.
+  */
+  const sincronizar = () => {
+    if (bloqueado()) return lenis.stop();
+    requestAnimationFrame(() => {
+      if (!bloqueado()) lenis.start();
+    });
+  };
   const observador = new MutationObserver(sincronizar);
   observador.observe(html, { attributes: true, attributeFilter: ['style'] });
   observador.observe(document.body, { attributes: true, attributeFilter: ['style'] });

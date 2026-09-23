@@ -19,6 +19,14 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
     nativo. Verificado en Chromium, escritorio y móvil.
   - Falta: los tiempos de entrada de cada sección, y ajustar ritmo y curvas a cargokite
     cuando esté la grabación. Three.js y Swiper no: el documento dice por qué.
+  - Revisión con ojos frescos hecha por un subagente aparte. Encontró cuatro defectos,
+    corregidos: los titulares ganaban un 15 % de alto, salían en blanco al imprimir, la rueda
+    que cierra el intro movía la página y el texto de cada titular iba duplicado (se copiaba
+    dos veces). Costo aceptado: en una recarga sin intro, el h1 no se pinta hasta que llega
+    el JavaScript. Pendiente de probar con VoiceOver o NVDA reales el `aria-label` de los
+    titulares.
+- **Defecto previo, sin arreglar:** con el móvil en horizontal (844×390) el menú mide 433 px
+  en 390 de pantalla, no tiene scroll propio y el último botón queda cortado.
 - **Bloque 2, lo que quedó hecho: animación de apertura con la brújula.** Verificada en Chromium.
   Se dibuja el bisel, la aguja busca el norte, se forma el arco y el logotipo queda armado.
   Dura 3,5 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en

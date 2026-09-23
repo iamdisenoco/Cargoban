@@ -3,9 +3,10 @@
  * Titular que entra palabra por palabra, como los de cargokite.com.
  *
  * Las palabras se parten aquí, al compilar: no hace falta SplitText ni esperar
- * a que cargue el JavaScript para tener el HTML listo. El texto va dos veces:
- * una entera y oculta para lectores de pantalla, y otra partida y marcada
- * aria-hidden para la vista. Así nadie oye el titular deletreado palabra a palabra.
+ * a que cargue el JavaScript para tener el HTML listo. El texto va una sola vez
+ * (copiar, buscar con Ctrl+F y los buscadores lo ven entero y sin duplicar).
+ * Para lectores de pantalla, la frase entera va en aria-label y las palabras
+ * sueltas se ocultan: así nadie oye el titular deletreado palabra a palabra.
  *
  * Una palabra entre asteriscos se resalta en verde: "Operamos la *carga* que…".
  * El estado final (texto visible) es el de partida. Lo oculta solo el script de
@@ -40,7 +41,6 @@ const partido = palabras
   .join(' ');
 ---
 
-<Etiqueta class:list={['titular', clase]} style={style} data-titular>
-  <span class="sr-only">{limpio}</span>
+<Etiqueta class:list={['titular', clase]} style={style} aria-label={limpio} data-titular>
   <span aria-hidden="true" set:html={partido} />
 </Etiqueta>
