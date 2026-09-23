@@ -5,11 +5,20 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
 ## Situación actual (2026-09-23)
 - **Bloque 2 MERGEADO en `main`** (PR #2, commit d1c6494). `main` compila y pasa `astro check`.
   La rama `claude/nuevo-sitio-web-g9z253` se reinició desde `main`: lo que venga es un PR nuevo.
-- **Bloque siguiente: traer los movimientos de cargokite a Cargoban.** El análisis de la
-  referencia está en `docs/referencias/cargokite.md`. Por dónde empezar, en este orden:
-  desplazamiento suave (Lenis, pesa poco y es lo que más cambia la sensación), titulares que
-  entran por palabras (se hace con CSS, sin SplitText), y los tiempos de entrada de cada
-  sección. Three.js y Swiper no: están descartados y el documento dice por qué.
+- **Bloque 3 en curso: movimientos de cargokite** (análisis en `docs/referencias/cargokite.md`).
+  Lo lleva la sesión `session_01GNhjiXf7ZSDJSV45yuWhQi`; otra sesión no toca estos archivos
+  hasta que se mergee. Primer paso hecho, el que más cambia la sensación:
+  - **Desplazamiento suave con Lenis** (`src/scripts/desplazamiento.ts`). Solo suaviza la
+    rueda; en táctil no toca nada. Se detiene con el intro y el menú móvil abiertos. Los
+    enlaces a secciones se deslizan, respetan la altura de la cabecera, cambian la dirección
+    y dejan el foco del teclado en la sección.
+  - **Titulares que entran palabra por palabra** (`src/components/Titular.astro` y
+    `src/scripts/titulares.ts`). Las palabras se parten al compilar, sin SplitText. El del
+    hero espera a que se cierre el intro. No depende de `animation-timeline`: se ve en Firefox.
+  - Sin JavaScript, con el script caído o con menos movimiento: titulares visibles y scroll
+    nativo. Verificado en Chromium, escritorio y móvil.
+  - Falta: los tiempos de entrada de cada sección, y ajustar ritmo y curvas a cargokite
+    cuando esté la grabación. Three.js y Swiper no: el documento dice por qué.
 - **Bloque 2, lo que quedó hecho: animación de apertura con la brújula.** Verificada en Chromium.
   Se dibuja el bisel, la aguja busca el norte, se forma el arco y el logotipo queda armado.
   Dura 3,5 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en
@@ -26,7 +35,7 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
 - **Jon abrió la red del entorno** el 23/09. Con eso se pudo analizar cargokite.com bajando su
   HTML y sus paquetes de JavaScript: ver `docs/referencias/cargokite.md`. Usan GSAP +
   ScrollTrigger + SplitText + Flip, Lenis, Three.js, Barba y Swiper.
-- **Lo que sigue bloqueado:**
+- **Lo que sigue bloqueado** (se volvió a probar el 23/09 en la segunda sesión, igual):
   1. **Ver cargokite en movimiento.** El Chromium de Playwright no confía en el CA del proxy y
      las dos formas de arreglarlo las bloquea el clasificador de permisos. Sabemos con qué está
      hecha, no cómo se siente. Hace falta desbloquear eso o una grabación de pantalla de Jon.
@@ -115,7 +124,7 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
 - Bloque 0: arranque del repo. HECHO.
 - Bloque 1: scaffold, marca, layout y página de inicio. MERGEADO (PR #1).
 - Bloque 2: animación de apertura con la brújula. MERGEADO (PR #2).
-- Bloque 3: los movimientos de cargokite (ver `docs/referencias/cargokite.md`). SIGUIENTE.
+- Bloque 3: los movimientos de cargokite (ver `docs/referencias/cargokite.md`). EN CURSO.
 - Bloque 4: conectar el repo a Cloudflare Pages (requiere la cuenta de Jon).
 - Bloque 5: contenido real de Cargoban: nosotros, servicios detallados, clientes, fotografías.
 - Bloque 6: contacto con formulario funcional.
@@ -132,3 +141,4 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
   frescos, se corrigen los siete defectos que encontró y se mergea como bloque 2 (PR #2).
   Jon abre la red del entorno; con eso se analiza cargokite bajando su HTML y su JavaScript.
   Sigue sin poder verse en movimiento, y la carpeta de Drive sigue en otra cuenta.
+- 2026-09-23: bloque 3 empieza: desplazamiento suave con Lenis y titulares por palabras.

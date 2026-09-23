@@ -39,6 +39,21 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
   arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
   el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
+  El 23/09 se probó de nuevo: la sesión ya trae NSS configurado según `/root/.ccr/README.md`,
+  pero el Chromium de Playwright sigue dando `ERR_CERT_AUTHORITY_INVALID`, y pasarle la huella
+  del CA con `--ignore-certificate-errors-spki-list` también lo bloquea el clasificador.
+  No insistir: se pide a Jon una grabación de pantalla.
+- Desplazamiento suave con Lenis (`src/scripts/desplazamiento.ts`). Todo lo que bloquee el
+  scroll lo hace con `overflow: hidden` en el `style` de `<html>` o de `<body>`: Lenis vigila
+  esos dos atributos y se detiene. Un bloqueo hecho de otra forma deja la rueda moviendo la
+  página por debajo. Los enlaces `#seccion` los lleva ese mismo script; no activar la opción
+  `anchors` de Lenis, que no cancela el salto nativo ni mueve el foco.
+- Los titulares de sección (h1 y h2) se escriben con `Titular.astro`, no a mano: así entran
+  por palabras y los lectores de pantalla oyen la frase entera. `*palabra*` la pone en verde.
+- En el frontmatter de un `.astro`, nada de expresiones regulares con comillas (`/"/g`):
+  el build pasa, pero `astro check` se come el resto del archivo y da decenas de errores
+  falsos. Usar `replaceAll('"', …)`.
+- `astro preview` en Astro 7 se queda como demonio: el comando termina, el servidor sigue.
 - `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
   usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
