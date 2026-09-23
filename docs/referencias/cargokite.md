@@ -57,6 +57,35 @@ No se vio en movimiento, pero sí se leyeron los valores que le pasan a GSAP en
 - **Logo de la cabecera:** el símbolo gira con la velocidad del scroll (`lenis.velocity`,
   topada a ±80, suavizada con `lerp` 0,08).
 
+## Visto en Chromium (23/09, con autorización de Jon)
+
+Jon autorizó que Chromium confíe en el certificado del proxy (`--ignore-certificate-errors-spki-list`
+con la huella del CA). Con eso se recorrió la portada entera a 1440 px y 390 px. Capturas y videos
+quedaron en el scratchpad de esa sesión (no en el repo). Lo que define cómo se siente, por peso:
+
+1. **Pantalla de carga:** naranja #eb2c00 a pantalla completa, contador grande 00→100 % con barra
+   fina, el titular baja con el contador y vuelve a su sitio; salida en columnas escalonadas.
+2. **Hero fijo (`sticky`) que queda debajo:** la sección siguiente sube encima como una cortina,
+   con parallax por capas (el título baja más lento que la ilustración).
+3. **Sección fija horizontal** con dibujo técnico de línea fina: un barco gigante cruza y tapa el
+   texto, aparece la flota pequeña, una frase enorme pasa de lado arrastrada por el scroll.
+4. **Tipografía grande en peso 500** (no negrita), 60 px en h2 y 83 px en h1 a 1440, interlineado
+   1,2; una o dos palabras clave en el color de acento. Textos que se «pintan» de gris a negro al bajar.
+5. **Fondo claro** (#fff y #eaeef0) con dos golpes oscuros: hero #013a54 y tecnología #111.
+   Un solo acento, naranja #ff471d.
+6. **Imágenes que se abren con recorte** y bloques de color que crecen desde un borde. Todo en
+   rectángulos de esquina recta.
+7. **Composición editorial:** etiqueta gris pequeña, título grande, columnas desfasadas, mucho aire.
+   Enlaces con punto final ("About us."), cintas de texto que corren (logos, pie).
+8. **Cabecera** que al bajar se reduce a símbolo + menú + botón, y cambia de claro a oscuro según
+   la sección de debajo. El símbolo gira con la velocidad del scroll (esto no se trae: el manual de
+   Cargoban prohíbe rotar la marca).
+
+Secciones de la portada, en orden: hero, intro de empresa, problema (fichas con foto en mampostería
+desfasada), solución (ilustración que crece + frase que se pinta), sección horizontal fija,
+tecnología (foto a todo el ancho, tarjeta de acento que crece, grilla oscura de datos), por qué
+nosotros (tarjetas escalonadas), socios (cintas de logos), preguntas frecuentes, pie con boletín.
+
 ## Lo que NO se pudo ver, y por qué
 
 No se pudo abrir la página en un navegador. El Chromium de este entorno no confía en el
