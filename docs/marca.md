@@ -32,9 +32,6 @@ efectos sobre el logo.
 - El símbolo solo puede usarse fragmentado o en transparencia únicamente cuando la marca
   completa está presente en la misma pieza. El sitio lo usa como textura de fondo y como favicon,
   con el logotipo completo presente en cabecera y pie.
-- La animación de apertura gira las dos cuñas de la aguja, y solo hasta que se asientan en su
-  posición correcta: el logotipo completo nunca se muestra rotado ni queda rotado. Como el manual
-  prohíbe rotar la marca, conviene que Cargoban confirme esta lectura antes de publicar.
 - Prohibido: cambiar tipografía, proporciones, orden de los elementos, colores, rotar, reflejar,
   añadir elementos.
 

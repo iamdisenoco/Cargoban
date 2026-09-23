@@ -15,6 +15,10 @@ const {
   descripcion = `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}. Operaciones portuarias, logística extraportuaria, almacenamiento y alquiler de equipos.`,
 } = Astro.props;
 
+// La apertura es solo de la portada. En una página interna, quien llega desde
+// un buscador quiere lo que buscaba, no tres segundos de animación de marca.
+const esPortada = Astro.url.pathname === '/';
+
 const tituloCompleto = titulo
   ? `${titulo} · ${empresa.nombre}`
   : `${empresa.nombre} · ${empresa.lema}`;
@@ -44,7 +48,7 @@ const tituloCompleto = titulo
   </head>
 
   <body class="min-h-dvh">
-    <IntroBrujula />
+    {esPortada && <IntroBrujula />}
 
     <a
       href="#contenido"

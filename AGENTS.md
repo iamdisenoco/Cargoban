@@ -33,6 +33,14 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Para verificar una animación en Chromium hay que congelarla (`animation-delay` negativo más
   `animation-play-state: paused`). Con capturas a reloj corriendo, cada captura arrastra el reloj
   y las marcas de tiempo salen desplazadas: se leen fotogramas que no son los que dicen ser.
+- El SVG del logo se trae con `import ... from '…svg?raw'`, no con `fs` y `process.cwd()`:
+  en el build de Astro el componente se empaqueta y las rutas relativas dejan de valer.
+- Para abrir un sitio externo con Chromium hace falta que confíe en el CA del proxy del
+  entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
+  arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
+  el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
+- `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
+  usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
 - El verde de marca es acento escaso. Si aparece en todas las secciones, pierde fuerza.
 - Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.

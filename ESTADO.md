@@ -8,13 +8,24 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
   Dura unos 3 s; el ritmo se ajusta con la variable `--r` y el tamaño con `--z`, las dos en
   `IntroBrujula.astro`. Se salta con clic, con cualquier tecla o con la rueda, se muestra una
   sola vez por sesión y no se muestra a quien pidió menos movimiento.
-- **Dos cosas bloqueadas por el entorno, no por falta de trabajo:**
-  1. `cargokite.com` (la referencia que mandó Jon) no se puede abrir desde aquí: la política de
-     red de este entorno responde 403 a todo lo que no sea npm, PyPI, GitHub y la API de Anthropic.
-     Se arregla abriendo la red del entorno en claude.ai/code, o mandando capturas o una grabación.
-  2. La carpeta de Drive de Jon tampoco: el enlace lleva `/u/3/`, o sea que vive en otra cuenta de
-     Google distinta de `jon@iaconlala.com`, que es la que tiene el conector. Se arregla
-     compartiendo la carpeta con `jon@iaconlala.com`, o adjuntando los archivos al chat.
+- **Revisión con ojos frescos hecha** por una sesión distinta a la que escribió el código.
+  Confirmó que nadie se queda trancado, que el sitio se ve entero sin JavaScript y que el
+  logotipo no se muestra rotado en ningún fotograma. Encontró y se corrigieron: el intro se
+  repetía en cada carga con el almacenamiento bloqueado (Safari en privado, Lockdown de iOS);
+  la aserción del SVG contaba trazos pero no los identificaba, así que un reexport con las
+  capas en otro orden habría hecho girar las letras; el logo formado duraba 0,2 s y ahora
+  dura ~1 s; el intro salía en todas las páginas y ahora solo en la portada; el botón
+  "Saltar" no se alcanzaba con el teclado; y el resto del documento no quedaba inerte.
+- **Jon abrió la red del entorno** el 23/09. Con eso se pudo analizar cargokite.com bajando su
+  HTML y sus paquetes de JavaScript: ver `docs/referencias/cargokite.md`. Usan GSAP +
+  ScrollTrigger + SplitText + Flip, Lenis, Three.js, Barba y Swiper.
+- **Lo que sigue bloqueado:**
+  1. **Ver cargokite en movimiento.** El Chromium de Playwright no confía en el CA del proxy y
+     las dos formas de arreglarlo las bloquea el clasificador de permisos. Sabemos con qué está
+     hecha, no cómo se siente. Hace falta desbloquear eso o una grabación de pantalla de Jon.
+  2. **La carpeta de Drive.** El enlace lleva `/u/3/`: vive en otra cuenta de Google distinta de
+     `jon@iaconlala.com`, que es la del conector. Se arregla compartiéndola con esa dirección,
+     o adjuntando los archivos al chat.
 
 ## Situación anterior (2026-09-21)
 - **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.
@@ -79,6 +90,14 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
 - Tipografía web: Jost Variable (títulos) y Archivo Variable (texto), autoalojadas.
 
 ## Decisiones abiertas (esperan a Jon o a Cargoban)
+0. **¿Autoriza Cargoban la animación de apertura?** El manual prohíbe rotar la marca, permite
+   usar el símbolo fragmentado solo si la marca completa está en la misma pieza, y prohíbe
+   añadirle elementos. La apertura gira las dos cuñas de la aguja (dos vueltas y media, y
+   terminan a 0°), muestra el símbolo solo durante los primeros ~1,75 s, y le rodea con un
+   bisel de 16 rumbos que no es de la marca. Es una animación, no una aplicación estática,
+   y el logotipo completo nunca se muestra rotado — pero eso lo decide el cliente, no el repo.
+   `docs/marca.md` se dejó como estaba a propósito: no se documenta como permitido algo que
+   Cargoban todavía no ha aprobado.
 1. **Logo horizontal en el header.** El manual exige aprobación de la compañía para usarlo. Por defecto se mantiene.
 2. **¿Los clientes inician sesión?** Jon dijo "que los clientes ingresen". Se asume que significa visitar el sitio,
    sin login. Si hay portal de clientes, el stack cambia a Next.js.

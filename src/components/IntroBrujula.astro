@@ -15,16 +15,34 @@
  * de la aguja, y solo hasta asentarse en su posición correcta; el logotipo completo
  * nunca se muestra rotado. Conviene que Cargoban lo confirme.
  */
-import fs from 'node:fs';
-import path from 'node:path';
+/*
+  El SVG se importa como texto: lo resuelve el empaquetador en tiempo de
+  compilación, así que no depende del directorio desde el que se lance el build
+  ni queda una lectura de disco en el paquete. Si el archivo no existe, el build
+  falla al importarlo, que es lo que queremos.
+*/
+import logoHorizontal from '../../public/marca/logo-horizontal-blanco.svg?raw';
 
-const archivo = path.join(process.cwd(), 'public/marca/logo-horizontal-blanco.svg');
-const trazos = fs.readFileSync(archivo, 'utf8').match(/<path[\s\S]*?\/>/g) ?? [];
+const trazos = logoHorizontal.match(/<path[\s\S]*?\/>/g) ?? [];
 
-if (trazos.length !== 12) {
+/*
+  No basta con contar los trazos: si el diseñador reexporta el SVG con las capas
+  en otro orden, siguen siendo 12 y se animarían los elementos equivocados (las
+  letras girando 880 grados). Se comprueba el color de cada uno, que es lo que
+  de verdad identifica qué es qué: 10 blancos, después el turquesa y el verde.
+*/
+const color = (trazo: string) => (trazo.match(/fill="(#[0-9a-fA-F]{6})"/) ?? [])[1]?.toLowerCase();
+const formaEsperada =
+  trazos.length === 12 &&
+  trazos.slice(0, 10).every((t) => color(t) === '#ffffff') &&
+  color(trazos[10]) === '#0599ba' &&
+  color(trazos[11]) === '#a8cf45';
+
+if (!formaEsperada) {
   throw new Error(
-    `IntroBrujula: se esperaban 12 trazos en logo-horizontal-blanco.svg y hay ${trazos.length}. ` +
-      'Si el logo cambió, hay que volver a medir qué trazos son la palabra, el arco y la aguja.',
+    'IntroBrujula: logo-horizontal-blanco.svg ya no tiene la forma esperada ' +
+      '(10 trazos blancos, luego el turquesa y el verde). Hay que volver a medir ' +
+      'qué trazos son la palabra, el arco y la aguja antes de seguir.',
   );
 }
 
@@ -58,7 +76,14 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
 });
 ---
 
-<div id="intro" class="intro" hidden>
+<div
+  id="intro"
+  class="intro"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Animación de apertura de Cargoban"
+>
   <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
 
   <svg
@@ -91,6 +116,11 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
       ))}
     </g>
 
+    {/*
+      Ojo: los <path> inyectados con set:html quedan fuera del ámbito de estilos
+      de Astro. Una regla como `.intro__palabra path { … }` en el <style> de abajo
+      no les llegaría; haría falta `is:global`.
+    */}
     <g class="intro__palabra" set:html={palabra} />
     <g class="intro__arco" set:html={arco} />
     <g class="intro__aguja" set:html={aguja} />
@@ -111,7 +141,7 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     place-items: center;
     overflow: hidden;
     background: var(--color-navy-950);
-    animation: intro-salir calc(0.5s * var(--r)) ease-in calc(2.65s * var(--r)) both;
+    animation: intro-salir calc(0.5s * var(--r)) ease-in calc(3.0s * var(--r)) both;
   }
 
   .intro[hidden] {
@@ -167,7 +197,7 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   .intro__palabra {
     transform-box: fill-box;
     transform-origin: right center;
-    animation: intro-palabra calc(0.5s * var(--r)) var(--ease-suave) calc(1.95s * var(--r)) both;
+    animation: intro-palabra calc(0.5s * var(--r)) var(--ease-suave) calc(1.75s * var(--r)) both;
   }
 
   /* En pantalla de teléfono la brújula necesita ampliarse más para tener presencia. */
@@ -249,19 +279,40 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     var intro = document.getElementById('intro');
     if (!intro) return;
 
-    var menosMovimiento =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Una vez por sesión: quien vuelve a la página en la misma visita no lo repite.
-    var yaVisto = false;
+    /*
+      Solo en una llegada de verdad. Una recarga o el botón atrás no son una
+      primera visita, y este corte funciona aunque el almacenamiento esté
+      bloqueado (Safari en privado, modo Lockdown de iOS).
+    */
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    if (nav && nav.type !== 'navigate') return;
+
+    /*
+      Marca de "ya visto" con dos vías, porque sessionStorage puede lanzar.
+      window.name sobrevive a la navegación dentro de la misma pestaña y no es
+      almacenamiento de sitio, así que no lo bloquea nadie.
+    */
+    var MARCA = 'cb-intro';
+    var visto = window.name.indexOf(MARCA) > -1;
     try {
-      yaVisto = sessionStorage.getItem('cargoban:intro') === '1';
+      visto = visto || sessionStorage.getItem('cargoban:intro') === '1';
     } catch (e) {
-      /* navegación privada o cookies bloqueadas: se muestra igual */
+      /* almacenamiento bloqueado: queda la marca de window.name */
+    }
+    if (visto) return;
+
+    // Pestaña abierta en segundo plano: la animación se vería sola. Se espera.
+    if (document.visibilityState === 'hidden') {
+      document.addEventListener('visibilitychange', function reintentar() {
+        document.removeEventListener('visibilitychange', reintentar);
+        if (document.visibilityState === 'visible') location.reload();
+      });
+      return;
     }
 
-    if (menosMovimiento || yaVisto) return;
-
+    window.name = window.name + MARCA;
     try {
       sessionStorage.setItem('cargoban:intro', '1');
     } catch (e) {}
@@ -269,20 +320,46 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     intro.hidden = false;
     document.documentElement.style.overflow = 'hidden';
 
+    /*
+      Mientras el intro tapa la pantalla, el resto del documento queda inerte:
+      un lector de pantalla no debería estar leyendo el hero por debajo.
+      Se aplica cuando el documento está armado, porque este script corre antes.
+    */
     var cerrado = false;
+    var inertes = [];
+    function aislarFondo() {
+      if (cerrado) return;
+      for (var i = 0; i < document.body.children.length; i++) {
+        var el = document.body.children[i];
+        if (el !== intro && !el.inert) {
+          el.inert = true;
+          inertes.push(el);
+        }
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aislarFondo);
+    } else {
+      aislarFondo();
+    }
+
     function cerrar() {
       if (cerrado) return;
       cerrado = true;
       intro.hidden = true;
       document.documentElement.style.overflow = '';
+      for (var i = 0; i < inertes.length; i++) inertes[i].inert = false;
       document.removeEventListener('keydown', porTecla);
+      document.removeEventListener('DOMContentLoaded', aislarFondo);
     }
 
-    function porTecla() {
-      cerrar();
+    // Solo Escape cierra con el teclado: si cerrara cualquier tecla, el primer
+    // Tab quitaría el intro y el botón "Saltar" nunca llegaría a recibir foco.
+    function porTecla(e) {
+      if (e.key === 'Escape') cerrar();
     }
 
-    document.getElementById('intro-saltar')?.addEventListener('click', cerrar);
+    document.getElementById('intro-saltar').addEventListener('click', cerrar);
     intro.addEventListener('click', cerrar);
     document.addEventListener('keydown', porTecla);
     window.addEventListener('wheel', cerrar, { once: true, passive: true });
@@ -294,6 +371,6 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     });
 
     // Red de seguridad: si alguna animación no dispara, el intro se quita igual.
-    setTimeout(cerrar, 4200);
+    setTimeout(cerrar, 4800);
   })();
 </script>
