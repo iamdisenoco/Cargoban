@@ -36,9 +36,22 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - El SVG del logo se trae con `import ... from '…svg?raw'`, no con `fs` y `process.cwd()`:
   en el build de Astro el componente se empaqueta y las rutas relativas dejan de valer.
 - Para abrir un sitio externo con Chromium hace falta que confíe en el CA del proxy del
-  entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
-  arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
-  el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
+  entorno; el Chromium de Playwright no lee ese almacén (`ERR_CERT_AUTHORITY_INVALID`).
+  Jon lo autorizó expresamente el 23/09 y funciona así, sin apagar la verificación:
+  `SPKI=$(openssl x509 -in /root/.ccr/agent-proxy-ca.crt -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)`
+  y `chromium.launch({ args: ['--ignore-certificate-errors-spki-list=' + SPKI], proxy: { server: process.env.HTTPS_PROXY } })`.
+  Sin esa autorización en la conversación, el clasificador de permisos lo bloquea: se pide a Jon.
+- Desplazamiento suave con Lenis (`src/scripts/desplazamiento.ts`). Todo lo que bloquee el
+  scroll lo hace con `overflow: hidden` en el `style` de `<html>` o de `<body>`: Lenis vigila
+  esos dos atributos y se detiene. Un bloqueo hecho de otra forma deja la rueda moviendo la
+  página por debajo. Los enlaces `#seccion` los lleva ese mismo script; no activar la opción
+  `anchors` de Lenis, que no cancela el salto nativo ni mueve el foco.
+- Los titulares de sección (h1 y h2) se escriben con `Titular.astro`, no a mano: así entran
+  por palabras y los lectores de pantalla oyen la frase entera. `*palabra*` la pone en verde.
+- En el frontmatter de un `.astro`, nada de expresiones regulares con comillas (`/"/g`):
+  el build pasa, pero `astro check` se come el resto del archivo y da decenas de errores
+  falsos. Usar `replaceAll('"', …)`.
+- `astro preview` en Astro 7 se queda como demonio: el comando termina, el servidor sigue.
 - `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
   usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
@@ -53,4 +66,7 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Antes de dar un bloque por terminado: `npm run build`, `npm run check` y capturas con Chromium en escritorio y móvil.
 
 ## Reglas aprendidas
-- (vacío por ahora)
+- Una referencia visual se estudia **viéndola en el navegador** antes de construir, no solo
+  leyendo su código. Con el código se sacaron los tiempos de cargokite, pero no su forma
+  (fondo claro, tipografía de peso medio, hero fijo, sección horizontal), y Jon dijo
+  «no se me parece». Primero se mira y se captura; después se construye.

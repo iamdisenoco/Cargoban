@@ -1,0 +1,46 @@
+---
+/**
+ * Titular que entra palabra por palabra, como los de cargokite.com.
+ *
+ * Las palabras se parten aquí, al compilar: no hace falta SplitText ni esperar
+ * a que cargue el JavaScript para tener el HTML listo. El texto va una sola vez
+ * (copiar, buscar con Ctrl+F y los buscadores lo ven entero y sin duplicar).
+ * Para lectores de pantalla, la frase entera va en aria-label y las palabras
+ * sueltas se ocultan: así nadie oye el titular deletreado palabra a palabra.
+ *
+ * Una palabra entre asteriscos se resalta en verde: "Operamos la *carga* que…".
+ * El estado final (texto visible) es el de partida. Lo oculta solo el script de
+ * `src/scripts/titulares.ts`, y solo si puede encargarse de mostrarlo después.
+ */
+interface Props {
+  texto: string;
+  as?: 'h1' | 'h2';
+  class?: string;
+  style?: string;
+}
+
+const { texto, as: Etiqueta = 'h2', class: clase, style } = Astro.props;
+
+const escapar = (s: string) =>
+  s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+
+const esResaltada = (p: string) => p.length > 2 && p.startsWith('*') && p.endsWith('*');
+const sinMarca = (p: string) => (esResaltada(p) ? p.slice(1, -1) : p);
+
+const palabras = texto.trim().split(/\s+/);
+const limpio = palabras.map(sinMarca).join(' ');
+
+// Se arma como texto para controlar los espacios: entre palabra y palabra va un
+// espacio real, que es lo que permite que el titular corte línea donde toca.
+const partido = palabras
+  .map((p, i) => {
+    const contenido = escapar(sinMarca(p));
+    const clases = esResaltada(p) ? 'palabra-in text-green' : 'palabra-in';
+    return `<span class="palabra"><span class="${clases}" style="--i:${i}">${contenido}</span></span>`;
+  })
+  .join(' ');
+---
+
+<Etiqueta class:list={['titular', clase]} style={style} aria-label={limpio} data-titular>
+  <span aria-hidden="true" set:html={partido} />
+</Etiqueta>

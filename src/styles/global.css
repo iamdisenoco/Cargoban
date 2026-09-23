@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource-variable/jost";
 @import "@fontsource-variable/archivo";
+@import "lenis/dist/lenis.css";
 
 /*
   Tokens de marca Cargoban.
@@ -42,8 +43,21 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* Donde Lenis no corre (sin JavaScript), los saltos a una sección se deslizan
+     igual. Nunca para quien pidió menos movimiento. */
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.lenis) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Destino de un ancla o del "Saltar al contenido": recibe el foco para que el
+     teclado siga desde ahí, pero no se enmarca la sección entera. */
+  [tabindex="-1"]:focus {
+    outline: none;
   }
 
   body {
@@ -163,6 +177,46 @@
       opacity: 1;
       transform: none;
       filter: none;
+    }
+  }
+
+  /*
+    Titulares palabra por palabra (componente Titular.astro).
+    Cada palabra es una ventana con overflow oculto y la palabra sube desde abajo.
+    El relleno con margen negativo agranda la ventana para no cortar tildes arriba
+    ni la cola de la g y la p abajo. `vertical-align: top` es lo que evita que
+    mueva el texto: un inline-block con overflow oculto apoya la línea base en su
+    borde inferior, y sin esto cada línea del titular crece un 15 %.
+    Por defecto no hay nada oculto: lo oculta `titulares-listos`, que solo se pone
+    cuando hay un script que lo va a mostrar (ver Base.astro).
+  */
+  .titular .palabra {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-block: 0.12em 0.16em;
+    margin-block: -0.12em -0.16em;
+  }
+
+  .titular .palabra-in {
+    display: inline-block;
+  }
+
+  .titulares-listos .titular .palabra-in {
+    transform: translateY(130%);
+    transition: transform 1.1s var(--ease-suave);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .titulares-listos .titular.titular-visible .palabra-in {
+    transform: none;
+  }
+
+  /* Al imprimir no hay scroll que los haga entrar: todos visibles. */
+  @media print {
+    .titulares-listos .titular .palabra-in {
+      transform: none;
+      transition: none;
     }
   }
 

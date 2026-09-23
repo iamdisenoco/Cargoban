@@ -6,6 +6,8 @@
  * junto a la fotografía de una): el arco es la caja y las dos cuñas verde y turquesa
  * son las dos mitades de la aguja. La animación parte de eso: se dibuja el bisel,
  * la aguja busca el norte, se forma el arco y el logotipo completo queda armado.
+ * Todo pasa sobre un telón de cinco columnas que tapa la página; al final las
+ * columnas caen una tras otra y la destapan, como la pantalla de carga de cargokite.com.
  *
  * Los trazos NO se copian a mano: se leen del SVG oficial del logo horizontal, para
  * que el logo que queda al final del intro sea exactamente el logo aprobado y no una
@@ -84,6 +86,10 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   aria-modal="true"
   aria-label="Animación de apertura de Cargoban"
 >
+  <div class="intro__telon" aria-hidden="true">
+    {Array.from({ length: 5 }, (_, i) => <span style={`--c:${i}`} />)}
+  </div>
+
   <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
 
   <svg
@@ -140,8 +146,28 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     display: grid;
     place-items: center;
     overflow: hidden;
+  }
+
+  /*
+    El telón: cinco columnas que tapan la página mientras se arma el logo. Al
+    terminar, el logo se apaga y las columnas caen hacia abajo una tras otra,
+    0,1 s entre cada una, con la misma curva de aceleración que cargokite.com.
+    El script retira el intro cuando termina de caer la última.
+  */
+  .intro__telon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  .intro__telon span {
+    flex: 1;
+    /* 1 px de solape para que no se vea una rendija entre columnas. */
+    margin-right: -1px;
     background: var(--color-navy-950);
-    animation: intro-salir calc(0.5s * var(--r)) ease-in calc(3.0s * var(--r)) both;
+    transform-origin: bottom;
+    animation: intro-caer calc(1s * var(--r)) cubic-bezier(0.7, 0, 0.84, 0)
+      calc((3.25s + var(--c) * 0.1s) * var(--r)) both;
   }
 
   .intro[hidden] {
@@ -149,6 +175,9 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   }
 
   .intro__svg {
+    /* Por encima del telón, que es absoluto y taparía a un elemento sin posición. */
+    position: relative;
+    z-index: 1;
     /* --z es cuánto se amplía la brújula antes de recomponerse como logotipo. */
     --z: 2;
     width: clamp(15rem, 84vw, 44rem);
@@ -160,7 +189,9 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
       El desplazamiento lo lleva al centro horizontal del propio SVG.
     */
     transform-origin: 82.463% 50.157%;
-    animation: intro-armar calc(0.6s * var(--r)) var(--ease-suave) calc(1.65s * var(--r)) both;
+    animation:
+      intro-armar calc(0.6s * var(--r)) var(--ease-suave) calc(1.65s * var(--r)) both,
+      intro-desvanecer calc(0.35s * var(--r)) ease-in calc(3s * var(--r)) both;
   }
 
   .intro__bisel {
@@ -221,6 +252,7 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     background: transparent;
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
+    animation: intro-desvanecer calc(0.35s * var(--r)) ease-in calc(3s * var(--r)) both;
   }
 
   .intro__saltar:hover {
@@ -264,8 +296,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     to { opacity: 0; }
   }
 
-  @keyframes intro-salir {
-    to { opacity: 0; visibility: hidden; }
+  @keyframes intro-caer {
+    to { transform: scaleY(0); }
   }
 </style>
 
@@ -319,6 +351,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
 
     intro.hidden = false;
     document.documentElement.style.overflow = 'hidden';
+    // Aviso para quien espera al intro (los titulares del hero, ver titulares.ts).
+    document.documentElement.dataset.intro = 'abierto';
 
     /*
       Mientras el intro tapa la pantalla, el resto del documento queda inerte:
@@ -351,6 +385,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
       for (var i = 0; i < inertes.length; i++) inertes[i].inert = false;
       document.removeEventListener('keydown', porTecla);
       document.removeEventListener('DOMContentLoaded', aislarFondo);
+      delete document.documentElement.dataset.intro;
+      document.dispatchEvent(new Event('intro:cerrado'));
     }
 
     // Solo Escape cierra con el teclado: si cerrara cualquier tecla, el primer
@@ -365,12 +401,17 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     window.addEventListener('wheel', cerrar, { once: true, passive: true });
     window.addEventListener('touchmove', cerrar, { once: true, passive: true });
 
-    // Al terminar el fundido de salida, el intro se retira del documento.
-    intro.addEventListener('animationend', function (e) {
-      if (e.target === intro) cerrar();
+    /*
+      Cuando empieza a caer el telón se avisa, para que el titular del hero entre
+      mientras se destapa. Cuando cae la última columna, el intro se retira.
+    */
+    var columnas = intro.querySelectorAll('.intro__telon span');
+    columnas[0].addEventListener('animationstart', function () {
+      if (!cerrado) document.dispatchEvent(new Event('intro:destapando'));
     });
+    columnas[columnas.length - 1].addEventListener('animationend', cerrar);
 
     // Red de seguridad: si alguna animación no dispara, el intro se quita igual.
-    setTimeout(cerrar, 4800);
+    setTimeout(cerrar, 6000);
   })();
 </script>
