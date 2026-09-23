@@ -40,6 +40,23 @@ Three.js los crea al vuelo. Un solo `<video>` y un `.mp4`.
 Cintas de texto en movimiento (`marquee`) en el cuerpo y en el pie. Eso ya lo tenemos
 en `Cinta.astro`.
 
+## Tiempos y curvas, leídos de su código (23/09)
+
+No se vio en movimiento, pero sí se leyeron los valores que le pasan a GSAP en
+`index.a05c254c.js`. Son datos, no impresiones:
+
+- **Pantalla de carga** (`.trans`): cinco columnas (`.trans__item`) tapan la página. Un
+  contador sube de 00 a 100 % con una barra, en tres fases de 2,2 s, 2,45 s y 1,25 s, y el
+  titular del hero viaja con él hasta su sitio. Al final las columnas caen: `scaleY: 0`,
+  origen abajo, 1 s, `expo.in`, 0,1 s entre una y otra. Sale en cada carga, no una vez.
+  El desplazamiento suave está detenido (`lenis.stop()`) mientras dura.
+- **Titulares por palabras:** `yPercent: 60` más opacidad de 0 a 1, **0,4 s por palabra y
+  0,02 s entre una y otra** (0,6 s y 0,03 s en los párrafos). Mucho más rápido que lo que
+  pusimos al principio (1,1 s y 0,07 s): pendiente de ajustarlo con la grabación.
+- **Imágenes:** se abren con `clipPath` de `inset(10%)` a `inset(0%)`, 1 s, `expo.out`.
+- **Logo de la cabecera:** el símbolo gira con la velocidad del scroll (`lenis.velocity`,
+  topada a ±80, suavizada con `lerp` 0,08).
+
 ## Lo que NO se pudo ver, y por qué
 
 No se pudo abrir la página en un navegador. El Chromium de este entorno no confía en el

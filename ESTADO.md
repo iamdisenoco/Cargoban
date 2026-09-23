@@ -19,6 +19,11 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
     nativo. Verificado en Chromium, escritorio y móvil.
   - Falta: los tiempos de entrada de cada sección, y ajustar ritmo y curvas a cargokite
     cuando esté la grabación. Three.js y Swiper no: el documento dice por qué.
+  - **La brújula ahora es la pantalla de carga**, como pidió Jon el 23/09 ("antes de que
+    aparezca la página, así como el referente"). Se arma sobre un telón de cinco columnas
+    que al final caen una tras otra y destapan la página, con los valores de cargokite
+    (ver `docs/referencias/cargokite.md`). El titular del hero entra mientras cae el telón.
+    Dura ~4,8 s en total. Sigue saliendo una vez por sesión y solo en la portada.
   - Revisión con ojos frescos hecha por un subagente aparte. Encontró cuatro defectos,
     corregidos: los titulares ganaban un 15 % de alto, salían en blanco al imprimir, la rueda
     que cierra el intro movía la página y el texto de cada titular iba duplicado (se copiaba

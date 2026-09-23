@@ -30,9 +30,17 @@ if (html.classList.contains('titulares-listos')) {
     document.querySelectorAll('[data-titular]').forEach((t) => observador.observe(t));
 
   // Mientras el intro de la brújula tapa la pantalla, el titular del hero
-  // espera: si entrara por debajo, nadie lo vería entrar.
+  // espera: si entrara por debajo, nadie lo vería entrar. Arranca cuando el
+  // telón empieza a caer, o al cerrarse si alguien salta la animación.
   if (html.dataset.intro === 'abierto') {
-    document.addEventListener('intro:cerrado', empezar, { once: true });
+    let empezado = false;
+    const unaVez = () => {
+      if (empezado) return;
+      empezado = true;
+      empezar();
+    };
+    document.addEventListener('intro:destapando', unaVez, { once: true });
+    document.addEventListener('intro:cerrado', unaVez, { once: true });
   } else {
     empezar();
   }
