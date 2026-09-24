@@ -3,35 +3,56 @@ import Titular from './Titular.astro';
 import { empresa, tiposDeCarga } from '../data/sitio';
 
 /**
- * Fotografía de fondo del hero.
- * Cuando Cargoban entregue su banco de imágenes, se pone la ruta aquí
- * (por ejemplo '/fotos/muelle.jpg') y el fondo de marca pasa a segundo plano.
+ * Fondo del hero: un fragmento corto de video en bucle, sin sonido.
+ * PRUEBA: la toma es de un video de Puerto Antioquia, no de Cargoban. No sale a
+ * producción sin su permiso o sin tomas propias (ver ESTADO.md). La marca de agua
+ * queda como viene: no se recorta ni se tapa.
+ * El fragmento va y vuelve (ida y reversa) para que el bucle no dé un salto.
+ * Con `null` queda el fondo de marca.
  */
-const foto: string | null = null;
+const video: { mp4: string; webm: string; poster: string } | null = {
+  mp4: '/video/muelle.mp4',
+  webm: '/video/muelle.webm',
+  poster: '/video/muelle.jpg',
+};
 ---
 
 <section id="inicio" class="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-  <!-- Capa de fondo -->
+  <!-- Capa de fondo: video o, sin video, la textura derivada del símbolo (permitida por el manual de marca) -->
   <div class="absolute inset-0 -z-10 fondo-marca">
-    {foto && (
-      <img
-        src={foto}
-        alt=""
-        class="parallax-lento size-full object-cover"
-        fetchpriority="high"
-        decoding="async"
-      />
+    {video ? (
+      <>
+        {/* Decorativo: sin controles ni sonido. Quien pidió menos movimiento ve el primer cuadro. */}
+        <video
+          id="video-hero"
+          class="size-full object-cover object-right-top"
+          poster={video.poster}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          {/* H.264 primero (Safari y Chrome); WebM para los navegadores sin H.264. */}
+          <source src={video.mp4} type="video/mp4" />
+          <source src={video.webm} type="video/webm" />
+        </video>
+        {/* Velo azul de marca sobre el video: el titular se lee siempre. */}
+        <div class="absolute inset-0 bg-navy-950/60" aria-hidden="true"></div>
+      </>
+    ) : (
+      <div
+        class="absolute inset-0 opacity-[0.07] mix-blend-overlay"
+        style="background-image:url('/marca/isotipo-blanco.svg');background-size:clamp(90px,11vw,180px);background-repeat:repeat"
+        aria-hidden="true"
+      >
+      </div>
     )}
-    <!-- Textura derivada del símbolo, permitida por el manual de marca -->
-    <div
-      class="absolute inset-0 opacity-[0.07] mix-blend-overlay"
-      style="background-image:url('/marca/isotipo-blanco.svg');background-size:clamp(90px,11vw,180px);background-repeat:repeat"
-      aria-hidden="true"
-    >
-    </div>
     <div
       class="absolute inset-0"
-      style="background:linear-gradient(to top,var(--color-navy-950) 3%,transparent 45%)"
+      style="background:linear-gradient(to top,var(--color-navy-950) 8%,transparent 60%)"
       aria-hidden="true"
     >
     </div>
@@ -93,3 +114,16 @@ const foto: string | null = null;
   -->
   <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
 </section>
+
+<script>
+  // Quien pidió menos movimiento ve el primer cuadro quieto, no el bucle.
+  const video = document.getElementById('video-hero') as HTMLVideoElement | null;
+  const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const ajustar = () => {
+    if (!video) return;
+    if (menosMovimiento.matches) video.pause();
+    else video.play().catch(() => {});
+  };
+  ajustar();
+  menosMovimiento.addEventListener('change', ajustar);
+</script>
