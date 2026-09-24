@@ -16,7 +16,8 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 
 ## Stack
 - Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Hosting previsto: Cloudflare Pages.
-- Tipografías: Jost Variable (titulares) y Archivo Variable (texto), autoalojadas con Fontsource.
+- Tipografía: Inter Variable con eje de tamaño óptico (`@fontsource-variable/inter/opsz.css`), una sola
+  familia para titulares y texto, autoalojada. Jon la pidió «similar a la que usa Apple» (24/09).
 - `npm run dev` para desarrollar, `npm run build` compila a `dist/`, `npm run check` hace el chequeo de tipos.
 - Contenido editable en `src/data/sitio.ts`. Lo marcado PROVISIONAL espera confirmación de Cargoban.
 - Marca: tokens en `src/styles/global.css`, logos en `public/marca/`, reglas en `docs/marca.md`.
@@ -70,3 +71,6 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   leyendo su código. Con el código se sacaron los tiempos de cargokite, pero no su forma
   (fondo claro, tipografía de peso medio, hero fijo, sección horizontal), y Jon dijo
   «no se me parece». Primero se mira y se captura; después se construye.
+- Nada de etiquetas pequeñas en mayúsculas con una raya encima del titular («— NOSOTROS»).
+  Jon las rechazó el 24/09: el titular abre la sección solo.
+- Jost y Archivo quedaron descartadas por Jon (24/09). Tipografía de estilo Apple: Inter.

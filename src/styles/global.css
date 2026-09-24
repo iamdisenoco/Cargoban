@@ -1,6 +1,5 @@
 @import "tailwindcss";
-@import "@fontsource-variable/jost";
-@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/inter/opsz.css";
 @import "lenis/dist/lenis.css";
 
 /*
@@ -20,11 +19,12 @@
   --color-ink-faint: #b3b3b3;
   --color-paper: #f4f6f8;
 
-  /* Jost es una geométrica derivada de Futura, la familia a la que pertenece
-     Century Gothic (la fuente del logo). Variable: un archivo cubre todos los pesos.
-     Archivo es la grotesca de texto: legible en párrafos, listas y datos. */
-  --font-display: "Jost Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Una sola familia, como Apple con San Francisco. Inter es la pariente libre
+     más cercana de SF Pro, y con el eje de tamaño óptico (opsz) hace lo mismo que
+     SF Pro Display y SF Pro Text: dibujo más apretado en titulares y más abierto
+     en texto chico, sin cargar dos fuentes. En Apple se usa la propia SF Pro. */
+  --font-display: "Inter Variable", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
 
   /* Escala tipográfica fluida: se adapta al ancho sin saltos por breakpoint. */
   --text-hero: clamp(2.75rem, 1.2rem + 7vw, 8rem);
@@ -61,15 +61,21 @@
   }
 
   body {
-    @apply bg-navy-950 text-white font-sans antialiased;
+    @apply bg-white text-ink font-sans antialiased;
     overflow-x: clip;
   }
 
   h1, h2, h3, h4 {
     @apply font-display font-semibold;
     text-wrap: balance;
-    letter-spacing: -0.02em;
-    line-height: 0.98;
+    /* Como en Apple: cuanto más grande el titular, más apretado. Los chicos
+       (h3, h4) casi no se aprietan o las letras se tocan. */
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+  }
+
+  h1, h2 {
+    letter-spacing: -0.035em;
   }
 
   p { text-wrap: pretty; }
