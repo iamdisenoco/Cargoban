@@ -3,44 +3,36 @@ import Titular from './Titular.astro';
 import { empresa, tiposDeCarga } from '../data/sitio';
 
 /**
- * Fondo del hero: un fragmento corto de video en bucle, sin sonido.
- * PRUEBA: la toma es de un video de Puerto Antioquia, no de Cargoban. No sale a
- * producción sin su permiso o sin tomas propias (ver ESTADO.md). La marca de agua
- * queda como viene: no se recorta ni se tapa.
- * El fragmento va y vuelve (ida y reversa) para que el bucle no dé un salto.
- * Con `null` queda el fondo de marca.
+ * Fondo del hero: fotos propias de Cargoban en Santa Marta que se funden una en otra
+ * con un acercamiento lento. Sin JavaScript y sin animación se ve la primera, quieta.
+ * Nada de material de terceros aquí: ni videos ni fotos de Puerto Antioquia (AGENTS.md).
+ * Con una lista vacía queda el fondo de marca.
  */
-const video: { mp4: string; webm: string; poster: string } | null = {
-  mp4: '/video/muelle.mp4',
-  webm: '/video/muelle.webm',
-  poster: '/video/muelle.jpg',
-};
+// `foco`: qué parte de la foto se conserva cuando la pantalla la recorta (en móvil, los costados).
+const fotos: { src: string; foco: string }[] = [
+  { src: '/fotos/portada-izaje.webp', foco: '50% 50%' },
+  { src: '/fotos/portada-equipo.webp', foco: '55% 50%' },
+  { src: '/fotos/portada-operario.webp', foco: '30% 50%' },
+];
 ---
 
 <section id="inicio" class="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-  <!-- Capa de fondo: video o, sin video, la textura derivada del símbolo (permitida por el manual de marca) -->
+  <!-- Capa de fondo: fotos propias o, sin fotos, la textura derivada del símbolo (permitida por el manual de marca) -->
   <div class="absolute inset-0 -z-10 fondo-marca">
-    {video ? (
+    {fotos.length > 0 ? (
       <>
-        {/* Decorativo: sin controles ni sonido. Quien pidió menos movimiento ve el primer cuadro. */}
-        <video
-          id="video-hero"
-          class="size-full object-cover object-right-top"
-          poster={video.poster}
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-          aria-hidden="true"
-          tabindex="-1"
-        >
-          {/* H.264 primero (Safari y Chrome); WebM para los navegadores sin H.264. */}
-          <source src={video.mp4} type="video/mp4" />
-          <source src={video.webm} type="video/webm" />
-        </video>
-        {/* Velo azul de marca sobre el video: el titular se lee siempre. */}
-        <div class="absolute inset-0 bg-navy-950/60" aria-hidden="true"></div>
+        {fotos.map(({ src, foco }, i) => (
+          <img
+            src={src}
+            alt=""
+            class="portada-foto absolute inset-0 size-full object-cover"
+            style={`--n:${fotos.length}; --i:${i}; object-position:${foco}`}
+            fetchpriority={i === 0 ? 'high' : 'low'}
+            decoding="async"
+          />
+        ))}
+        {/* Velo azul de marca sobre las fotos: el titular se lee siempre. */}
+        <div class="absolute inset-0 bg-navy-950/65" aria-hidden="true"></div>
       </>
     ) : (
       <div
@@ -68,8 +60,10 @@ const video: { mp4: string; webm: string; poster: string } | null = {
 
     <div class="mt-10 flex flex-col gap-10 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between">
       <p class="max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">
-        Medio siglo moviendo carga en {empresa.sedes.join(' y ')}. Personal propio,
-        procedimientos establecidos y trazabilidad en cada movimiento.
+        Somos una empresa colombiana que lleva más de {empresa.anios} años trabajando en los
+        puertos de {empresa.sedes.join(' y ')}. Cargamos y descargamos buques, llevamos la
+        carga fuera del puerto y la guardamos hasta su destino, con gente propia que conoce
+        el oficio.
       </p>
 
       <div class="flex flex-wrap items-center gap-4">
@@ -115,15 +109,3 @@ const video: { mp4: string; webm: string; poster: string } | null = {
   <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
 </section>
 
-<script>
-  // Quien pidió menos movimiento ve el primer cuadro quieto, no el bucle.
-  const video = document.getElementById('video-hero') as HTMLVideoElement | null;
-  const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const ajustar = () => {
-    if (!video) return;
-    if (menosMovimiento.matches) video.pause();
-    else video.play().catch(() => {});
-  };
-  ajustar();
-  menosMovimiento.addEventListener('change', ajustar);
-</script>

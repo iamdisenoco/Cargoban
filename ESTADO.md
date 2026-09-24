@@ -69,10 +69,9 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
        de un video ajeno. Opciones abiertas: pedir a Puerto Antioquia las tomas limpias o permiso
        escrito (recomendado), o usar fragmentos con la marca visible y crédito.
      Hasta que se resuelva, los videos no entran en el sitio.
-     24/09: Jon pidió un fragmento en bucle detrás del titular del inicio. Se armó como PRUEBA
-     en la rama local `claude/fondo-claro-prueba` (`public/video/muelle.*`, 9 s de ida y vuelta
-     de la toma de contenedores del video «Neo Panamax», con la marca de agua sin tocar). No sale
-     a producción sin permiso de Puerto Antioquia o tomas propias.
+     24/09: se probó un fragmento en bucle en el inicio y se retiró el mismo día: Jon no quiere
+     que la marca de Puerto Antioquia aparezca, y no se borra la marca de agua de un video ajeno.
+     El inicio usa ahora tres fotos propias de Santa Marta que se funden (`public/fotos/portada-*`).
 
 ## Situación anterior (2026-09-21)
 - **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.

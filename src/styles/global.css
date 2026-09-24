@@ -237,6 +237,35 @@
     }
   }
 
+  /*
+    Fotos de portada que se funden una en otra (Hero.astro).
+    Por defecto se ve la primera, quieta; las demás esperan ocultas. Cada foto
+    tiene su turno de 6 s dentro del ciclo y se acerca despacio mientras se ve.
+  */
+  .portada-foto {
+    opacity: 0;
+  }
+
+  .portada-foto:first-of-type {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .portada-foto {
+      animation: portada-turno calc(var(--n) * 6s) linear infinite both;
+      animation-delay: calc(var(--i) * 6s - 1.2s);
+    }
+  }
+
+  /* Porcentajes para tres fotos (ciclo de 18 s): 1,2 s de fundido, 6 s visible. */
+  @keyframes portada-turno {
+    0% { opacity: 0; transform: scale(1.02); }
+    6.7% { opacity: 1; }
+    33.3% { opacity: 1; }
+    40% { opacity: 0; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.1); }
+  }
+
   @keyframes desplazar {
     from { transform: translateY(-6%) scale(1.08); }
     to { transform: translateY(6%) scale(1.08); }

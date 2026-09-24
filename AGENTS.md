@@ -74,3 +74,7 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Nada de etiquetas pequeñas en mayúsculas con una raya encima del titular («— NOSOTROS»).
   Jon las rechazó el 24/09: el titular abre la sección solo.
 - Jost y Archivo quedaron descartadas por Jon (24/09). Tipografía de estilo Apple: Inter.
+- La marca de Puerto Antioquia no puede aparecer en el sitio (Jon, 24/09: «es muy importante»).
+  Sus videos no se usan: no se les borra ni tapa la marca de agua, se dejan fuera. Para el
+  movimiento del inicio van fotos propias de Cargoban. Si Puerto Antioquia entrega tomas
+  limpias con permiso, se evalúa de nuevo.
