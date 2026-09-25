@@ -3,12 +3,42 @@ import Titular from './Titular.astro';
 import { servicios, tiposDeCarga } from '../data/sitio';
 ---
 
-<section id="servicios" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+<section id="servicios" class="relative isolate scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+  <!--
+    Fondo: un tramo corto de video propio (DJI_0587, operarios junto a un contenedor) que va
+    y vuelve en bucle. Queda fijo detrás mientras se recorre la sección.
+    El video está recortado para dejar fuera la grúa y desenfocado a propósito: en el chasis
+    del remolque hay un rótulo de Puerto Antioquia, y su marca no puede leerse (AGENTS.md).
+    Versión alta para pantallas verticales, ancha para el resto. Quien pidió menos
+    movimiento ve la imagen fija.
+  -->
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="sticky top-0 h-[100svh] overflow-hidden">
+      <picture>
+        <source srcset="/video/servicios-alto.jpg" media="(max-aspect-ratio: 1/1)" />
+        <img src="/video/servicios-ancho.jpg" alt="" class="absolute inset-0 size-full object-cover" />
+      </picture>
+      <video
+        class="video-servicios absolute inset-0 size-full object-cover"
+        muted
+        loop
+        playsinline
+        preload="none"
+        tabindex="-1"
+      >
+        <source src="/video/servicios-alto.webm" type="video/webm" media="(max-aspect-ratio: 1/1)" />
+        <source src="/video/servicios-alto.mp4" type="video/mp4" media="(max-aspect-ratio: 1/1)" />
+        <source src="/video/servicios-ancho.mp4" type="video/mp4" />
+        <source src="/video/servicios-ancho.webm" type="video/webm" />
+      </video>
+      <div class="absolute inset-0 bg-navy-950/80"></div>
+    </div>
+  </div>
   <div class="contenedor">
     <div class="revelar flex flex-col gap-8 border-b border-white/15 pb-10 lg:flex-row lg:items-end lg:justify-between">
       <div>
         <Titular
-          texto="De la bodega del buque a la puerta del cliente"
+          texto="Nuestros servicios"
           class="max-w-[14ch] text-white"
           style="font-size:var(--text-titulo)"
         />
@@ -27,7 +57,7 @@ import { servicios, tiposDeCarga } from '../data/sitio';
   <div class="contenedor mt-4">
     {servicios.map((servicio, i) => (
       <article
-        class="panel-apilado overflow-hidden rounded-2xl border border-white/12 bg-navy-900 lg:rounded-3xl"
+        class="panel-apilado overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
         style={`--desplazamiento-apilado:calc(8rem + ${i * 1.25}rem); margin-top:${i === 0 ? '2rem' : '1.5rem'}`}
       >
         <div class="grid gap-8 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
@@ -95,3 +125,26 @@ import { servicios, tiposDeCarga } from '../data/sitio';
     </ul>
   </div>
 </section>
+
+<script>
+  // El video solo se carga y corre cuando la sección está cerca de la pantalla, y nunca
+  // para quien pidió menos movimiento: ahí queda la imagen fija de debajo.
+  const video = document.querySelector<HTMLVideoElement>('.video-servicios');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (video && !quieto.matches && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada.isIntersecting) {
+          if (video.preload === 'none') {
+            video.preload = 'auto';
+            video.load();
+          }
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: '200px 0px' },
+    ).observe(video.closest('section')!);
+  }
+</script>
