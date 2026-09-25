@@ -174,3 +174,10 @@ Dominio previsto: `www.cargobanoperador.com` (se conecta al final).
   Jon abre la red del entorno; con eso se analiza cargokite bajando su HTML y su JavaScript.
   Sigue sin poder verse en movimiento, y la carpeta de Drive sigue en otra cuenta.
 - 2026-09-23: bloque 3 empieza: desplazamiento suave con Lenis y titulares por palabras.
+
+## Vista previa pública (25/09)
+- Jon pidió un enlace en internet para revisar. Proyecto de prueba en su cuenta de Vercel:
+  `cargoban-prueba` → https://cargoban-prueba.vercel.app, construido desde la rama
+  `claude/happy-knuth-4l56e4`. No es el sitio de Cargoban ni toca su dominio.
+- No se actualiza solo: cada cambio se vuelve a publicar a mano (o Jon conecta el repo en
+  Vercel → Settings → Git). Publicar ahí requiere que Jon lo autorice en la conversación.
