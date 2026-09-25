@@ -77,13 +77,13 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
 
           <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
                El número final va escrito en el HTML: sin JavaScript se lee igual. -->
-          <dl class="revelar mt-24 grid border-y border-ink/10 sm:grid-cols-3 lg:mt-32">
+          <dl class="revelar mt-24 grid border-y border-ink/10 lg:mt-32 lg:grid-cols-3">
             {cifras.map((cifra, i) => (
               <div
                 class:list={[
-                  'flex flex-col-reverse gap-3 py-10 sm:px-8 lg:py-14',
-                  i > 0 && 'border-t border-ink/10 sm:border-t-0 sm:border-l',
-                  i === 0 && 'sm:pl-0',
+                  'flex flex-col-reverse justify-end gap-3 py-10 lg:px-8 lg:py-14',
+                  i > 0 && 'border-t border-ink/10 lg:border-t-0 lg:border-l',
+                  i === 0 && 'lg:pl-0',
                 ]}
               >
                 <dt class="text-ink-soft">{cifra.texto}</dt>
@@ -119,7 +119,7 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
   <!-- Sostenibilidad: Fundación Cargoban. Textos PROVISIONALES (ver src/data/sitio.ts).
        Fotos: carpeta «Cargoban fundación» del Drive de Jon (25/09). Hay menores
        identificables: confirmar con la fundación el permiso de uso antes de publicar. -->
-  <section id="sostenibilidad" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+  <section id="sostenibilidad" class="scroll-mt-24 bg-navy-950 pt-12 pb-20 sm:py-24 lg:py-36">
     <div class="contenedor">
       <!-- El titular va a lo ancho, en dos líneas: en una columna angosta quedaba
            partido en cinco renglones gigantes (Jon, 25/09). -->
@@ -130,7 +130,7 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
       />
 
       <div class="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-x-20">
-        <figure class="foto-abre aspect-square overflow-hidden rounded-2xl lg:col-span-5">
+        <figure class="foto-abre aspect-square max-h-[85svh] overflow-hidden rounded-2xl lg:col-span-5">
           <img
             src="/fotos/fundacion-nina.webp"
             alt="Niña de una comunidad acompañada por la Fundación Cargoban"
@@ -192,7 +192,7 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
       </ul>
 
       <!-- Fondo de empleados. Foto: colaboradora de Cargoban en muelle (Drive de Jon, 25/09). -->
-      <div class="mt-24 grid gap-12 border-t border-white/15 pt-24 lg:mt-36 lg:grid-cols-12 lg:gap-x-20 lg:pt-36">
+      <div class="mt-16 grid gap-12 border-t border-white/15 pt-16 sm:mt-24 sm:pt-24 lg:mt-36 lg:grid-cols-12 lg:gap-x-20 lg:pt-36">
         <div class="lg:col-span-5 lg:self-center">
           <h3 class="revelar font-display font-semibold text-white" style="font-size:var(--text-subtitulo);line-height:1.1;letter-spacing:-0.03em">
             Fondo de empleados <span class="text-green">{fondecar.nombre}</span>
@@ -210,7 +210,7 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
             ))}
           </ul>
         </div>
-        <figure class="foto-abre order-first aspect-[4/3] overflow-hidden rounded-2xl lg:col-span-7">
+        <figure class="foto-abre order-first aspect-[4/3] max-h-[85svh] overflow-hidden rounded-2xl lg:col-span-7">
           <img
             src="/fotos/fondecar-colaboradora.webp"
             alt="Colaboradora de Cargoban con casco y gafas de seguridad en el muelle"

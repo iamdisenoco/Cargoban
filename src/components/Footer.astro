@@ -22,10 +22,10 @@ const anio = new Date().getFullYear();
 
       <nav class="lg:col-span-3" aria-label="Pie de página">
         <p class="etiqueta text-white/60">Navegación</p>
-        <ul class="mt-6 space-y-3">
+        <ul class="mt-4">
           {navegacion.map((item) => (
             <li>
-              <a href={item.href} class="text-white/80 transition-colors hover:text-green">
+              <a href={item.href} class="inline-flex min-h-11 items-center text-white/80 transition-colors hover:text-green">
                 {item.etiqueta}
               </a>
             </li>

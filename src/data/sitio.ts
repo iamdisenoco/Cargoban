@@ -51,7 +51,7 @@ export const servicios = [
       'Operadores de maquinaria portuaria',
       'Tarja y trazabilidad de carga',
       'Trincado y destrincado de contenedores',
-      'Movimiento de vehículos en buques Ro-Ro',
+      'Movimiento de vehículos en buques Ro‑Ro',
       'Apoyo en inspecciones de autoridades',
     ],
     provisional: true,

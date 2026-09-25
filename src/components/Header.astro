@@ -7,7 +7,7 @@ import { navegacion, empresa } from '../data/sitio';
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
   <div class="contenedor flex h-20 items-center justify-between gap-6 lg:h-24">
-    <a href="#inicio" class="shrink-0" aria-label={`${empresa.nombre}, ir al inicio`}>
+    <a href="#inicio" class="inline-flex min-h-11 shrink-0 items-center" aria-label={`${empresa.nombre}, ir al inicio`}>
       <img
         src="/marca/logo-horizontal-blanco.svg"
         alt=""
@@ -80,11 +80,11 @@ import { navegacion, empresa } from '../data/sitio';
   aria-modal="true"
   aria-label="Menú de navegación"
 >
-  <nav class="contenedor flex h-full flex-col justify-center gap-2" aria-label="Principal móvil">
+  <nav class="contenedor flex h-full flex-col justify-center gap-2 overflow-y-auto py-24 [@media(max-height:560px)]:justify-start" aria-label="Principal móvil">
     {navegacion.map((item, i) => (
       <a
         href={item.href}
-        class="flex items-baseline gap-5 border-b border-white/10 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl"
+        class="flex items-baseline gap-5 border-b border-white/10 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl [@media(max-height:560px)]:py-3 [@media(max-height:560px)]:text-2xl"
       >
         <span class="font-sans text-xs text-green">{String(i + 1).padStart(2, '0')}</span>
         {item.etiqueta}
@@ -92,7 +92,7 @@ import { navegacion, empresa } from '../data/sitio';
     ))}
     <a
       href="#contacto"
-      class="mt-8 inline-flex justify-center rounded-full bg-green px-8 py-4 font-display text-base font-semibold text-navy-950"
+      class="mt-8 inline-flex shrink-0 justify-center rounded-full bg-green px-8 py-4 font-display text-base font-semibold text-navy-950"
     >
       Cotizar operación
     </a>
