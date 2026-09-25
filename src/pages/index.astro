@@ -49,24 +49,23 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
           <div class="lg:col-span-6">
             <figure class="foto-abre aspect-[3/2] overflow-hidden rounded-2xl">
               <img
-                src="/fotos/nosotros-equipo.webp"
-                alt="Equipo de operación de Cargoban en el patio de contenedores de Santa Marta"
+                src="/fotos/nosotros-refrigerado.webp"
+                alt="Operario de Cargoban junto a un contenedor refrigerado en Santa Marta"
                 class="size-full object-cover"
                 loading="lazy"
                 decoding="async"
               />
             </figure>
 
-            <h3 class="revelar mt-10 font-display font-semibold text-ink" style="font-size:var(--text-cuerpo-lg);line-height:1.35">
+            <p class="revelar mt-10 font-display font-semibold text-ink" style="font-size:var(--text-cuerpo-lg);line-height:1.35">
               Somos un operador logístico y portuario colombiano con más de {empresa.anios} años
               de trayectoria en {empresa.sedes.join(' y ')}.
-            </h3>
+            </p>
             <p class="revelar mt-6 max-w-prose text-ink-soft">
               Acompañamos a nuestros clientes en cada etapa de la operación: cargue y descargue
               de buques, manejo de carga en muelle, transporte, almacenamiento y alquiler de
               equipos. Trabajamos con personal propio y especializado, procedimientos
-              estandarizados y control de cada movimiento, para que la carga llegue a su destino
-              en las mismas condiciones en que nos fue entregada.
+              estandarizados y control de cada movimiento.
             </p>
 
             <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
@@ -90,7 +89,7 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
               {razones.map((razon) => (
                 <li class="bg-white p-6 lg:p-7">
                   <span class="block size-2 rotate-45 bg-teal" aria-hidden="true"></span>
-                  <h4 class="mt-4 font-display text-lg font-semibold text-ink">{razon.titulo}</h4>
+                  <h3 class="mt-4 font-display text-lg font-semibold text-ink">{razon.titulo}</h3>
                   <p class="mt-2 text-sm leading-relaxed text-ink-soft">{razon.texto}</p>
                 </li>
               ))}
@@ -119,7 +118,7 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
         <p class="text-white" style="font-size:var(--text-cuerpo-lg)">
           Desde {fundacion.desde}, la {fundacion.nombre} desarrolla proyectos sociales
           sostenibles que mejoran la calidad de vida de comunidades vulnerables
-          en {empresa.sedes.join(' y ')}.
+          en {fundacion.regiones.join(' y ')}.
         </p>
         <p class="mt-6 max-w-prose text-white/65">
           Nació en el Urabá antioqueño como iniciativa de Cargoban para responder a
@@ -141,6 +140,7 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
           ))}
         </ul>
 
+        {fundacion.web && (
         <a
           href={fundacion.web}
           target="_blank"
@@ -153,6 +153,7 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
           </svg>
           <span class="sr-only">(se abre en una pestaña nueva)</span>
         </a>
+        )}
       </div>
     </div>
   </section>

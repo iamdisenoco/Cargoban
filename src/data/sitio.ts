@@ -108,7 +108,7 @@ export const tiposDeCarga = [
 export const razones = [
   {
     titulo: 'Trayectoria comprobada',
-    texto: 'Más de cinco décadas de operación continua en los puertos del Caribe colombiano.',
+    texto: 'Más de cinco décadas de operación en los puertos del Caribe colombiano.',
   },
   {
     titulo: 'Integridad de la carga',
@@ -143,7 +143,11 @@ export const cifras = [
 export const fundacion = {
   nombre: 'Fundación Cargoban',
   desde: 2006,
-  web: 'http://fundacioncargoban.org.co/',
+  // Donde trabaja: Urabá y Santa Marta, según los directorios públicos. Confirmar.
+  regiones: ['Urabá', 'Santa Marta'],
+  // La dirección pública (fundacioncargoban.org.co) no resuelve en DNS al 25/09.
+  // Sin web confirmada no se muestra el botón. Pedir a Cargoban la vigente, con https.
+  web: '',
   lineas: [
     'Emprendimientos agrícolas y de mujeres',
     'Recreación, cultura y deporte',

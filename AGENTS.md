@@ -62,7 +62,7 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
 - El verde de marca es acento escaso. Si aparece en todas las secciones, pierde fuerza.
-- Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.
+- Fotos propias antes que banco de imágenes, siempre. Ver `docs/fotos.md`.
 - Al interpolar en Astro, cuidado con el espacio antes de `{variable}`: un salto de línea
   entre la palabra y la llave se colapsa y las pega ("más de50 años").
 - El build sale a `dist/recursos/`, no a `_astro/`: el guion bajo inicial rompe en varios

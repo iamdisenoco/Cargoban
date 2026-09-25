@@ -72,6 +72,8 @@ Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actuali
      24/09: se probó un fragmento en bucle en el inicio y se retiró el mismo día: Jon no quiere
      que la marca de Puerto Antioquia aparezca, y no se borra la marca de agua de un video ajeno.
      El inicio usa ahora tres fotos propias de Santa Marta que se funden (`public/fotos/portada-*`).
+     **Al mergear esta rama, hacerlo con squash** (o rehacerla sin los commits 74f8c73 y 610e373):
+     esos dos commits agregaron y quitaron el video, y un merge normal lo dejaría en el historial de `main`.
 
 ## Situación anterior (2026-09-21)
 - **Bloque 1 MERGEADO en `main`** (PR #1, commit d74683b). `main` compila y pasa `astro check`.
@@ -95,7 +97,7 @@ clientes y aprobación del logotipo horizontal. Sin eso el sitio no se puede pub
 - Servicios y tipos de carga ahora salen de la lámina 3/5 del carrusel de Instagram: son datos
   reales de Cargoban, no texto de relleno.
 - Falta el banco de fotos de Cargoban. Es lo que más va a cambiar el resultado.
-  Instrucciones de entrega en `public/fotos/LEEME.md`.
+  Instrucciones de entrega en `docs/fotos.md`.
 - Revisión con ojos frescos hecha por una sesión distinta a la que escribió el código.
   Encontró cinco defectos graves, todos corregidos: la cabecera se volvía sólida al revés
   y el logo se imprimía sobre el contenido; el apilado de servicios ocultaba contenido de
