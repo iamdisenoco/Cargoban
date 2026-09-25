@@ -8,62 +8,98 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
 ---
 
 <Base>
-  <Hero />
-  <Cinta />
+  <!--
+    Escena de apertura, como cargokite: la portada queda fija (sticky) y la cinta
+    con "Nosotros" sube encima como una cortina. Mientras sube, el texto de la
+    portada se va hacia arriba y el fondo baja un poco (global.css, .portada-escena).
+    En pantallas angostas o bajas no hay cortina: el scroll es el normal.
+  -->
+  <div class="portada-escena relative">
+    <!--
+      Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio de la
+      página. Mientras parte de esa franja se vea, la cabecera queda transparente.
+      Va aquí y no dentro de la portada: la portada queda fija y el centinela nunca saldría.
+    -->
+    <div id="centinela-cabecera" class="pointer-events-none absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
+    <Hero />
 
-  <!-- Nosotros -->
-  <section id="nosotros" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
-    <div class="contenedor grid gap-14 lg:grid-cols-12 lg:gap-20">
-      <div class="revelar lg:col-span-5">
-        <Titular
-          texto="Experiencia que respalda cada operación"
-          class="text-white"
-          style="font-size:var(--text-titulo)"
-        />
-      </div>
+    <div class="portada-cortina">
+      <Cinta />
 
-      <div class="revelar lg:col-span-7">
-        <p class="text-white" style="font-size:var(--text-cuerpo-lg)">
-          Cargoban es un operador logístico y portuario colombiano con más
-          de {empresa.anios} años de trayectoria. Desde {empresa.sedes.join(' y ')} acompañamos
-          a nuestros clientes en cada etapa de la operación: del buque al patio y del puerto
-          a la bodega.
-        </p>
-        <p class="mt-6 max-w-prose text-white/65">
-          Trabajamos con personal propio y especializado, procedimientos estandarizados y
-          control de cada movimiento, para que la carga llegue a su destino en las mismas
-          condiciones en que nos fue entregada.
-        </p>
+      <!-- Nosotros -->
+      <section id="nosotros" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
+        <div class="contenedor grid gap-14 lg:grid-cols-12 lg:gap-x-20">
+          <div class="lg:col-span-6">
+            <Titular
+              texto="Bienvenido a Cargoban"
+              class="text-ink"
+              style="font-size:var(--text-titulo)"
+            />
+            <figure class="foto-abre mt-14 hidden aspect-[4/5] w-3/4 overflow-hidden rounded-2xl lg:block">
+              <img
+                src="/fotos/nosotros-amarre.webp"
+                alt="Operario de Cargoban asegurando carga sobre un contenedor en Santa Marta"
+                class="size-full object-cover object-[28%_60%]"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
 
-        <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
-             El número final va escrito en el HTML: sin JavaScript se lee igual. -->
-        <dl class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-3">
-          {cifras.map((cifra) => (
-            <div class="flex flex-col-reverse gap-2 bg-navy-950 p-7 lg:p-8">
-              <dt class="text-sm text-white/65">{cifra.texto}</dt>
-              <dd
-                class="cifra font-display text-4xl font-semibold leading-none text-white lg:text-5xl"
-                data-contador={cifra.valor}
-                data-prefijo={cifra.prefijo}
-              >
-                {cifra.prefijo}{cifra.valor.toLocaleString('es-CO')}
-              </dd>
-            </div>
-          ))}
-        </dl>
+          <div class="lg:col-span-6">
+            <figure class="foto-abre aspect-[3/2] overflow-hidden rounded-2xl">
+              <img
+                src="/fotos/nosotros-equipo.webp"
+                alt="Equipo de operación de Cargoban en el patio de contenedores de Santa Marta"
+                class="size-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
 
-        <ul class="mt-6 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2">
-          {razones.map((razon) => (
-            <li class="bg-navy-950 p-7 lg:p-8">
-              <span class="block size-2 rotate-45 bg-teal-400" aria-hidden="true"></span>
-              <h3 class="mt-5 font-display text-lg font-semibold text-white">{razon.titulo}</h3>
-              <p class="mt-3 text-sm leading-relaxed text-white/60">{razon.texto}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
+            <h3 class="revelar mt-10 font-display font-semibold text-ink" style="font-size:var(--text-cuerpo-lg);line-height:1.35">
+              Somos un operador logístico y portuario colombiano con más de {empresa.anios} años
+              de trayectoria en {empresa.sedes.join(' y ')}.
+            </h3>
+            <p class="revelar mt-6 max-w-prose text-ink-soft">
+              Acompañamos a nuestros clientes en cada etapa de la operación: cargue y descargue
+              de buques, manejo de carga en muelle, transporte, almacenamiento y alquiler de
+              equipos. Trabajamos con personal propio y especializado, procedimientos
+              estandarizados y control de cada movimiento, para que la carga llegue a su destino
+              en las mismas condiciones en que nos fue entregada.
+            </p>
+
+            <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
+                 El número final va escrito en el HTML: sin JavaScript se lee igual. -->
+            <dl class="revelar mt-12 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-3">
+              {cifras.map((cifra) => (
+                <div class="flex flex-col-reverse gap-2 bg-white p-6 lg:p-7">
+                  <dt class="text-sm text-ink-soft">{cifra.texto}</dt>
+                  <dd
+                    class="cifra font-display text-4xl font-semibold leading-none text-navy"
+                    data-contador={cifra.valor}
+                    data-prefijo={cifra.prefijo}
+                  >
+                    {cifra.prefijo}{cifra.valor.toLocaleString('es-CO')}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <ul class="revelar mt-6 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2">
+              {razones.map((razon) => (
+                <li class="bg-white p-6 lg:p-7">
+                  <span class="block size-2 rotate-45 bg-teal" aria-hidden="true"></span>
+                  <h4 class="mt-4 font-display text-lg font-semibold text-ink">{razon.titulo}</h4>
+                  <p class="mt-2 text-sm leading-relaxed text-ink-soft">{razon.texto}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
     </div>
-  </section>
+  </div>
 
   <Servicios />
 

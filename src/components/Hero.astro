@@ -16,9 +16,9 @@ const fotos: { src: string; foco: string }[] = [
 ];
 ---
 
-<section id="inicio" class="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
+<section id="inicio" class="portada-fija relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
   <!-- Capa de fondo: fotos propias o, sin fotos, la textura derivada del símbolo (permitida por el manual de marca) -->
-  <div class="absolute inset-0 -z-10 fondo-marca">
+  <div class="portada-fondo absolute inset-0 -z-10 fondo-marca">
     {fotos.length > 0 ? (
       <>
         {fotos.map(({ src, foco }, i) => (
@@ -50,7 +50,7 @@ const fotos: { src: string; foco: string }[] = [
     </div>
   </div>
 
-  <div class="contenedor pb-16 pt-32 lg:pb-24">
+  <div class="portada-texto contenedor pb-16 pt-32 lg:pb-24">
     <Titular
       as="h1"
       texto="Operamos la *carga* que mueve al Caribe"
@@ -86,10 +86,5 @@ const fotos: { src: string; foco: string }[] = [
 
   </div>
 
-  <!--
-    Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio.
-    Mientras parte de esa franja se vea, la cabecera queda transparente.
-  -->
-  <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
 </section>
 

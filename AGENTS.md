@@ -22,6 +22,10 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Contenido editable en `src/data/sitio.ts`. Lo marcado PROVISIONAL espera confirmación de Cargoban.
 - Marca: tokens en `src/styles/global.css`, logos en `public/marca/`, reglas en `docs/marca.md`.
 - Estilos base (body, h1…) siempre dentro de `@layer base`; fuera de la capa pisan las utilidades de Tailwind.
+- Animaciones de scroll: con propiedades sueltas (`animation-name`, `animation-duration: auto`…) y la
+  línea de tiempo dentro de `var()`, nunca `animation:` más `animation-timeline:`. El minificador del
+  build junta ese par en un solo atajo que Chromium rechaza y la animación desaparece sin error
+  (pasó hasta el 25/09: ninguna `.revelar` corría). Comprobar con `getComputedStyle(el).animationName`.
 - Animaciones de scroll (`animation-timeline`) siempre dentro de `@supports` y de
   `prefers-reduced-motion: no-preference`, y con el estado final como estado por defecto.
   Firefox estable todavía no las activa: si se ocultan por defecto, ahí no se ve nada.
@@ -52,7 +56,8 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - En el frontmatter de un `.astro`, nada de expresiones regulares con comillas (`/"/g`):
   el build pasa, pero `astro check` se come el resto del archivo y da decenas de errores
   falsos. Usar `replaceAll('"', …)`.
-- `astro preview` en Astro 7 se queda como demonio: el comando termina, el servidor sigue.
+- `astro preview` en Astro 7 se queda como demonio: el comando termina, el servidor sigue. Solo corre uno: si ya
+  hay uno levantado, pedir otro puerto no arranca nada (`astro preview status` dice cuál está).
 - `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
   usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.

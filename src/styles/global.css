@@ -166,8 +166,11 @@
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .revelar {
-        animation: aparecer linear both;
-        animation-timeline: view();
+        animation-name: aparecer;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
         animation-range: entry 5% cover 28%;
       }
     }
@@ -230,8 +233,11 @@
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .parallax-lento {
-        animation: desplazar linear both;
-        animation-timeline: view();
+        animation-name: desplazar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
         animation-range: cover;
       }
     }
@@ -264,6 +270,98 @@
     33.3% { opacity: 1; }
     40% { opacity: 0; transform: scale(1.1); }
     100% { opacity: 0; transform: scale(1.1); }
+  }
+
+  /*
+    Animaciones atadas al scroll: siempre con propiedades sueltas y la línea de
+    tiempo dentro de var(). Si se escriben con el atajo `animation:` más
+    `animation-timeline:`, el minificador del build las junta en un solo atajo
+    que Chromium rechaza, y la animación desaparece sin avisar.
+  */
+
+  /*
+    Escena de apertura (index.astro): portada fija y cortina que sube encima.
+    Valores medidos en cargokite (docs/referencias/cargokite.md): en la primera
+    pantalla de scroll el texto sube y el fondo baja un 15 %, los dos lineales.
+    Solo en pantallas anchas y altas: en móvil la portada no entra entera y
+    fijarla taparía su propio final. Sin soporte, la cortina funciona igual
+    (es solo sticky) y el texto y el fondo quedan quietos.
+  */
+  @media (min-width: 48rem) and (min-height: 40rem) {
+    .portada-escena > .portada-fija {
+      position: sticky;
+      top: 0;
+      z-index: 0;
+    }
+    .portada-escena > .portada-cortina {
+      position: relative;
+      z-index: 10;
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) and (min-height: 40rem) {
+      .portada-escena .portada-texto {
+        animation-name: portada-subir;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-scroll, scroll(root));
+        animation-range: 0 100vh;
+      }
+      .portada-escena .portada-fondo {
+        top: -15%;
+        animation-name: portada-bajar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-scroll, scroll(root));
+        animation-range: 0 100vh;
+      }
+    }
+  }
+
+  @keyframes portada-subir {
+    to { transform: translateY(-35%); }
+  }
+
+  @keyframes portada-bajar {
+    to { transform: translateY(13%); }
+  }
+
+  /*
+    Fotos que se abren desde un recorte al entrar en pantalla (como cargokite:
+    inset 10 % → 0 y la imagen de 1,2 a 1). Estado final por defecto.
+  */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .foto-abre {
+        animation-name: foto-abrir;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry 0% cover 35%;
+      }
+      .foto-abre > img {
+        animation-name: foto-acercar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry 0% cover 35%;
+      }
+    }
+  }
+
+  @keyframes foto-abrir {
+    from { clip-path: inset(10% round 1rem); }
+    to { clip-path: inset(0% round 1rem); }
+  }
+
+  @keyframes foto-acercar {
+    from { transform: scale(1.2); }
+    to { transform: scale(1); }
   }
 
   @keyframes desplazar {
