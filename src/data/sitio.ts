@@ -29,7 +29,7 @@ export const clientes: { nombre: string; logo?: string }[] = [];
 export const navegacion = [
   { etiqueta: 'Nosotros', href: '#nosotros' },
   { etiqueta: 'Servicios', href: '#servicios' },
-  { etiqueta: 'Carga', href: '#carga' },
+  { etiqueta: 'Sostenibilidad', href: '#sostenibilidad' },
   ...(clientes.length > 0 ? [{ etiqueta: 'Clientes', href: '#clientes' }] : []),
   { etiqueta: 'Contacto', href: '#contacto' },
 ];
@@ -107,24 +107,51 @@ export const tiposDeCarga = [
 
 export const razones = [
   {
-    titulo: 'Medio siglo en el oficio',
+    titulo: 'Trayectoria comprobada',
+    texto: 'Más de cinco décadas de operación continua en los puertos del Caribe colombiano.',
+  },
+  {
+    titulo: 'Integridad de la carga',
     texto:
-      'Más de 50 años operando carga nos enseñaron que la experiencia no se improvisa. Está en la gente que mueve el contenedor.',
+      'Procedimientos estandarizados y personal calificado en cada manipulación, desde el buque hasta la entrega.',
   },
   {
-    titulo: 'La carga llega como salió',
-    texto:
-      'Procedimientos establecidos y personal con experiencia para que cada movimiento sea el mismo movimiento, siempre.',
+    titulo: 'Trazabilidad de cada movimiento',
+    texto: 'Tarja y registro de la carga en cada etapa, del muelle a la bodega.',
   },
   {
-    titulo: 'Usted sabe dónde está su carga',
-    texto: 'Tarja y trazabilidad de cada movimiento, del muelle a la bodega.',
-  },
-  {
-    titulo: 'Dos puertos, una operación',
-    texto: 'Presencia propia en Urabá y Santa Marta, dos puntos clave del Caribe colombiano.',
+    titulo: 'Presencia en dos puertos',
+    texto: 'Sedes en Urabá y Santa Marta, dos puntos estratégicos del comercio exterior colombiano.',
   },
 ];
+
+/**
+ * Cifras de la sección Nosotros, que cuentan hacia arriba al entrar en pantalla.
+ * Fuente: Jon (25/09/2026). PROVISIONAL hasta que Cargoban las confirme por escrito.
+ */
+export const cifras = [
+  { prefijo: '+', valor: 50, texto: 'años de experiencia' },
+  { prefijo: '+', valor: 50000, texto: 'contenedores movilizados' },
+  { prefijo: '', valor: 250000, texto: 'cajas movilizadas' },
+];
+
+/**
+ * Fundación Cargoban (sección Sostenibilidad).
+ * Fuente: información pública de la fundación (fundacioncargoban.org.co y directorios
+ * de ONG). PROVISIONAL: Cargoban debe confirmar textos, cifras y fotos antes de publicar.
+ */
+export const fundacion = {
+  nombre: 'Fundación Cargoban',
+  desde: 2006,
+  web: 'http://fundacioncargoban.org.co/',
+  lineas: [
+    'Emprendimientos agrícolas y de mujeres',
+    'Recreación, cultura y deporte',
+    'Vivienda',
+    'Escuelas y espacios comunitarios',
+    'Fortalecimiento ambiental',
+  ],
+};
 
 /** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
 export const sedes = [

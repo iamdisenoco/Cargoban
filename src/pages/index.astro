@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import Cinta from '../components/Cinta.astro';
 import Servicios from '../components/Servicios.astro';
 import Titular from '../components/Titular.astro';
-import { empresa, tiposDeCarga, razones, clientes, sedes } from '../data/sitio';
+import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/sitio';
 ---
 
 <Base>
@@ -16,7 +16,7 @@ import { empresa, tiposDeCarga, razones, clientes, sedes } from '../data/sitio';
     <div class="contenedor grid gap-14 lg:grid-cols-12 lg:gap-20">
       <div class="revelar lg:col-span-5">
         <Titular
-          texto="Medio siglo en el mismo oficio"
+          texto="Experiencia que respalda cada operación"
           class="text-white"
           style="font-size:var(--text-titulo)"
         />
@@ -24,17 +24,35 @@ import { empresa, tiposDeCarga, razones, clientes, sedes } from '../data/sitio';
 
       <div class="revelar lg:col-span-7">
         <p class="text-white" style="font-size:var(--text-cuerpo-lg)">
-          Cargoban es un operador logístico y portuario colombiano. Llevamos más
-          de {empresa.anios} años moviendo carga en {empresa.sedes.join(' y ')}, dos de
-          los puntos por donde entra y sale el comercio del Caribe.
+          Cargoban es un operador logístico y portuario colombiano con más
+          de {empresa.anios} años de trayectoria. Desde {empresa.sedes.join(' y ')} acompañamos
+          a nuestros clientes en cada etapa de la operación: del buque al patio y del puerto
+          a la bodega.
         </p>
         <p class="mt-6 max-w-prose text-white/65">
-          En este oficio la diferencia no está en el discurso. Está en el operario que sabe
-          cómo va amarrado un contenedor, en el procedimiento que se cumple igual a las tres
-          de la mañana y en saber, en todo momento, dónde está cada bulto.
+          Trabajamos con personal propio y especializado, procedimientos estandarizados y
+          control de cada movimiento, para que la carga llegue a su destino en las mismas
+          condiciones en que nos fue entregada.
         </p>
 
-        <ul class="mt-14 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2">
+        <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
+             El número final va escrito en el HTML: sin JavaScript se lee igual. -->
+        <dl class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-3">
+          {cifras.map((cifra) => (
+            <div class="flex flex-col-reverse gap-2 bg-navy-950 p-7 lg:p-8">
+              <dt class="text-sm text-white/65">{cifra.texto}</dt>
+              <dd
+                class="cifra font-display text-4xl font-semibold leading-none text-white lg:text-5xl"
+                data-contador={cifra.valor}
+                data-prefijo={cifra.prefijo}
+              >
+                {cifra.prefijo}{cifra.valor.toLocaleString('es-CO')}
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        <ul class="mt-6 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2">
           {razones.map((razon) => (
             <li class="bg-navy-950 p-7 lg:p-8">
               <span class="block size-2 rotate-45 bg-teal-400" aria-hidden="true"></span>
@@ -49,36 +67,57 @@ import { empresa, tiposDeCarga, razones, clientes, sedes } from '../data/sitio';
 
   <Servicios />
 
-  <!-- Tipos de carga -->
-  <section id="carga" class="scroll-mt-24 border-y border-white/10 bg-navy-900 py-24 lg:py-36">
-    <div class="contenedor">
-      <div class="revelar grid gap-10 lg:grid-cols-12 lg:items-end">
-        <div class="lg:col-span-7">
-          <Titular
-            texto="Si se mueve por puerto, lo hemos movido"
-            class="max-w-[16ch] text-white"
-            style="font-size:var(--text-titulo)"
-          />
-        </div>
-        <p class="text-white/65 lg:col-span-5">
-          Manejamos una variedad de carga que va del contenedor refrigerado al proyecto
-          sobredimensionado, cada uno con su propio manejo.
-        </p>
+
+  <!-- Sostenibilidad: Fundación Cargoban. Contenido PROVISIONAL (ver src/data/sitio.ts). -->
+  <section id="sostenibilidad" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+    <div class="contenedor grid gap-14 lg:grid-cols-12 lg:gap-20">
+      <div class="revelar lg:col-span-5">
+        <Titular
+          texto="Compromiso con las comunidades donde operamos"
+          class="text-white"
+          style="font-size:var(--text-titulo)"
+        />
       </div>
 
-      <ul class="revelar mt-16 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-        {tiposDeCarga.map((tipo, i) => (
-          <li class="group relative flex flex-col gap-6 bg-navy-900 p-7 transition-colors duration-300 hover:bg-navy-950 lg:gap-10 lg:p-8">
-            <span class="font-sans text-xs text-white/55">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="font-display text-xl font-semibold text-white lg:text-2xl">{tipo}</h3>
-            <span
-              class="absolute inset-x-7 bottom-0 h-px w-0 bg-green transition-all duration-500 ease-suave group-hover:w-[calc(100%-3.5rem)]"
-              aria-hidden="true"
+      <div class="revelar lg:col-span-7">
+        <p class="text-white" style="font-size:var(--text-cuerpo-lg)">
+          Desde {fundacion.desde}, la {fundacion.nombre} desarrolla proyectos sociales
+          sostenibles que mejoran la calidad de vida de comunidades vulnerables
+          en {empresa.sedes.join(' y ')}.
+        </p>
+        <p class="mt-6 max-w-prose text-white/65">
+          Nació en el Urabá antioqueño como iniciativa de Cargoban para responder a
+          necesidades de educación, vivienda y espacios de encuentro en la región.
+        </p>
+
+        <ul class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2">
+          {fundacion.lineas.map((linea, i, todas) => (
+            // Con un número impar de líneas, la última ocupa la fila entera: sin celda vacía.
+            <li
+              class:list={[
+                'flex items-center gap-4 bg-navy-950 px-7 py-6',
+                { 'sm:col-span-2': i === todas.length - 1 && todas.length % 2 === 1 },
+              ]}
             >
-            </span>
-          </li>
-        ))}
-      </ul>
+              <span class="block size-2 shrink-0 rotate-45 bg-green" aria-hidden="true"></span>
+              <span class="font-display text-lg font-semibold text-white">{linea}</span>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={fundacion.web}
+          target="_blank"
+          rel="noopener"
+          class="group mt-10 inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
+        >
+          Conocer la {fundacion.nombre}
+          <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="sr-only">(se abre en una pestaña nueva)</span>
+        </a>
+      </div>
     </div>
   </section>
 
