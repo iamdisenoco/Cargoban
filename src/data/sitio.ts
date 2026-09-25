@@ -149,11 +149,25 @@ export const fundacion = {
   // Sin web confirmada no se muestra el botón. Pedir a Cargoban la vigente, con https.
   web: '',
   lineas: [
-    'Emprendimientos agrícolas y de mujeres',
+    'Emprendimiento y bisutería',
     'Recreación, cultura y deporte',
-    'Vivienda',
+    'Resignificación de comunidades',
     'Escuelas y espacios comunitarios',
     'Fortalecimiento ambiental',
+  ],
+};
+
+/**
+ * Fondo de empleados de Cargoban. Fuente: presentación corporativa que envió Jon (25/09).
+ */
+export const fondecar = {
+  nombre: 'FONDECAR',
+  beneficios: [
+    'Ahorro',
+    'Créditos de vivienda y/o vehículo',
+    'Torneos deportivos',
+    'Ayuda social',
+    'Bonos y subsidios escolares',
   ],
 };
 

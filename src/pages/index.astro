@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import Cinta from '../components/Cinta.astro';
 import Servicios from '../components/Servicios.astro';
 import Titular from '../components/Titular.astro';
-import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/sitio';
+import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '../data/sitio';
 ---
 
 <Base>
@@ -121,33 +121,34 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
        identificables: confirmar con la fundación el permiso de uso antes de publicar. -->
   <section id="sostenibilidad" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
     <div class="contenedor">
-      <div class="grid gap-14 lg:grid-cols-12 lg:gap-x-20">
-        <div class="lg:col-span-5">
-          <Titular
-            texto="Compromiso con las comunidades donde operamos"
-            class="text-white"
-            style="font-size:var(--text-titulo)"
-          />
-          <figure class="foto-abre mt-12 aspect-square overflow-hidden rounded-2xl">
-            <img
-              src="/fotos/fundacion-nina.webp"
-              alt="Niña de una comunidad acompañada por la Fundación Cargoban"
-              class="size-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        </div>
+      <!-- El titular va a lo ancho, en dos líneas: en una columna angosta quedaba
+           partido en cinco renglones gigantes (Jon, 25/09). -->
+      <Titular
+        texto="Compromiso con las *comunidades* donde operamos"
+        class="max-w-[24ch] text-white"
+        style="font-size:var(--text-seccion)"
+      />
 
-        <div class="lg:col-span-7 lg:pt-40">
+      <div class="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-x-20">
+        <figure class="foto-abre aspect-square overflow-hidden rounded-2xl lg:col-span-5">
+          <img
+            src="/fotos/fundacion-nina.webp"
+            alt="Niña de una comunidad acompañada por la Fundación Cargoban"
+            class="size-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <div class="lg:col-span-7 lg:self-center">
           <p class="revelar font-display font-semibold text-white" style="font-size:var(--text-subtitulo);line-height:1.2;letter-spacing:-0.02em">
             Desde {fundacion.desde}, la {fundacion.nombre} desarrolla proyectos sociales
-            sostenibles que mejoran la calidad de vida de comunidades vulnerables
-            en {fundacion.regiones.join(' y ')}.
+            sostenibles que <span class="text-green">mejoran la calidad de vida</span> de
+            comunidades vulnerables en {fundacion.regiones.join(' y ')}.
           </p>
           <p class="revelar mt-6 max-w-prose text-white/65" style="font-size:var(--text-cuerpo-lg)">
             Nació en el Urabá antioqueño como iniciativa de Cargoban para responder a
-            necesidades de educación, vivienda y espacios de encuentro en la región.
+            necesidades de educación, emprendimiento y espacios de encuentro en la región.
           </p>
 
           <ul class="revelar mt-12 grid gap-x-10 sm:grid-cols-2">
@@ -189,6 +190,37 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
           </li>
         ))}
       </ul>
+
+      <!-- Fondo de empleados. Foto: colaboradora de Cargoban en muelle (Drive de Jon, 25/09). -->
+      <div class="mt-24 grid gap-12 border-t border-white/15 pt-24 lg:mt-36 lg:grid-cols-12 lg:gap-x-20 lg:pt-36">
+        <div class="lg:col-span-5 lg:self-center">
+          <h3 class="revelar font-display font-semibold text-white" style="font-size:var(--text-subtitulo);line-height:1.1;letter-spacing:-0.03em">
+            Fondo de empleados <span class="text-green">{fondecar.nombre}</span>
+          </h3>
+          <p class="revelar mt-6 max-w-prose text-white/65" style="font-size:var(--text-cuerpo-lg)">
+            Nuestro fondo de empleados brinda soluciones para <span class="text-white">mejorar
+            la calidad de vida</span> de los asociados y sus familias.
+          </p>
+          <ul class="revelar mt-10">
+            {fondecar.beneficios.map((beneficio) => (
+              <li class="flex items-center gap-4 border-t border-white/15 py-4 last:border-b">
+                <span class="block size-2 shrink-0 rotate-45 bg-green" aria-hidden="true"></span>
+                <span class="font-display text-lg font-semibold text-white">{beneficio}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <figure class="foto-abre order-first aspect-[4/3] overflow-hidden rounded-2xl lg:col-span-7">
+          <img
+            src="/fotos/fondecar-colaboradora.webp"
+            alt="Colaboradora de Cargoban con casco y gafas de seguridad en el muelle"
+            class="size-full object-cover"
+            style="object-position:55% 40%"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
     </div>
   </section>
 
