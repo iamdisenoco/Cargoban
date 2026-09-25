@@ -250,6 +250,14 @@
     tiene su turno de 6 s dentro del ciclo y se acerca despacio mientras se ve.
   */
   .portada-foto {
+    object-position: var(--foco-movil, 50% 50%);
+  }
+  @media (min-width: 48rem) {
+    .portada-foto {
+      object-position: var(--foco, 50% 50%);
+    }
+  }
+  .portada-foto {
     opacity: 0;
   }
 

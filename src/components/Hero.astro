@@ -8,31 +8,38 @@ import { empresa } from '../data/sitio';
  * Nada de material de terceros aquí: ni videos ni fotos de Puerto Antioquia (AGENTS.md).
  * Con una lista vacía queda el fondo de marca.
  */
-// `foco`: qué parte de la foto se conserva cuando la pantalla la recorta (en móvil, los costados).
-const fotos: { src: string; foco: string }[] = [
-  { src: '/fotos/portada-izaje.webp', foco: '78% 50%' },
-  { src: '/fotos/portada-equipo.webp', foco: '45% 50%' },
-  { src: '/fotos/portada-operario.webp', foco: '30% 50%' },
+// `foco`: qué parte de la foto se conserva cuando la pantalla la recorta.
+// `focoMovil`: lo mismo en la franja de foto del móvil, que es casi cuadrada y recorta
+// los costados. Se eligió mirando cada foto: la llanta, el grupo con su jefe, el operario.
+const fotos: { src: string; foco: string; focoMovil: string }[] = [
+  { src: '/fotos/portada-izaje.webp', foco: '50% 50%', focoMovil: '72% 50%' },
+  { src: '/fotos/portada-equipo.webp', foco: '55% 50%', focoMovil: '33% 50%' },
+  { src: '/fotos/portada-operario.webp', foco: '30% 50%', focoMovil: '27% 50%' },
 ];
 ---
 
-<section id="inicio" class="portada-fija relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
+<!--
+  En móvil la foto va arriba, limpia, y el texto debajo sobre el azul: con el texto
+  encima de la foto a pantalla completa, el titular tapaba las caras (Jon, 25/09).
+  Desde md vuelve a ser foto de fondo a pantalla completa con el texto encima.
+-->
+<section id="inicio" class="portada-fija relative isolate flex flex-col overflow-hidden bg-navy-950 md:min-h-[100svh] md:justify-end">
   <!-- Capa de fondo: fotos propias o, sin fotos, la textura derivada del símbolo (permitida por el manual de marca) -->
-  <div class="portada-fondo absolute inset-0 -z-10 fondo-marca">
+  <div class="portada-fondo relative -z-10 h-[62svh] min-h-80 fondo-marca md:absolute md:inset-0 md:h-auto">
     {fotos.length > 0 ? (
       <>
-        {fotos.map(({ src, foco }, i) => (
+        {fotos.map(({ src, foco, focoMovil }, i) => (
           <img
             src={src}
             alt=""
             class="portada-foto absolute inset-0 size-full object-cover"
-            style={`--n:${fotos.length}; --i:${i}; object-position:${foco}`}
+            style={`--n:${fotos.length}; --i:${i}; --foco:${foco}; --foco-movil:${focoMovil}`}
             fetchpriority={i === 0 ? 'high' : 'low'}
             decoding="async"
           />
         ))}
         {/* Velo azul de marca sobre las fotos: el titular se lee siempre. */}
-        <div class="absolute inset-0 bg-navy-950/65" aria-hidden="true"></div>
+        <div class="absolute inset-0 bg-navy-950/20 md:bg-navy-950/65" aria-hidden="true"></div>
       </>
     ) : (
       <div
@@ -50,7 +57,7 @@ const fotos: { src: string; foco: string }[] = [
     </div>
   </div>
 
-  <div class="portada-texto contenedor pb-16 pt-32 lg:pb-24">
+  <div class="portada-texto contenedor relative -mt-10 pb-16 md:mt-0 md:pt-32 lg:pb-24">
     <Titular
       as="h1"
       texto="Operamos la *carga* que mueve al Caribe"
