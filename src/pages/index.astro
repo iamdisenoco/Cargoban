@@ -26,77 +26,88 @@ import { empresa, razones, cifras, fundacion, clientes, sedes } from '../data/si
     <div class="portada-cortina">
       <Cinta />
 
-      <!-- Nosotros -->
+      <!-- Nosotros: tres filas a todo el ancho para que ninguna columna quede colgando.
+           1) titular y foto vertical | foto horizontal y presentación
+           2) cifras en una franja   3) las cuatro razones en una fila -->
       <section id="nosotros" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
-        <div class="contenedor grid gap-14 lg:grid-cols-12 lg:gap-x-20">
-          <div class="lg:col-span-6">
-            <Titular
-              texto="Bienvenido a Cargoban"
-              class="text-ink"
-              style="font-size:var(--text-titulo)"
-            />
-            <figure class="foto-abre mt-14 hidden aspect-[4/5] w-3/4 overflow-hidden rounded-2xl lg:block">
-              <img
-                src="/fotos/nosotros-caminando.webp"
-                alt="Supervisor de Cargoban caminando por el muelle frente a las grúas pórtico"
-                class="size-full object-cover object-[50%_58%]"
-                loading="lazy"
-                decoding="async"
+        <div class="contenedor">
+          <div class="grid gap-14 lg:grid-cols-12 lg:gap-x-20">
+            <div class="flex flex-col lg:col-span-5">
+              <Titular
+                texto="Bienvenido a Cargoban"
+                class="text-ink"
+                style="font-size:var(--text-titulo)"
               />
-            </figure>
+              <figure class="foto-abre mt-12 hidden aspect-[4/5] overflow-hidden rounded-2xl lg:block">
+                <img
+                  src="/fotos/nosotros-caminando.webp"
+                  alt="Supervisor de Cargoban caminando por el muelle frente a las grúas pórtico"
+                  class="size-full object-cover object-[50%_58%]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            </div>
+
+            <div class="flex flex-col lg:col-span-7 lg:pt-40">
+              <figure class="foto-abre aspect-[4/3] overflow-hidden rounded-2xl">
+                <!-- Recortada arriba (la grúa lleva la marca de Puerto Antioquia) y con dos rótulos
+                     del chasis desenfocados. Original: IMG_2894 en la carpeta de Drive de Jon. -->
+                <img
+                  src="/fotos/nosotros-maersk.webp"
+                  alt="Operarios de Cargoban junto a un contenedor refrigerado en el muelle"
+                  class="size-full object-cover object-[50%_25%]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+
+              <p class="revelar mt-12 max-w-2xl font-display font-semibold text-ink" style="font-size:var(--text-subtitulo);line-height:1.2;letter-spacing:-0.02em">
+                Somos un operador logístico y portuario colombiano con más de {empresa.anios} años
+                de trayectoria en {empresa.sedes.join(' y ')}.
+              </p>
+              <p class="revelar mt-6 max-w-2xl text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+                Acompañamos a nuestros clientes en cada etapa de la operación: cargue y descargue
+                de buques, manejo de carga en muelle, transporte, almacenamiento y alquiler de
+                equipos, con personal propio y especializado, procedimientos estandarizados y
+                control de cada movimiento.
+              </p>
+            </div>
           </div>
 
-          <div class="lg:col-span-6">
-            <figure class="foto-abre aspect-[4/3] overflow-hidden rounded-2xl">
-              <!-- Recortada arriba (la grúa lleva la marca de Puerto Antioquia) y con dos rótulos
-                   del chasis desenfocados. Original: IMG_2894 en la carpeta de Drive de Jon. -->
-              <img
-                src="/fotos/nosotros-maersk.webp"
-                alt="Operarios de Cargoban junto a un contenedor refrigerado en el muelle"
-                class="size-full object-cover object-[50%_25%]"
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
+          <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
+               El número final va escrito en el HTML: sin JavaScript se lee igual. -->
+          <dl class="revelar mt-24 grid border-y border-ink/10 sm:grid-cols-3 lg:mt-32">
+            {cifras.map((cifra, i) => (
+              <div
+                class:list={[
+                  'flex flex-col-reverse gap-3 py-10 sm:px-8 lg:py-14',
+                  i > 0 && 'border-t border-ink/10 sm:border-t-0 sm:border-l',
+                  i === 0 && 'sm:pl-0',
+                ]}
+              >
+                <dt class="text-ink-soft">{cifra.texto}</dt>
+                <dd
+                  class="cifra font-display font-semibold leading-none text-navy"
+                  style="font-size:clamp(3rem,2rem + 3.5vw,5.5rem);letter-spacing:-0.035em"
+                  data-contador={cifra.valor}
+                  data-prefijo={cifra.prefijo}
+                >
+                  {cifra.prefijo}{cifra.valor.toLocaleString('es-CO')}
+                </dd>
+              </div>
+            ))}
+          </dl>
 
-            <p class="revelar mt-10 font-display font-semibold text-ink" style="font-size:var(--text-cuerpo-lg);line-height:1.35">
-              Somos un operador logístico y portuario colombiano con más de {empresa.anios} años
-              de trayectoria en {empresa.sedes.join(' y ')}.
-            </p>
-            <p class="revelar mt-6 max-w-prose text-ink-soft">
-              Acompañamos a nuestros clientes en cada etapa de la operación: cargue y descargue
-              de buques, manejo de carga en muelle, transporte, almacenamiento y alquiler de
-              equipos. Trabajamos con personal propio y especializado, procedimientos
-              estandarizados y control de cada movimiento.
-            </p>
-
-            <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
-                 El número final va escrito en el HTML: sin JavaScript se lee igual. -->
-            <dl class="revelar mt-12 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-3">
-              {cifras.map((cifra) => (
-                <div class="flex flex-col-reverse gap-2 bg-white p-6 lg:p-7">
-                  <dt class="text-sm text-ink-soft">{cifra.texto}</dt>
-                  <dd
-                    class="cifra font-display text-4xl font-semibold leading-none text-navy"
-                    data-contador={cifra.valor}
-                    data-prefijo={cifra.prefijo}
-                  >
-                    {cifra.prefijo}{cifra.valor.toLocaleString('es-CO')}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-
-            <ul class="revelar mt-6 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2">
-              {razones.map((razon) => (
-                <li class="bg-white p-6 lg:p-7">
-                  <span class="block size-2 rotate-45 bg-teal" aria-hidden="true"></span>
-                  <h3 class="mt-4 font-display text-lg font-semibold text-ink">{razon.titulo}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-ink-soft">{razon.texto}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul class="revelar mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+            {razones.map((razon) => (
+              <li class="border-t border-ink/15 pt-6">
+                <span class="block size-2 rotate-45 bg-teal" aria-hidden="true"></span>
+                <h3 class="mt-5 font-display text-xl font-semibold text-ink">{razon.titulo}</h3>
+                <p class="mt-3 leading-relaxed text-ink-soft">{razon.texto}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </div>
