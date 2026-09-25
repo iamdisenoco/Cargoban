@@ -87,3 +87,8 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   se ve gigante (Jon, 25/09, Sostenibilidad). Va a lo ancho, en dos líneas como mucho, con
   `--text-seccion`. Jon pidió frases en verde para dar color, como el referente: una palabra
   en el titular (`*palabra*`) y una frase en el párrafo principal, no más.
+- Las capturas con `reducedMotion: 'reduce'` no bastan: esconden lo que hacen las animaciones.
+  El acercamiento de las fotos de portada las hacía crecer 26 px fuera de su caja y en el
+  teléfono de Jon se veía una franja de foto bajo el degradado (25/09). Toda caja con una
+  imagen que se escala lleva `overflow-hidden`, y se revisa también con la animación
+  congelada en su punto máximo.

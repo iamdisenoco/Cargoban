@@ -25,7 +25,7 @@ const fotos: { src: string; foco: string; focoMovil: string }[] = [
 -->
 <section id="inicio" class="portada-fija relative isolate flex flex-col overflow-hidden bg-navy-950 md:min-h-[100svh] md:justify-end">
   <!-- Capa de fondo: fotos propias o, sin fotos, la textura derivada del símbolo (permitida por el manual de marca) -->
-  <div class="portada-fondo relative -z-10 h-[62svh] min-h-80 fondo-marca md:absolute md:inset-0 md:h-auto">
+  <div class="portada-fondo relative -z-10 h-[62svh] min-h-80 overflow-hidden fondo-marca md:absolute md:inset-0 md:h-auto">
     {fotos.length > 0 ? (
       <>
         {fotos.map(({ src, foco, focoMovil }, i) => (
