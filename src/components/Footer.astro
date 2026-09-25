@@ -1,5 +1,7 @@
 ---
-import { empresa, navegacion, sedes } from '../data/sitio';
+import { empresa, navegacion, sedes, enlaceWhatsapp, numeroMarcable } from '../data/sitio';
+import Instagram from './iconos/Instagram.astro';
+import WhatsApp from './iconos/WhatsApp.astro';
 const anio = new Date().getFullYear();
 ---
 
@@ -18,9 +20,33 @@ const anio = new Date().getFullYear();
           Operador logístico y portuario con más de {empresa.anios} años de experiencia
           en {empresa.sedes.join(' y ')}.
         </p>
+        <ul class="mt-6 flex gap-3" aria-label="Redes sociales">
+          <li>
+            <a
+              href={empresa.instagram}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
+            >
+              <Instagram class="size-5" />
+              <span class="sr-only">Instagram de {empresa.nombre} (se abre en una pestaña nueva)</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={enlaceWhatsapp}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
+            >
+              <WhatsApp class="size-5" />
+              <span class="sr-only">WhatsApp de {empresa.nombre} (se abre en una pestaña nueva)</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
-      <nav class="lg:col-span-3" aria-label="Pie de página">
+      <nav class="lg:col-span-3 lg:col-start-10" aria-label="Pie de página">
         <p class="etiqueta text-white/60">Navegación</p>
         <ul class="mt-4">
           {navegacion.map((item) => (
@@ -32,20 +58,26 @@ const anio = new Date().getFullYear();
           ))}
         </ul>
       </nav>
-
-      <div class="lg:col-span-4">
-        <p class="etiqueta text-white/60">Sedes</p>
-        <ul class="mt-6 space-y-6">
-          {sedes.map((sede) => (
-            <li>
-              <p class="font-display font-semibold text-white">{sede.ciudad}</p>
-              <p class="text-sm text-white/55">{sede.region}</p>
-              {sede.direccion && <p class="mt-1 text-sm text-white/70">{sede.direccion}</p>}
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
+
+    <!-- Sedes con sus datos de contacto, en letra pequeña (Jon, 25/09). -->
+    <ul class="mt-14 grid gap-10 border-t border-white/10 pt-10 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      {sedes.map((sede) => (
+        <li>
+          <p class="font-display font-semibold text-white">{sede.ciudad}</p>
+          <address class="mt-2 not-italic leading-relaxed text-white/60">
+            {sede.direccion.map((linea) => <span class="block">{linea}</span>)}
+            <span class="block">{sede.ciudad}, {sede.region}</span>
+          </address>
+          <p class="mt-2 leading-relaxed text-white/60">
+            Tel. <a href={`tel:${numeroMarcable(sede.telefono)}`} class="text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.telefono}</a>
+            <span class="block">
+              Cel. <a href={`tel:${numeroMarcable(sede.celular)}`} class="text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.celular}</a>
+            </span>
+          </p>
+        </li>
+      ))}
+    </ul>
   </div>
 
   <div class="border-t border-white/10">

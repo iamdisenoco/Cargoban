@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import IntroBrujula from '../components/IntroBrujula.astro';
 import Footer from '../components/Footer.astro';
+import BurbujaWhatsapp from '../components/BurbujaWhatsapp.astro';
 import { empresa } from '../data/sitio';
 
 interface Props {
@@ -79,6 +80,7 @@ const tituloCompleto = titulo
       <slot />
     </main>
     <Footer />
+    <BurbujaWhatsapp />
 
     <script>
       import '../scripts/desplazamiento';

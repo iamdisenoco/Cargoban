@@ -17,7 +17,17 @@ export const empresa = {
   // PROVISIONAL: datos de contacto pendientes de Cargoban.
   telefono: '',
   correo: '',
+  // WhatsApp de la burbuja y del botón de Contacto: línea «Costos Cargoban» (Jon, 25/09).
+  whatsapp: {
+    numero: '573245794431',
+    visible: '+57 324 579 4431',
+    mensaje: 'Hola, quiero información sobre una operación con Cargoban.',
+  },
+  instagram: 'https://www.instagram.com/cargobanoperador/',
 };
+
+/** Enlace de WhatsApp con el mensaje inicial ya escrito. */
+export const enlaceWhatsapp = `https://wa.me/${empresa.whatsapp.numero}?text=${encodeURIComponent(empresa.whatsapp.mensaje)}`;
 
 /** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
 export const clientes: { nombre: string; logo?: string }[] = [];
@@ -172,9 +182,36 @@ export const fondecar = {
 };
 
 /** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
-export const sedes = [
-  // Urabá es una subregión de Antioquia, no un municipio. Confirmar con Cargoban
-  // el municipio exacto de la sede (Turbo, Apartadó o Necoclí) antes de publicar.
-  { ciudad: 'Urabá', region: 'Antioquia', direccion: '', telefono: '' },
-  { ciudad: 'Santa Marta', region: 'Magdalena', direccion: '', telefono: '' },
+export const sedes: {
+  ciudad: string;
+  region: string;
+  direccion: string[];
+  telefono: string;
+  celular: string;
+}[] = [
+  // Datos de la papelería de Cargoban que envió Jon (25/09).
+  {
+    ciudad: 'Apartadó',
+    region: 'Antioquia',
+    direccion: ['Calle 100 No. 103-27', 'Barrio Ortiz'],
+    telefono: '(604) 524 7028',
+    celular: '+57 317 585 2899',
+  },
+  {
+    ciudad: 'Santa Marta',
+    region: 'Magdalena',
+    direccion: ['Calle 24 No. 3-99, Of. 603 y 701', 'Edificio Banco de Bogotá'],
+    telefono: '(605) 431 9861',
+    celular: '+57 312 775 8504',
+  },
+  {
+    ciudad: 'Medellín',
+    region: 'Antioquia',
+    direccion: ['Calle 4 Sur No. 43A-195, Of. 243', 'Centro Ejecutivo'],
+    telefono: '(604) 540 3261',
+    celular: '+57 316 740 7225',
+  },
 ];
+
+/** Para enlaces tel:, sin espacios ni paréntesis. */
+export const numeroMarcable = (n: string) => n.replace(/[^+\d]/g, '');

@@ -392,3 +392,13 @@
     to { transform: translateX(-50%); }
   }
 }
+
+/* La burbuja de WhatsApp entra poco después de cargar. Su estado final es el de partida. */
+@media (prefers-reduced-motion: no-preference) {
+  .burbuja-whatsapp {
+    animation: burbuja-entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.2s backwards;
+  }
+}
+@keyframes burbuja-entrar {
+  from { opacity: 0; transform: translateY(1rem) scale(0.8); }
+}

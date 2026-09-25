@@ -4,7 +4,9 @@ import Hero from '../components/Hero.astro';
 import Cinta from '../components/Cinta.astro';
 import Servicios from '../components/Servicios.astro';
 import Titular from '../components/Titular.astro';
-import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '../data/sitio';
+import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes, enlaceWhatsapp, numeroMarcable } from '../data/sitio';
+import WhatsApp from '../components/iconos/WhatsApp.astro';
+import Instagram from '../components/iconos/Instagram.astro';
 ---
 
 <Base>
@@ -276,54 +278,48 @@ import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes } from '
           propuesta de operación.
         </p>
 
-        {empresa.correo || empresa.telefono ? (
-          <div class="mt-10 flex flex-wrap gap-4">
-            {empresa.correo && (
-              <a
-                href={`mailto:${empresa.correo}`}
-                class="inline-flex items-center rounded-full bg-green px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green-300"
-              >
-                {empresa.correo}
-              </a>
-            )}
-            {empresa.telefono && (
-              <a
-                href={`tel:${empresa.telefono.replace(/\s/g, '')}`}
-                class="inline-flex items-center rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                {empresa.telefono}
-              </a>
-            )}
-          </div>
-        ) : (
-          <p class="mt-10 max-w-md text-sm text-white/60">
-            Estamos habilitando los canales de contacto de la nueva página.
-            Mientras tanto puede escribirnos por nuestras redes sociales.
-          </p>
-        )}
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href={enlaceWhatsapp}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-3 rounded-full bg-green px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green-300"
+          >
+            <WhatsApp class="size-5" />
+            Escribir por WhatsApp
+            <span class="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
+          <a
+            href={empresa.instagram}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
+          >
+            <Instagram class="size-5" />
+            Instagram
+            <span class="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
+          {empresa.correo && (
+            <a
+              href={`mailto:${empresa.correo}`}
+              class="inline-flex items-center rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              {empresa.correo}
+            </a>
+          )}
+        </div>
       </div>
 
-      <ul class="revelar grid gap-6 lg:col-span-6">
+      <ul class="revelar grid content-start gap-4 lg:col-span-6">
         {sedes.map((sede) => (
-          <li class="rounded-2xl border border-white/15 bg-navy-900 p-8">
-            <h3 class="font-display text-3xl font-semibold text-white">{sede.ciudad}</h3>
-            <p class="mt-2 text-white/60">{sede.region}</p>
-            {(sede.direccion || sede.telefono) && (
-              <dl class="mt-6 space-y-2 text-sm">
-                {sede.direccion && (
-                  <div class="flex gap-3">
-                    <dt class="w-20 shrink-0 text-white/60">Dirección</dt>
-                    <dd class="text-white/80">{sede.direccion}</dd>
-                  </div>
-                )}
-                {sede.telefono && (
-                  <div class="flex gap-3">
-                    <dt class="w-20 shrink-0 text-white/60">Teléfono</dt>
-                    <dd class="text-white/80">{sede.telefono}</dd>
-                  </div>
-                )}
-              </dl>
-            )}
+          <li class="flex flex-col gap-3 rounded-2xl border border-white/15 bg-navy-900 px-7 py-6 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+            <div>
+              <h3 class="font-display text-2xl font-semibold text-white">{sede.ciudad}</h3>
+              <p class="mt-1 text-sm text-white/60">{sede.region}</p>
+            </div>
+            <p class="text-sm text-white/70">
+              Cel. <a href={`tel:${numeroMarcable(sede.celular)}`} class="text-white underline-offset-4 hover:text-green hover:underline">{sede.celular}</a>
+            </p>
           </li>
         ))}
       </ul>

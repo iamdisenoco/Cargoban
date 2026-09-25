@@ -1,0 +1,18 @@
+---
+/**
+ * Burbuja fija de WhatsApp (Jon, 25/09). Va por debajo del menú móvil (z-40) y del
+ * intro, así no tapa ninguno de los dos. Se abre en otra pestaña con el mensaje ya escrito.
+ */
+import { empresa, enlaceWhatsapp } from '../data/sitio';
+import WhatsApp from './iconos/WhatsApp.astro';
+---
+
+<a
+  href={enlaceWhatsapp}
+  target="_blank"
+  rel="noopener"
+  class="burbuja-whatsapp fixed right-4 bottom-4 z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-lg shadow-black/25 transition-transform duration-300 ease-suave hover:scale-105 sm:right-6 sm:bottom-6 sm:size-16"
+>
+  <WhatsApp class="size-7 sm:size-8" />
+  <span class="sr-only">Escribir a {empresa.nombre} por WhatsApp (se abre en una pestaña nueva)</span>
+</a>
