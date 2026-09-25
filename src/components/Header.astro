@@ -80,7 +80,7 @@ import { navegacion, empresa } from '../data/sitio';
   aria-modal="true"
   aria-label="Menú de navegación"
 >
-  <nav class="contenedor flex h-full flex-col justify-center gap-2 overflow-y-auto py-24 [@media(max-height:560px)]:justify-start" aria-label="Principal móvil">
+  <nav class="contenedor mt-20 flex h-[calc(100%-5rem)] flex-col justify-center gap-2 overflow-y-auto pt-4 pb-10 [@media(max-height:560px)]:justify-start" aria-label="Principal móvil">
     {navegacion.map((item, i) => (
       <a
         href={item.href}
