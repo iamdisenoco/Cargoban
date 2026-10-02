@@ -378,6 +378,56 @@
     to { transform: translateY(6%) scale(1.08); }
   }
 
+  /* Nuestros clientes. De partida, cuadrícula quieta dentro del ancho del contenido;
+     con la clase `activa` (la pone el script) pasa a dos cintas a todo el ancho. */
+  .clientes-marquesina {
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem; /* igual que .contenedor */
+  }
+  @media (min-width: 40rem) { .clientes-marquesina { padding-inline: 2rem; } }
+  @media (min-width: 64rem) { .clientes-marquesina { padding-inline: 3.5rem; } }
+  .clientes-pista {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .clientes-fila + .clientes-fila { margin-top: -1px; }
+  .clientes-celda {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 8rem;
+    padding: 1.5rem;
+    margin-right: -1px;
+    border: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent);
+    background: var(--color-white);
+  }
+  .clientes-celda img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .clientes-copia { display: none; }
+  @media (min-width: 40rem) {
+    .clientes-celda { width: 25%; height: 10rem; padding: 2rem; }
+  }
+  @media (min-width: 64rem) {
+    .clientes-celda { width: calc(100% / 7); padding: 1.5rem; }
+  }
+
+  .clientes-marquesina.activa { max-width: none; padding-inline: 0; }
+  .clientes-marquesina.activa .clientes-fila { overflow: hidden; }
+  .clientes-marquesina.activa .clientes-pista {
+    flex-wrap: nowrap;
+    width: max-content;
+    will-change: transform;
+  }
+  .clientes-marquesina.activa .clientes-copia { display: flex; }
+  .clientes-marquesina.activa .clientes-celda { width: 11rem; flex-shrink: 0; }
+  @media (min-width: 40rem) {
+    .clientes-marquesina.activa .clientes-celda { width: 15rem; }
+  }
+  @media (min-width: 64rem) {
+    .clientes-marquesina.activa .clientes-celda { width: 17rem; padding: 2rem; }
+  }
+
   /* Cinta de tipos de carga en movimiento continuo. */
   .cinta {
     animation: correr 38s linear infinite;

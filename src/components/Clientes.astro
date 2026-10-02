@@ -1,0 +1,116 @@
+---
+/**
+ * Nuestros clientes, en dos filas que corren en sentidos opuestos, como en cargokite.com
+ * (Jon, 02/10). Visto en su página: ~72 px/s, la fila de arriba hacia la izquierda y la de
+ * abajo hacia la derecha; al hacer scroll se aceleran y luego vuelven a su ritmo, y al
+ * subir cambian de sentido.
+ *
+ * El estado de partida es una cuadrícula quieta con todos los logos a la vista. Solo el
+ * script la convierte en cinta, y solo si puede moverla: sin JavaScript o con «menos
+ * movimiento» se ven todos los clientes, ninguno queda tapado.
+ */
+import Titular from './Titular.astro';
+import { clientes } from '../data/sitio';
+
+const mitad = Math.ceil(clientes.length / 2);
+// Cada fila lleva dos copias seguidas: al recorrer la primera, la cinta vuelve al
+// inicio sin que se note. La copia se oculta a lectores de pantalla.
+const filas = [clientes.slice(0, mitad), clientes.slice(mitad)].map((fila) => [
+  ...fila.map((cliente) => ({ ...cliente, copia: false })),
+  ...fila.map((cliente) => ({ ...cliente, copia: true })),
+]);
+---
+
+<section id="clientes" class="scroll-mt-24 overflow-hidden bg-white py-24 text-ink lg:py-36">
+  <div class="contenedor">
+    <div class="revelar">
+      <Titular texto="Nuestros *clientes*" class="text-navy" style="font-size:var(--text-seccion)" />
+    </div>
+    <p class="revelar mt-6 max-w-2xl text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+      Puertos, exportadores, agencias y operadores que confían su carga a nuestro equipo.
+    </p>
+  </div>
+
+  <div class="clientes-marquesina mt-14 lg:mt-20" data-marquesina>
+    {filas.map((fila) => (
+      <div class="clientes-fila">
+        <ul class="clientes-pista">
+          {fila.map((cliente) => (
+            <li class:list={['clientes-celda', { 'clientes-copia': cliente.copia }]} aria-hidden={cliente.copia ? 'true' : undefined}>
+              {cliente.logo ? (
+                <img src={cliente.logo} alt={cliente.copia ? '' : cliente.nombre} loading="lazy" decoding="async" />
+              ) : (
+                <span class="text-center font-display font-semibold text-navy">{cliente.nombre}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  const marquesina = document.querySelector<HTMLElement>('[data-marquesina]');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (marquesina && !quieto.matches) {
+    marquesina.classList.add('activa');
+    const pistas = Array.from(marquesina.querySelectorAll<HTMLElement>('.clientes-pista'));
+    // Fila 0 hacia la izquierda, fila 1 hacia la derecha (como cargokite).
+    const sentidos = pistas.map((_, i) => (i % 2 === 0 ? -1 : 1));
+    const posiciones = pistas.map(() => 0);
+    const BASE = 72; // px por segundo
+    let direccion = 1; // 1 al bajar, -1 al subir
+    let impulso = 0; // px por segundo extra que deja el scroll y se apaga solo
+    let ultimoY = window.scrollY;
+    let visible = false;
+    let anterior = 0;
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        const y = window.scrollY;
+        const delta = y - ultimoY;
+        ultimoY = y;
+        if (delta !== 0) direccion = delta > 0 ? 1 : -1;
+        impulso = Math.min(impulso + Math.abs(delta) * 0.8, 450);
+      },
+      { passive: true },
+    );
+
+    function cuadro(t: number) {
+      if (!visible) return;
+      const dt = anterior ? Math.min((t - anterior) / 1000, 0.05) : 0;
+      anterior = t;
+      impulso *= Math.pow(0.04, dt); // pierde ~96 % por segundo
+      const avance = (BASE + impulso) * dt * direccion;
+      pistas.forEach((pista, i) => {
+        // La pista lleva dos copias iguales: al recorrer una, se vuelve al inicio sin salto.
+        const ancho = pista.scrollWidth / 2;
+        let x = posiciones[i] + avance * sentidos[i];
+        x = ((x % ancho) - ancho) % ancho; // siempre entre -ancho y 0
+        posiciones[i] = x;
+        pista.style.transform = `translate3d(${x}px,0,0)`;
+      });
+      requestAnimationFrame(cuadro);
+    }
+
+    // Arranque escalonado como en la referencia: la fila de abajo empieza desplazada.
+    requestAnimationFrame(() => {
+      pistas.forEach((pista, i) => {
+        posiciones[i] = -(pista.scrollWidth / 2) * (i % 2 === 0 ? 0.04 : 0.46);
+        pista.style.transform = `translate3d(${posiciones[i]}px,0,0)`;
+      });
+    });
+
+    new IntersectionObserver(([entrada]) => {
+      const antes = visible;
+      visible = entrada.isIntersecting;
+      if (visible && !antes) {
+        anterior = 0;
+        requestAnimationFrame(cuadro);
+      }
+    }).observe(marquesina);
+  }
+</script>
