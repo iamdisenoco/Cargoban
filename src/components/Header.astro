@@ -6,14 +6,15 @@ import { navegacion, empresa } from '../data/sitio';
   id="cabecera"
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
-  <div class="contenedor flex h-20 items-center justify-between gap-6 lg:h-24">
+  <div id="cabecera-barra" class="contenedor flex h-20 items-center justify-between gap-6 transition-[height] duration-500 ease-suave lg:h-24">
     <a href="#inicio" class="inline-flex min-h-11 shrink-0 items-center" aria-label={`${empresa.nombre}, ir al inicio`}>
       <img
         src="/marca/logo-horizontal-blanco.svg"
         alt=""
         width="220"
         height="60"
-        class="h-9 w-auto lg:h-11"
+        id="cabecera-logo"
+        class="h-9 w-auto transition-[height] duration-500 ease-suave lg:h-11"
       />
     </a>
 
@@ -108,7 +109,9 @@ import { navegacion, empresa } from '../data/sitio';
   const menu = document.getElementById('menu-movil');
 
   /*
-    La cabecera se vuelve sólida en cuanto el contenido empieza a pasar por detrás.
+    Al bajar, la cabecera se encoge y queda translúcida para que ocupe menos y deje ver
+    el contenido por detrás (Jon, 02/10: «opacidad para que no quite tanto espacio»).
+    La cabecera se vuelve visible en cuanto el contenido empieza a pasar por detrás.
     El centinela ocupa exactamente la franja que cubre la cabecera al inicio de la
     página: mientras una parte de esa franja siga a la vista, no hemos bajado lo
     suficiente. No depende de la altura del hero, que cambia con el contenido.
@@ -117,10 +120,20 @@ import { navegacion, empresa } from '../data/sitio';
   if (centinela && cabecera) {
     new IntersectionObserver(([entrada]) => {
       const solido = !entrada.isIntersecting;
-      cabecera.classList.toggle('bg-navy-950/90', solido);
-      cabecera.classList.toggle('backdrop-blur-lg', solido);
+      cabecera.classList.toggle('bg-navy-950/55', solido);
+      cabecera.classList.toggle('backdrop-blur-md', solido);
       cabecera.classList.toggle('border-b', solido);
       cabecera.classList.toggle('border-white/10', solido);
+      const barra = document.getElementById('cabecera-barra');
+      barra?.classList.toggle('h-20', !solido);
+      barra?.classList.toggle('lg:h-24', !solido);
+      barra?.classList.toggle('h-14', solido);
+      barra?.classList.toggle('lg:h-16', solido);
+      const logo = document.getElementById('cabecera-logo');
+      logo?.classList.toggle('h-9', !solido);
+      logo?.classList.toggle('lg:h-11', !solido);
+      logo?.classList.toggle('h-7', solido);
+      logo?.classList.toggle('lg:h-8', solido);
     }).observe(centinela);
   }
 

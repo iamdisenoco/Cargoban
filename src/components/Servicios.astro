@@ -96,35 +96,50 @@ import { servicios, tiposDeCarga } from '../data/sitio';
         </div>
       </article>
     ))}
-  </div>
 
-  <!-- Tipos de carga: antes era una sección aparte; Jon la pidió dentro de Servicios (25/09). -->
-  <!-- Va en un panel igual a los de servicio: suelto sobre el video se veía flotando,
-       con el párrafo descolgado a la derecha (Jon, 25/09). -->
-  <div id="carga" class="contenedor scroll-mt-24 pt-16 lg:pt-24">
-    <div class="revelar overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl">
+    <!-- Tipos de carga: antes era una sección aparte; Jon la pidió dentro de Servicios (25/09).
+         Va como último panel apilado, igual que los servicios: suelto debajo, los paneles
+         fijos se iban y este entraba solo, desordenado (Jon, 02/10). -->
+    <article
+      id="carga"
+      class="panel-apilado scroll-mt-24 overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
+      style={`--desplazamiento-apilado:calc(8rem + ${servicios.length * 1.25}rem); margin-top:1.5rem`}
+    >
       <div class="grid gap-10 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
         <div class="lg:col-span-5">
-          <h3 class="text-white" style="font-size:var(--text-subtitulo)">
-            Experiencia en todo tipo de carga
-          </h3>
-          <p class="mt-4 max-w-md text-white/60">
-            Desde contenedores refrigerados hasta carga de proyecto, aplicamos a cada tipo de
-            carga el procedimiento, los equipos y el personal que requiere.
-          </p>
+          <div class="flex items-start gap-5">
+            <span class="cifra font-display text-sm font-semibold text-teal-400">{String(servicios.length + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-white" style="font-size:var(--text-subtitulo)">
+                Experiencia en todo tipo de carga
+              </h3>
+              <p class="mt-4 max-w-md text-white/60">
+                Desde contenedores refrigerados hasta carga de proyecto, aplicamos a cada tipo de
+                carga el procedimiento, los equipos y el personal que requiere.
+              </p>
+            </div>
+          </div>
         </div>
 
         <ul class="grid grid-cols-1 gap-x-6 min-[400px]:grid-cols-2 sm:gap-x-10 lg:col-span-7">
-          {tiposDeCarga.map((tipo, i) => (
-            <li class="flex items-baseline gap-3 border-t border-white/10 py-4 sm:gap-4">
-              <span class="cifra font-display text-sm font-semibold text-teal-400">{String(i + 1).padStart(2, '0')}</span>
-              <span class="font-display text-base font-semibold text-white sm:text-lg lg:text-xl">{tipo}</span>
+          {tiposDeCarga.map((tipo) => (
+            <li class="flex items-start gap-3 border-t border-white/10 py-3 text-white/85">
+              <span class="mt-2 size-1.5 shrink-0 rotate-45 bg-white/40" aria-hidden="true"></span>
+              {tipo}
             </li>
           ))}
         </ul>
       </div>
-    </div>
+
+      <div
+        class="h-1 w-full"
+        style={`background:linear-gradient(to right, var(--color-${servicios.length % 2 === 0 ? 'teal' : 'green'}), transparent 70%)`}
+        aria-hidden="true"
+      >
+      </div>
+    </article>
   </div>
+
 </section>
 
 <script>
