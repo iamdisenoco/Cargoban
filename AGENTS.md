@@ -94,3 +94,5 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   teléfono de Jon se veía una franja de foto bajo el degradado (25/09). Toda caja con una
   imagen que se escala lleva `overflow-hidden`, y se revisa también con la animación
   congelada en su punto máximo.
+- La apertura del intro no usa columnas que caen (Jon, 02/10: «no me gusta ese efecto»).
+  Ahora el telón se abre en un círculo desde el centro mientras el logo se apaga.

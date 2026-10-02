@@ -6,8 +6,9 @@
  * junto a la fotografía de una): el arco es la caja y las dos cuñas verde y turquesa
  * son las dos mitades de la aguja. La animación parte de eso: se dibuja el bisel,
  * la aguja busca el norte, se forma el arco y el logotipo completo queda armado.
- * Todo pasa sobre un telón de cinco columnas que tapa la página; al final las
- * columnas caen una tras otra y la destapan, como la pantalla de carga de cargokite.com.
+ * Todo pasa sobre un telón que tapa la página; al final se abre en un círculo desde el
+ * centro, como un iris, y destapa la página. Antes eran cinco columnas que caían; a Jon
+ * no le gustó (02/10).
  *
  * Los trazos NO se copian a mano: se leen del SVG oficial del logo horizontal, para
  * que el logo que queda al final del intro sea exactamente el logo aprobado y no una
@@ -86,9 +87,7 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   aria-modal="true"
   aria-label="Animación de apertura de Cargoban"
 >
-  <div class="intro__telon" aria-hidden="true">
-    {Array.from({ length: 5 }, (_, i) => <span style={`--c:${i}`} />)}
-  </div>
+  <div class="intro__telon" aria-hidden="true"></div>
 
   <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
 
@@ -149,25 +148,43 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   }
 
   /*
-    El telón: cinco columnas que tapan la página mientras se arma el logo. Al
-    terminar, el logo se apaga y las columnas caen hacia abajo una tras otra,
-    0,1 s entre cada una, con la misma curva de aceleración que cargokite.com.
-    El script retira el intro cuando termina de caer la última.
+    El telón: tapa la página mientras se arma el logo. Al terminar, el logo se apaga y
+    el telón se abre en un círculo desde el centro, con un borde turquesa fino que
+    recorre la apertura. El radio es una propiedad registrada para que se pueda animar.
+    El script retira el intro cuando termina de abrirse.
   */
+  @property --apertura {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+  }
+
   .intro__telon {
     position: absolute;
     inset: 0;
-    display: flex;
+    background: var(--color-navy-950);
+    --apertura: 0px;
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--apertura), #000 calc(var(--apertura) + 1px));
+    mask-image: radial-gradient(circle at 50% 50%, transparent var(--apertura), #000 calc(var(--apertura) + 1px));
+    animation-name: intro-abrir;
+    animation-duration: calc(1.1s * var(--r));
+    animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+    animation-delay: calc(2.95s * var(--r));
+    animation-fill-mode: both;
   }
 
-  .intro__telon span {
-    flex: 1;
-    /* 1 px de solape para que no se vea una rendija entre columnas. */
-    margin-right: -1px;
-    background: var(--color-navy-950);
-    transform-origin: bottom;
-    animation: intro-caer calc(1s * var(--r)) cubic-bezier(0.7, 0, 0.84, 0)
-      calc((3.25s + var(--c) * 0.1s) * var(--r)) both;
+  /* Anillo turquesa que acompaña el borde de la apertura y se apaga al final. */
+  .intro__telon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    --apertura: 0px;
+    background: radial-gradient(circle at 50% 50%, transparent var(--apertura), var(--color-teal) calc(var(--apertura) + 1px), var(--color-teal) calc(var(--apertura) + 3px), transparent calc(var(--apertura) + 4px));
+    animation-name: intro-abrir, intro-anillo;
+    animation-duration: calc(1.1s * var(--r));
+    animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1), linear;
+    animation-delay: calc(2.95s * var(--r));
+    animation-fill-mode: both;
   }
 
   .intro[hidden] {
@@ -299,8 +316,15 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     to { opacity: 0; }
   }
 
-  @keyframes intro-caer {
-    to { transform: scaleY(0); }
+  /* 75vmax de sobra: el círculo pasa las cuatro esquinas de cualquier pantalla. */
+  @keyframes intro-abrir {
+    from { --apertura: 0px; }
+    to { --apertura: 75vmax; }
+  }
+
+  @keyframes intro-anillo {
+    0%, 70% { opacity: 1; }
+    100% { opacity: 0; }
   }
 </style>
 
@@ -405,14 +429,16 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     window.addEventListener('touchmove', cerrar, { once: true, passive: true });
 
     /*
-      Cuando empieza a caer el telón se avisa, para que el titular del hero entre
-      mientras se destapa. Cuando cae la última columna, el intro se retira.
+      Cuando empieza a abrirse el telón se avisa, para que el titular del hero entre
+      mientras se destapa. Cuando termina de abrirse, el intro se retira.
     */
-    var columnas = intro.querySelectorAll('.intro__telon span');
-    columnas[0].addEventListener('animationstart', function () {
-      if (!cerrado) document.dispatchEvent(new Event('intro:destapando'));
+    var telon = intro.querySelector('.intro__telon');
+    telon.addEventListener('animationstart', function (e) {
+      if (e.target === telon && !e.pseudoElement && !cerrado) document.dispatchEvent(new Event('intro:destapando'));
     });
-    columnas[columnas.length - 1].addEventListener('animationend', cerrar);
+    telon.addEventListener('animationend', function (e) {
+      if (e.target === telon && !e.pseudoElement) cerrar();
+    });
 
     // Red de seguridad: si alguna animación no dispara, el intro se quita igual.
     setTimeout(cerrar, 6000);
