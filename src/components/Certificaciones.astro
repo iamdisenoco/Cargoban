@@ -1,0 +1,60 @@
+---
+/**
+ * Certificaciones (Jon, 02/10): cada una con su nombre, y al hacer clic se abre el
+ * certificado en PDF en una pestaña nueva. Fondo claro, separada de Clientes por una
+ * línea de 1 px, igual que el resto del sistema.
+ */
+import Titular from './Titular.astro';
+import { certificaciones } from '../data/sitio';
+---
+
+<section id="certificaciones" class="scroll-mt-24 bg-white pb-24 text-ink lg:pb-36">
+  <div class="contenedor border-t border-ink/10 pt-20 lg:pt-28">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-20">
+      <div class="revelar lg:col-span-5">
+        <Titular texto="Operación *certificada*" class="text-navy" style="font-size:var(--text-seccion)" />
+        <p class="mt-6 max-w-md text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+          Nuestros sistemas de gestión están auditados por entidades independientes.
+          Consulte cada certificado.
+        </p>
+      </div>
+
+      <ul class="revelar border-b border-ink/15 lg:col-span-7">
+        {certificaciones.map((cert) => (
+          <li class="border-t border-ink/15">
+            {cert.pdf ? (
+              <a
+                href={cert.pdf}
+                target="_blank"
+                rel="noopener"
+                class="group flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:gap-8"
+              >
+                <div>
+                  <p class="font-display font-semibold text-navy" style="font-size:var(--text-subtitulo);line-height:1.1;letter-spacing:-0.02em">{cert.sigla}</p>
+                  <p class="mt-2 text-ink">{cert.nombre}</p>
+                  <p class="mt-1 text-sm text-ink-soft">{cert.emisor}</p>
+                </div>
+                <span class="inline-flex shrink-0 items-center gap-2 font-display font-semibold text-navy transition-colors group-hover:text-teal">
+                  Ver certificado (PDF)
+                  <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path d="M5 11l6-6M6 5h5v5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span class="sr-only">(se abre en una pestaña nueva)</span>
+                </span>
+              </a>
+            ) : (
+              <div class="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+                <div>
+                  <p class="font-display font-semibold text-navy" style="font-size:var(--text-subtitulo);line-height:1.1;letter-spacing:-0.02em">{cert.sigla}</p>
+                  <p class="mt-2 text-ink">{cert.nombre}</p>
+                  <p class="mt-1 text-sm text-ink-soft">{cert.emisor}</p>
+                </div>
+                <span class="shrink-0 text-sm text-ink-soft">Certificado por publicar</span>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

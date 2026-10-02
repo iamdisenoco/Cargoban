@@ -53,6 +53,29 @@ export const clientes: { nombre: string; logo?: string }[] = [
 ];
 
 /**
+ * Certificaciones, debajo de Clientes (Jon, 02/10). Cada una abre su certificado en PDF
+ * en una pestaña nueva; el archivo va en `public/certificados/` y aquí su ruta.
+ * PROVISIONAL: los certificados que mostró Jon ya vencieron (ISO 9001 el 21/12/2025,
+ * BASC el 12/02/2026). Falta el PDF vigente de cada uno; mientras `pdf` esté vacío, la
+ * tarjeta dice que el certificado está por publicarse en vez de enlazar uno vencido.
+ * No se muestran fechas aquí: cambian con cada renovación y quedarían desactualizadas.
+ */
+export const certificaciones: { sigla: string; nombre: string; emisor: string; pdf: string }[] = [
+  {
+    sigla: 'BASC',
+    nombre: 'Sistema de Gestión en Seguridad',
+    emisor: 'World BASC Organization',
+    pdf: '',
+  },
+  {
+    sigla: 'ISO 9001:2015',
+    nombre: 'Sistema de Gestión de Calidad',
+    emisor: 'ICONTEC · IQNet',
+    pdf: '',
+  },
+];
+
+/**
  * La sección de clientes solo existe si hay clientes que mostrar.
  * Una sección vacía con una nota de trabajo interno es peor que no tenerla.
  */

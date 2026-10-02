@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import Cinta from '../components/Cinta.astro';
 import Servicios from '../components/Servicios.astro';
 import Clientes from '../components/Clientes.astro';
+import Certificaciones from '../components/Certificaciones.astro';
 import Barco from '../components/iconos/Barco.astro';
 import Titular from '../components/Titular.astro';
 import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes, enlaceWhatsapp, numeroMarcable } from '../data/sitio';
@@ -128,6 +129,9 @@ import Instagram from '../components/iconos/Instagram.astro';
 
   {/* Nuestros clientes, después de Servicios (Jon, 02/10). */}
   {clientes.length > 0 && <Clientes />}
+
+  {/* Certificaciones, debajo de Clientes (Jon, 02/10). */}
+  <Certificaciones />
 
 
   <!-- Sostenibilidad: Fundación Cargoban. Textos PROVISIONALES (ver src/data/sitio.ts).
