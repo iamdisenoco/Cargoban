@@ -5,17 +5,27 @@
  * línea de 1 px, igual que el resto del sistema.
  */
 import Titular from './Titular.astro';
-import { certificaciones } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { certificaciones } = contenido(idioma);
 ---
 
 <section id="certificaciones" class="scroll-mt-24 bg-white pb-24 text-ink lg:pb-36">
   <div class="contenedor border-t border-ink/10 pt-20 lg:pt-28">
     <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-20">
       <div class="revelar lg:col-span-5">
-        <Titular texto="Operación *certificada*" class="text-navy" style="font-size:var(--text-seccion)" />
+        <Titular texto={t('Operación *certificada*', '*Certified* operation')} class="text-navy" style="font-size:var(--text-seccion)" />
         <p class="mt-6 max-w-md text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
-          Nuestros sistemas de gestión están auditados por entidades independientes.
-          Consulte cada certificado.
+          {t(
+            'Nuestros sistemas de gestión están auditados por entidades independientes. Consulte cada certificado.',
+            'Our management systems are audited by independent bodies. View each certificate.',
+          )}
         </p>
       </div>
 
@@ -35,11 +45,11 @@ import { certificaciones } from '../data/sitio';
                   <p class="mt-1 text-sm text-ink-soft">{cert.emisor}</p>
                 </div>
                 <span class="inline-flex shrink-0 items-center gap-2 font-display font-semibold text-navy transition-colors group-hover:text-teal">
-                  Ver certificado (PDF)
+                  {t('Ver certificado (PDF)', 'View certificate (PDF)')}
                   <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                     <path d="M5 11l6-6M6 5h5v5" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
-                  <span class="sr-only">(se abre en una pestaña nueva)</span>
+                  <span class="sr-only">{t('(se abre en una pestaña nueva)', '(opens in a new tab)')}</span>
                 </span>
               </a>
             ) : (
@@ -49,7 +59,7 @@ import { certificaciones } from '../data/sitio';
                   <p class="mt-2 text-ink">{cert.nombre}</p>
                   <p class="mt-1 text-sm text-ink-soft">{cert.emisor}</p>
                 </div>
-                <span class="shrink-0 text-sm text-ink-soft">Certificado por publicar</span>
+                <span class="shrink-0 text-sm text-ink-soft">{t('Certificado por publicar', 'Certificate coming soon')}</span>
               </div>
             )}
           </li>

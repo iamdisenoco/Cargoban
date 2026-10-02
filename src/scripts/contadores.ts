@@ -9,7 +9,8 @@
 const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cifras = document.querySelectorAll<HTMLElement>('[data-contador]');
 
-const formato = new Intl.NumberFormat('es-CO');
+// Formato según el idioma de la página: 50.000 en español, 50,000 en inglés.
+const formato = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-US' : 'es-CO');
 const escribir = (el: HTMLElement, n: number) => {
   el.textContent = `${el.dataset.prefijo ?? ''}${formato.format(n)}`;
 };

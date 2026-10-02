@@ -1,6 +1,14 @@
 ---
 import Titular from './Titular.astro';
-import { empresa, clientes } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, clientes } = contenido(idioma);
 
 /**
  * Fondo del hero: fotos propias de Cargoban en Santa Marta que se funden una en otra
@@ -56,6 +64,13 @@ const destacados = ['puerto-santa-marta', 'puerto-antioquia', 'uniban', 'greenla
       >
       </div>
     )}
+    <!-- Sombra arriba: la cabecera transparente se lee igual sobre fotos claras (revisión móvil, 02/10). -->
+    <div
+      class="absolute inset-x-0 top-0 h-40"
+      style="background:linear-gradient(to bottom,rgb(6 10 40 / 0.6),transparent)"
+      aria-hidden="true"
+    >
+    </div>
     <div
       class="absolute inset-0"
       style="background:linear-gradient(to top,var(--color-navy-950) 8%,transparent 60%)"
@@ -73,20 +88,25 @@ const destacados = ['puerto-santa-marta', 'puerto-antioquia', 'uniban', 'greenla
     <div class="md:flex md:flex-1 md:items-center">
       <Titular
         as="h1"
-        texto="Operamos la *carga* que mueve al Caribe"
-        class="portada-titular max-w-[9.8em] font-display text-white"
+        texto={t('Operamos la *carga* que mueve al Caribe', 'We handle the *cargo* that moves the Caribbean')}
+        class:list={['portada-titular font-display text-white', idioma === 'en' ? 'max-w-[11.6em]' : 'max-w-[9.8em]']}
         style="font-size:clamp(2.6rem, 1rem + 5.4vw, 6.25rem)"
       />
     </div>
 
     <div class="mt-10 flex flex-col gap-10 md:mt-16 md:flex-row-reverse md:items-end md:justify-between">
-      <p class="max-w-md text-white md:max-w-[26rem]" style="font-size:var(--text-cuerpo-lg);line-height:1.45">
-        Más de {empresa.anios} años moviendo carga en {empresa.sedes.join(' y ')},
-        con <span class="text-green">equipos y personal especializado</span> en cada operación.
+      <p class="max-w-md text-white md:mr-16 md:max-w-[25rem]" style="font-size:var(--text-cuerpo-lg);line-height:1.45">
+        {idioma === 'en' ? (
+          <>More than {empresa.anios} years moving cargo in {empresa.sedes.join(' and ')},
+          with <span class="text-green">specialized equipment and crews</span> in every operation.</>
+        ) : (
+          <>Más de {empresa.anios} años moviendo carga en {empresa.sedes.join(' y ')},
+          con <span class="text-green">equipos y personal especializado</span> en cada operación.</>
+        )}
       </p>
 
       <div>
-        <p class="text-sm text-white/70">Confían en nosotros:</p>
+        <p class="text-sm text-white/70">{t('Confían en nosotros:', 'Trusted by:')}</p>
         <ul class="mt-4 flex flex-wrap items-center gap-x-7 gap-y-4 lg:gap-x-9">
           {destacados.map((c) => (
             <li>

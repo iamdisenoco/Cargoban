@@ -1,8 +1,17 @@
 ---
-import { empresa, navegacion, sedes, enlaceWhatsapp, numeroMarcable } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
 import Instagram from './iconos/Instagram.astro';
 import WhatsApp from './iconos/WhatsApp.astro';
 const anio = new Date().getFullYear();
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, navegacion, sedes, enlaceWhatsapp, numeroMarcable } = contenido(idioma);
+const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');
 ---
 
 <footer class="border-t border-white/10 bg-navy-950">
@@ -17,10 +26,12 @@ const anio = new Date().getFullYear();
           class="h-24 w-auto"
         />
         <p class="mt-7 max-w-sm text-white/60">
-          Operador logístico y portuario con más de {empresa.anios} años de experiencia
-          en {empresa.sedes.join(' y ')}.
+          {t(
+            `Operador logístico y portuario con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}.`,
+            `Logistics and port operator with more than ${empresa.anios} years of experience in ${empresa.sedes.join(' and ')}.`,
+          )}
         </p>
-        <ul class="mt-6 flex gap-3" aria-label="Redes sociales">
+        <ul class="mt-6 flex gap-3" aria-label={t('Redes sociales', 'Social media')}>
           <li>
             <a
               href={empresa.instagram}
@@ -29,7 +40,7 @@ const anio = new Date().getFullYear();
               class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
             >
               <Instagram class="size-5" />
-              <span class="sr-only">Instagram de {empresa.nombre} (se abre en una pestaña nueva)</span>
+              <span class="sr-only">{t(`Instagram de ${empresa.nombre}`, `${empresa.nombre} on Instagram`)} {nuevaPestana}</span>
             </a>
           </li>
           <li>
@@ -40,14 +51,14 @@ const anio = new Date().getFullYear();
               class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
             >
               <WhatsApp class="size-5" />
-              <span class="sr-only">WhatsApp de {empresa.nombre} (se abre en una pestaña nueva)</span>
+              <span class="sr-only">{t(`WhatsApp de ${empresa.nombre}`, `${empresa.nombre} on WhatsApp`)} {nuevaPestana}</span>
             </a>
           </li>
         </ul>
       </div>
 
-      <nav class="lg:col-span-3 lg:col-start-10" aria-label="Pie de página">
-        <p class="etiqueta text-white/60">Navegación</p>
+      <nav class="lg:col-span-3 lg:col-start-10" aria-label={t('Pie de página', 'Footer')}>
+        <p class="etiqueta text-white/60">{t('Navegación', 'Navigation')}</p>
         <ul class="mt-4">
           {navegacion.map((item) => (
             <li>
@@ -70,9 +81,9 @@ const anio = new Date().getFullYear();
             <span class="block">{sede.ciudad}, {sede.region}</span>
           </address>
           <p class="mt-2 leading-relaxed text-white/60">
-            Tel. <a href={`tel:${numeroMarcable(sede.telefono)}`} class="text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.telefono}</a>
+            {t('Tel.', 'Phone')} <a href={`tel:${numeroMarcable(sede.telefono)}`} class="inline-block py-2 text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.telefono}</a>
             <span class="block">
-              Cel. <a href={`tel:${numeroMarcable(sede.celular)}`} class="text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.celular}</a>
+              {t('Cel.', 'Mobile')} <a href={`tel:${numeroMarcable(sede.celular)}`} class="inline-block py-2 text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.celular}</a>
             </span>
           </p>
         </li>
@@ -81,8 +92,9 @@ const anio = new Date().getFullYear();
   </div>
 
   <div class="border-t border-white/10">
-    <div class="contenedor flex flex-col gap-3 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {anio} {empresa.nombre}. Todos los derechos reservados.</p>
+    <!-- En móvil queda espacio abajo para que la burbuja de WhatsApp no tape el texto. -->
+    <div class="contenedor flex flex-col gap-3 pt-6 pb-24 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
+      <p>© {anio} {empresa.nombre}. {t('Todos los derechos reservados.', 'All rights reserved.')}</p>
       <p>{empresa.lema}</p>
     </div>
   </div>

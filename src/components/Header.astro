@@ -1,5 +1,14 @@
 ---
-import { navegacion, empresa } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { navegacion, empresa } = contenido(idioma);
+const otro: Idioma = idioma === 'es' ? 'en' : 'es';
 ---
 
 <header
@@ -7,7 +16,7 @@ import { navegacion, empresa } from '../data/sitio';
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
   <div id="cabecera-barra" class="contenedor flex h-20 items-center justify-between gap-6 transition-[height] duration-500 ease-suave lg:h-24">
-    <a href="#inicio" class="inline-flex min-h-11 shrink-0 items-center" aria-label={`${empresa.nombre}, ir al inicio`}>
+    <a href="#inicio" class="inline-flex min-h-11 shrink-0 items-center" aria-label={t(`${empresa.nombre}, ir al inicio`, `${empresa.nombre}, go to top`)}>
       <img
         src="/marca/logo-horizontal-blanco.svg"
         alt=""
@@ -18,7 +27,7 @@ import { navegacion, empresa } from '../data/sitio';
       />
     </a>
 
-    <nav class="hidden items-center gap-10 lg:flex" aria-label="Principal">
+    <nav class="hidden items-center gap-10 lg:flex" aria-label={t('Principal', 'Main')}>
       {navegacion.map((item) => (
         <a
           href={item.href}
@@ -31,11 +40,27 @@ import { navegacion, empresa } from '../data/sitio';
     </nav>
 
     <div class="flex items-center gap-3">
+      <!--
+        Selector de idioma (Jon, 02/10): el español va primero y la persona elige; el
+        idioma nunca cambia solo. Lleva a la misma sección en el otro idioma.
+      -->
+      <a
+        href={rutaInicio[otro]}
+        hreflang={otro}
+        data-cambiar-idioma
+        class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 font-display text-sm font-medium"
+        aria-label={t('Ver el sitio en inglés', 'Ver el sitio en español')}
+      >
+        <span class:list={[idioma === 'es' ? 'text-white' : 'text-white/50 hover:text-white']}>ES</span>
+        <span class="text-white/30" aria-hidden="true">|</span>
+        <span class:list={[idioma === 'en' ? 'text-white' : 'text-white/50 hover:text-white']}>EN</span>
+      </a>
+
       <a
         href="#contacto"
         class="hidden rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 lg:inline-flex"
       >
-        Cotizar operación
+        {t('Cotizar operación', 'Request a quote')}
       </a>
 
       <button
@@ -44,8 +69,10 @@ import { navegacion, empresa } from '../data/sitio';
         class="inline-flex size-11 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:bg-white/10 lg:hidden"
         aria-controls="menu-movil"
         aria-expanded="false"
+        data-abrir={t('Abrir menú', 'Open menu')}
+        data-cerrar={t('Cerrar menú', 'Close menu')}
       >
-        <span class="sr-only" id="menu-boton-texto">Abrir menú</span>
+        <span class="sr-only" id="menu-boton-texto">{t('Abrir menú', 'Open menu')}</span>
         <svg
           id="menu-icono-abrir"
           class="size-5"
@@ -79,15 +106,15 @@ import { navegacion, empresa } from '../data/sitio';
   class="fixed inset-0 z-40 hidden bg-navy-950/98 backdrop-blur-xl lg:hidden"
   role="dialog"
   aria-modal="true"
-  aria-label="Menú de navegación"
+  aria-label={t('Menú de navegación', 'Navigation menu')}
 >
-  <nav class="contenedor mt-20 flex h-[calc(100%-5rem)] flex-col justify-center gap-2 overflow-y-auto pt-4 pb-10 [@media(max-height:560px)]:justify-start" aria-label="Principal móvil">
+  <nav class="contenedor mt-20 flex h-[calc(100%-5rem)] flex-col justify-center gap-2 overflow-y-auto pt-4 pb-10 [@media(max-height:560px)]:justify-start" aria-label={t('Principal móvil', 'Main mobile')}>
     {navegacion.map((item, i) => (
       <a
         href={item.href}
         class="flex items-baseline gap-5 border-b border-white/10 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl [@media(max-height:560px)]:py-3 [@media(max-height:560px)]:text-2xl"
       >
-        <span class="font-sans text-xs text-green">{String(i + 1).padStart(2, '0')}</span>
+        <span class="w-5 shrink-0 font-sans text-xs text-green tabular-nums">{String(i + 1).padStart(2, '0')}</span>
         {item.etiqueta}
       </a>
     ))}
@@ -95,12 +122,54 @@ import { navegacion, empresa } from '../data/sitio';
       href="#contacto"
       class="mt-8 inline-flex shrink-0 justify-center rounded-full bg-green px-8 py-4 font-display text-base font-semibold text-navy-950"
     >
-      Cotizar operación
+      {t('Cotizar operación', 'Request a quote')}
     </a>
   </nav>
 </div>
 
+{/* Aviso discreto para quien tiene el navegador en inglés: no cambia nada solo, solo
+    ofrece la versión en inglés. Nace oculto; si se cierra, no vuelve a salir. */}
+{idioma === 'es' && (
+  <div id="aviso-idioma" class="fixed bottom-4 left-4 z-30 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:bottom-6 sm:left-6" lang="en" hidden>
+    <a href={rutaInicio.en} hreflang="en" data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
+      View in English
+      <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </a>
+    <button id="aviso-idioma-cerrar" type="button" class="inline-flex size-10 items-center justify-center rounded-full text-white/60 hover:text-white" aria-label="Dismiss">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+)}
+
 <script>
+  // Al cambiar de idioma se conserva la sección en la que estaba la persona.
+  document.querySelectorAll<HTMLAnchorElement>('[data-cambiar-idioma]').forEach((enlace) => {
+    enlace.addEventListener('click', () => {
+      if (location.hash) enlace.href = enlace.pathname + location.hash;
+    });
+  });
+
+  // Aviso «View in English»: solo si el navegador está en inglés y no lo cerró antes.
+  const aviso = document.getElementById('aviso-idioma');
+  if (aviso) {
+    let cerrado = false;
+    try {
+      cerrado = localStorage.getItem('cargoban:aviso-idioma') === 'cerrado';
+    } catch {
+      /* almacenamiento bloqueado: el aviso puede volver a salir, no pasa nada */
+    }
+    const enIngles = (navigator.languages?.[0] ?? navigator.language ?? '').toLowerCase().startsWith('en');
+    if (enIngles && !cerrado) aviso.hidden = false;
+    document.getElementById('aviso-idioma-cerrar')?.addEventListener('click', () => {
+      aviso.hidden = true;
+      try {
+        localStorage.setItem('cargoban:aviso-idioma', 'cerrado');
+      } catch {
+        /* sin almacenamiento: se cierra solo por esta visita */
+      }
+    });
+  }
+
   const cabecera = document.getElementById('cabecera');
   const boton = document.getElementById('menu-boton');
   const botonTexto = document.getElementById('menu-boton-texto');
@@ -147,7 +216,7 @@ import { navegacion, empresa } from '../data/sitio';
     boton?.setAttribute('aria-expanded', String(abrir));
     iconoAbrir?.classList.toggle('hidden', abrir);
     iconoCerrar?.classList.toggle('hidden', !abrir);
-    if (botonTexto) botonTexto.textContent = abrir ? 'Cerrar menú' : 'Abrir menú';
+    if (botonTexto) botonTexto.textContent = (abrir ? boton?.dataset.cerrar : boton?.dataset.abrir) ?? '';
     document.body.style.overflow = abrir ? 'hidden' : '';
     if (abrir) enfocables()[0]?.focus();
     else boton?.focus();

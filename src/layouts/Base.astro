@@ -4,21 +4,29 @@ import Header from '../components/Header.astro';
 import IntroBrujula from '../components/IntroBrujula.astro';
 import Footer from '../components/Footer.astro';
 import BurbujaWhatsapp from '../components/BurbujaWhatsapp.astro';
-import { empresa } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, rutaInicio, regional, idiomas, type Idioma } from '../i18n/idioma';
 
 interface Props {
+  idioma: Idioma;
   titulo?: string;
   descripcion?: string;
 }
 
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa } = contenido(idioma);
 const {
   titulo,
-  descripcion = `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}. Operaciones portuarias, logística extraportuaria, almacenamiento y alquiler de equipos.`,
+  descripcion = t(
+    `${empresa.nombre}, ${empresa.lema.toLowerCase()} con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}. Operaciones portuarias, logística extraportuaria, almacenamiento y alquiler de equipos.`,
+    `${empresa.nombre}, ${empresa.lema.toLowerCase()} with more than ${empresa.anios} years of experience in ${empresa.sedes.join(' and ')}. Port operations, off-port logistics, storage and equipment rental.`,
+  ),
 } = Astro.props;
 
 // La apertura es solo de la portada. En una página interna, quien llega desde
 // un buscador quiere lo que buscaba, no tres segundos de animación de marca.
-const esPortada = Astro.url.pathname === '/';
+const esPortada = Object.values(rutaInicio).includes(Astro.url.pathname);
 
 const tituloCompleto = titulo
   ? `${titulo} · ${empresa.nombre}`
@@ -26,13 +34,16 @@ const tituloCompleto = titulo
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={idioma}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
-    <link rel="canonical" href={Astro.site?.href} />
+    <link rel="canonical" href={new URL(rutaInicio[idioma], Astro.site).href} />
+    {/* Cada versión anuncia a la otra, así los buscadores muestran el idioma correcto. */}
+    {idiomas.map((i) => <link rel="alternate" hreflang={i} href={new URL(rutaInicio[i], Astro.site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(rutaInicio.es, Astro.site).href} />
     <link rel="icon" type="image/svg+xml" href="/marca/isotipo.svg" />
     <meta name="theme-color" content="#070b26" />
 
@@ -40,7 +51,7 @@ const tituloCompleto = titulo
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_CO" />
+    <meta property="og:locale" content={regional[idioma].og} />
     <meta property="og:image" content={new URL('/og.png', Astro.site).href} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -66,21 +77,21 @@ const tituloCompleto = titulo
   </head>
 
   <body class="min-h-dvh">
-    {esPortada && <IntroBrujula />}
+    {esPortada && <IntroBrujula idioma={idioma} />}
 
     <a
       href="#contenido"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-green focus:px-5 focus:py-3 focus:font-display focus:font-semibold focus:text-navy-950"
     >
-      Saltar al contenido
+      {t('Saltar al contenido', 'Skip to content')}
     </a>
 
-    <Header />
+    <Header idioma={idioma} />
     <main id="contenido" tabindex="-1">
       <slot />
     </main>
-    <Footer />
-    <BurbujaWhatsapp />
+    <Footer idioma={idioma} />
+    <BurbujaWhatsapp idioma={idioma} />
 
     <script>
       import '../scripts/desplazamiento';

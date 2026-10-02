@@ -1,5 +1,13 @@
 ---
-import { tiposDeCarga } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { tiposDeCarga } = contenido(idioma);
 
 // Se duplica la lista para que el desplazamiento sea continuo sin cortes.
 const secuencia = [...tiposDeCarga, ...tiposDeCarga];
@@ -19,6 +27,6 @@ const secuencia = [...tiposDeCarga, ...tiposDeCarga];
 
   <!-- Versión accesible y legible por buscadores, sin movimiento -->
   <p class="sr-only">
-    Tipos de carga que manejamos: {tiposDeCarga.join(', ')}.
+    {t('Tipos de carga que manejamos:', 'Cargo types we handle:')} {tiposDeCarga.join(', ')}.
   </p>
 </div>

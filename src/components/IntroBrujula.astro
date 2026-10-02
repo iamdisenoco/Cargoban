@@ -78,6 +78,12 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     cardinal,
   };
 });
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const t = traductor(Astro.props.idioma);
 ---
 
 <div
@@ -86,11 +92,11 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   hidden
   role="dialog"
   aria-modal="true"
-  aria-label="Animación de apertura de Cargoban"
+  aria-label={t('Animación de apertura de Cargoban', 'Cargoban opening animation')}
 >
   <div class="intro__telon" aria-hidden="true"></div>
 
-  <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
+  <button id="intro-saltar" class="intro__saltar" type="button">{t('Saltar animación', 'Skip animation')}</button>
 
   <svg
     class="intro__svg"

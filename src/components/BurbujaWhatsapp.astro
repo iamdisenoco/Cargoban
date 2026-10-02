@@ -3,7 +3,15 @@
  * Burbuja fija de WhatsApp (Jon, 25/09). Va por debajo del menú móvil (z-40) y del
  * intro, así no tapa ninguno de los dos. En verde Cargoban, no el de WhatsApp (Jon, 02/10). Se abre en otra pestaña con el mensaje ya escrito.
  */
-import { empresa, enlaceWhatsapp } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, enlaceWhatsapp } = contenido(idioma);
 import WhatsApp from './iconos/WhatsApp.astro';
 ---
 
@@ -14,5 +22,5 @@ import WhatsApp from './iconos/WhatsApp.astro';
   class="burbuja-whatsapp fixed right-4 bottom-4 z-30 inline-flex size-14 items-center justify-center rounded-full bg-green text-navy-950 shadow-lg shadow-black/25 transition-[transform,background-color] duration-300 ease-suave hover:scale-105 hover:bg-green-300 sm:right-6 sm:bottom-6 sm:size-16"
 >
   <WhatsApp class="size-7 sm:size-8" />
-  <span class="sr-only">Escribir a {empresa.nombre} por WhatsApp (se abre en una pestaña nueva)</span>
+  <span class="sr-only">{t(`Escribir a ${empresa.nombre} por WhatsApp (se abre en una pestaña nueva)`, `Message ${empresa.nombre} on WhatsApp (opens in a new tab)`)}</span>
 </a>

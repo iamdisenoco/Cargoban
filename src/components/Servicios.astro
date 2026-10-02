@@ -1,6 +1,14 @@
 ---
 import Titular from './Titular.astro';
-import { servicios, tiposDeCarga } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { servicios, tiposDeCarga } = contenido(idioma);
 ---
 
 <section id="servicios" class="relative isolate scroll-mt-24 bg-navy-950 py-24 lg:py-36">
@@ -42,7 +50,7 @@ import { servicios, tiposDeCarga } from '../data/sitio';
     <div class="revelar flex flex-col gap-8 border-b border-white/15 pb-10 lg:flex-row lg:items-end lg:justify-between">
       <div>
         <Titular
-          texto="Nuestros servicios"
+          texto={t('Nuestros servicios', 'Our services')}
           class="max-w-[14ch] text-white"
           style="font-size:var(--text-titulo)"
         />
@@ -111,11 +119,13 @@ import { servicios, tiposDeCarga } from '../data/sitio';
             <span class="cifra font-display text-sm font-semibold text-teal-400">{String(servicios.length + 1).padStart(2, '0')}</span>
             <div>
               <h3 class="text-white" style="font-size:var(--text-subtitulo)">
-                Experiencia en todo tipo de carga
+                {t('Experiencia en todo tipo de carga', 'Experience with every type of cargo')}
               </h3>
               <p class="mt-4 max-w-md text-white/60">
-                Desde contenedores refrigerados hasta carga de proyecto, aplicamos a cada tipo de
-                carga el procedimiento, los equipos y el personal que requiere.
+                {t(
+                  'Desde contenedores refrigerados hasta carga de proyecto, aplicamos a cada tipo de carga el procedimiento, los equipos y el personal que requiere.',
+                  'From reefer containers to project cargo, we apply the procedure, equipment and crew that each type of cargo requires.',
+                )}
               </p>
             </div>
           </div>
