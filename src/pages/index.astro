@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import Cinta from '../components/Cinta.astro';
 import Servicios from '../components/Servicios.astro';
 import Clientes from '../components/Clientes.astro';
+import Barco from '../components/iconos/Barco.astro';
 import Titular from '../components/Titular.astro';
 import { empresa, razones, cifras, fundacion, fondecar, clientes, sedes, enlaceWhatsapp, numeroMarcable } from '../data/sitio';
 import WhatsApp from '../components/iconos/WhatsApp.astro';
@@ -102,7 +103,13 @@ import Instagram from '../components/iconos/Instagram.astro';
             ))}
           </dl>
 
-          <ul class="revelar mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+          <!-- Un buque recorre la línea de arriba mientras se baja, y deja una estela
+               turquesa (Jon, 02/10). Sin JavaScript o con «menos movimiento» queda quieto
+               al final de la ruta, con la estela completa. -->
+          <div class="ruta-barco revelar relative mt-16 lg:mt-20" data-ruta-barco>
+          <div class="ruta-barco__estela" aria-hidden="true"></div>
+          <div class="ruta-barco__barco" aria-hidden="true"><Barco class="ruta-barco__svg" /></div>
+          <ul class="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {razones.map((razon) => (
               <li class="border-t border-ink/15 pt-6">
                 <span class="block size-2 rotate-45 bg-teal" aria-hidden="true"></span>
@@ -111,6 +118,7 @@ import Instagram from '../components/iconos/Instagram.astro';
               </li>
             ))}
           </ul>
+          </div>
         </div>
       </section>
     </div>
@@ -298,3 +306,30 @@ import Instagram from '../components/iconos/Instagram.astro';
     </div>
   </section>
 </Base>
+
+<script>
+  // El buque avanza con el scroll: sale cuando la ruta entra por abajo de la pantalla y
+  // llega al final cuando la ruta pasa del tercio superior.
+  const ruta = document.querySelector<HTMLElement>('[data-ruta-barco]');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (ruta && !quieto.matches) {
+    let pendiente = false;
+    const actualizar = () => {
+      pendiente = false;
+      const arriba = ruta.getBoundingClientRect().top;
+      const alto = window.innerHeight;
+      const desde = alto * 0.9;
+      const hasta = alto * 0.35;
+      const avance = Math.min(Math.max((desde - arriba) / (desde - hasta), 0), 1);
+      ruta.style.setProperty('--avance', avance.toFixed(4));
+    };
+    window.addEventListener('scroll', () => {
+      if (!pendiente) {
+        pendiente = true;
+        requestAnimationFrame(actualizar);
+      }
+    }, { passive: true });
+    window.addEventListener('resize', actualizar);
+    actualizar();
+  }
+</script>

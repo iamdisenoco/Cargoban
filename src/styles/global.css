@@ -378,6 +378,43 @@
     to { transform: translateY(6%) scale(1.08); }
   }
 
+  /* Buque que recorre la línea de las razones (Nosotros). `--avance` va de 0 a 1 y lo
+     pone el script; por defecto vale 1: buque al final y estela completa. */
+  .ruta-barco { --avance: 1; --barco: 3.25rem; }
+  @media (min-width: 64rem) { .ruta-barco { --barco: 4.25rem; } }
+  .ruta-barco__estela {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 2px;
+    width: calc((100% - var(--barco)) * var(--avance) + var(--barco) * 0.5);
+    background: linear-gradient(to right, transparent, var(--color-teal) 40%);
+    pointer-events: none;
+  }
+  .ruta-barco__barco {
+    position: absolute;
+    top: 0;
+    left: calc((100% - var(--barco)) * var(--avance));
+    width: var(--barco);
+    translate: 0 -82%; /* el casco queda un poco hundido en la línea, como en el agua */
+    pointer-events: none;
+    z-index: 1;
+  }
+  .ruta-barco__svg { display: block; width: 100%; height: auto; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ruta-barco__svg {
+      transform-origin: 50% 90%;
+      animation-name: mecerse;
+      animation-duration: 3.2s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+  }
+  @keyframes mecerse {
+    0%, 100% { transform: rotate(-2deg) translateY(0); }
+    50% { transform: rotate(2deg) translateY(1px); }
+  }
+
   /* Nuestros clientes. De partida, cuadrícula quieta dentro del ancho del contenido;
      con la clase `activa` (la pone el script) pasa a dos cintas a todo el ancho. */
   .clientes-marquesina {
