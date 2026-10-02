@@ -49,7 +49,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
         hreflang={otro}
         data-cambiar-idioma
         class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 font-display text-sm font-medium"
-        aria-label={t('Ver el sitio en inglés', 'Ver el sitio en español')}
+        aria-label={t('Ver el sitio en inglés', 'View the site in Spanish')}
       >
         <span class:list={[idioma === 'es' ? 'text-white' : 'text-white/50 hover:text-white']}>ES</span>
         <span class="text-white/30" aria-hidden="true">|</span>
@@ -130,7 +130,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
 {/* Aviso discreto para quien tiene el navegador en inglés: no cambia nada solo, solo
     ofrece la versión en inglés. Nace oculto; si se cierra, no vuelve a salir. */}
 {idioma === 'es' && (
-  <div id="aviso-idioma" class="fixed bottom-4 left-4 z-30 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:bottom-6 sm:left-6" lang="en" hidden>
+  <div id="aviso-idioma" class="fixed top-[4.5rem] left-4 z-30 sm:top-auto sm:bottom-6 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:left-6" lang="en" hidden>
     <a href={rutaInicio.en} hreflang="en" data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
       View in English
       <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" /></svg>

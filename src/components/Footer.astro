@@ -92,8 +92,8 @@ const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)'
   </div>
 
   <div class="border-t border-white/10">
-    <!-- En móvil queda espacio abajo para que la burbuja de WhatsApp no tape el texto. -->
-    <div class="contenedor flex flex-col gap-3 pt-6 pb-24 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:pb-6">
+    <!-- Espacio para la burbuja de WhatsApp: abajo en móvil, a la derecha en pantallas anchas. -->
+    <div class="contenedor flex flex-col gap-3 pt-6 pb-24 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:pb-6 sm:!pr-28">
       <p>© {anio} {empresa.nombre}. {t('Todos los derechos reservados.', 'All rights reserved.')}</p>
       <p>{empresa.lema}</p>
     </div>
