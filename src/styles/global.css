@@ -249,6 +249,21 @@
     Por defecto se ve la primera, quieta; las demás esperan ocultas. Cada foto
     tiene su turno de 6 s dentro del ciclo y se acerca despacio mientras se ve.
   */
+  /* Velo de la portada en pantallas anchas: oscurece la izquierda, donde va el titular,
+     y deja la foto limpia a la derecha (antes era un velo parejo del 65 %). */
+  @media (min-width: 48rem) {
+    .portada-fondo {
+      --velo-portada: linear-gradient(to right, rgb(6 10 40 / 0.72) 0%, rgb(6 10 40 / 0.45) 45%, rgb(6 10 40 / 0.12) 100%);
+    }
+  }
+
+  /* Titular de portada en peso medio, como el referente: impacta por tamaño, no por grosor. */
+  .portada-titular {
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
   .portada-foto {
     object-position: var(--foco-movil, 50% 50%);
   }

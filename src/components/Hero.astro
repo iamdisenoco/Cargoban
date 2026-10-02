@@ -1,6 +1,6 @@
 ---
 import Titular from './Titular.astro';
-import { empresa } from '../data/sitio';
+import { empresa, clientes } from '../data/sitio';
 
 /**
  * Fondo del hero: fotos propias de Cargoban en Santa Marta que se funden una en otra
@@ -16,6 +16,13 @@ const fotos: { src: string; foco: string; focoMovil: string }[] = [
   { src: '/fotos/portada-equipo.webp', foco: '55% 50%', focoMovil: '33% 50%' },
   { src: '/fotos/portada-operario.webp', foco: '30% 50%', focoMovil: '27% 50%' },
 ];
+
+// Logos en blanco para la franja «Confían en nosotros» (siluetas con fondo transparente
+// en public/clientes/silueta/). Solo los que se leen bien en una sola tinta.
+const destacados = ['puerto-santa-marta', 'smitco', 'uniban', 'greenland', 'transmares'].map((id) => ({
+  id,
+  nombre: clientes.find((c) => c.logo?.includes(id))?.nombre ?? id,
+}));
 ---
 
 <!--
@@ -39,7 +46,7 @@ const fotos: { src: string; foco: string; focoMovil: string }[] = [
           />
         ))}
         {/* Velo azul de marca sobre las fotos: el titular se lee siempre. */}
-        <div class="absolute inset-0 bg-navy-950/20 md:bg-navy-950/65" aria-hidden="true"></div>
+        <div class="absolute inset-0 bg-navy-950/20 md:bg-transparent" aria-hidden="true" style="background-image:var(--velo-portada,none)"></div>
       </>
     ) : (
       <div
@@ -57,40 +64,38 @@ const fotos: { src: string; foco: string; focoMovil: string }[] = [
     </div>
   </div>
 
-  <div class="portada-texto contenedor relative -mt-10 pb-16 md:mt-0 md:pt-32 lg:pb-24">
-    <Titular
-      as="h1"
-      texto="Operamos la *carga* que mueve al Caribe"
-      class="max-w-[16ch] font-display font-semibold text-white"
-      style="font-size:var(--text-hero)"
-    />
-
-    <div class="mt-10 flex flex-col gap-10 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between">
-      <p class="max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">
-        Más de {empresa.anios} años de experiencia en operaciones logísticas y portuarias.
-        Estamos en {empresa.sedes.join(' y ')}, movilizando diferentes tipos de carga con
-        equipos y personal especializado.
-      </p>
-
-      <div class="flex flex-wrap items-center gap-4">
-        <a
-          href="#servicios"
-          class="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green"
-        >
-          Ver servicios
-          <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-            <path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </a>
-        <a
-          href="#contacto"
-          class="inline-flex items-center rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
-        >
-          Hablar con nosotros
-        </a>
-      </div>
+  <!--
+    Composición tomada de cargokite.com (Jon, 02/10: «más impactante y limpio»): titular
+    grande en peso medio a media altura, sin botones ni línea; abajo a la izquierda los
+    clientes en blanco y abajo a la derecha un texto corto con una frase en verde.
+  -->
+  <div class="portada-texto contenedor relative -mt-10 flex flex-1 flex-col pb-12 md:mt-0 md:pt-40 md:pb-14 lg:pb-16">
+    <div class="md:flex md:flex-1 md:items-center">
+      <Titular
+        as="h1"
+        texto="Operamos la *carga* que mueve al Caribe"
+        class="portada-titular max-w-[9.8em] font-display text-white"
+        style="font-size:clamp(2.6rem, 1rem + 5.4vw, 6.25rem)"
+      />
     </div>
 
+    <div class="mt-10 flex flex-col gap-10 md:mt-16 md:flex-row-reverse md:items-end md:justify-between">
+      <p class="max-w-md text-white md:max-w-[26rem]" style="font-size:var(--text-cuerpo-lg);line-height:1.45">
+        Más de {empresa.anios} años moviendo carga en {empresa.sedes.join(' y ')},
+        con <span class="text-green">equipos y personal especializado</span> en cada operación.
+      </p>
+
+      <div>
+        <p class="text-sm text-white/70">Confían en nosotros:</p>
+        <ul class="mt-4 flex flex-wrap items-center gap-x-7 gap-y-4 lg:gap-x-9">
+          {destacados.map((c) => (
+            <li>
+              <img src={`/clientes/silueta/${c.id}.webp`} alt={c.nombre} class="h-8 w-auto opacity-90 lg:h-10" loading="lazy" decoding="async" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </div>
 
 </section>
