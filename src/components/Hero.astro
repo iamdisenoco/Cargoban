@@ -18,8 +18,8 @@ const fotos: { src: string; foco: string; focoMovil: string }[] = [
 ];
 
 // Logos en blanco para la franja «Confían en nosotros» (siluetas con fondo transparente
-// en public/clientes/silueta/). Solo los que se leen bien en una sola tinta.
-const destacados = ['puerto-santa-marta', 'smitco', 'uniban', 'greenland', 'transmares'].map((id) => ({
+// en public/clientes/silueta/). Los cuatro que eligió Jon (02/10).
+const destacados = ['puerto-santa-marta', 'puerto-antioquia', 'uniban', 'greenland'].map((id) => ({
   id,
   nombre: clientes.find((c) => c.logo?.includes(id))?.nombre ?? id,
 }));
