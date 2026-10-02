@@ -29,8 +29,28 @@ export const empresa = {
 /** Enlace de WhatsApp con el mensaje inicial ya escrito. */
 export const enlaceWhatsapp = `https://wa.me/${empresa.whatsapp.numero}?text=${encodeURIComponent(empresa.whatsapp.mensaje)}`;
 
-/** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
-export const clientes: { nombre: string; logo?: string }[] = [];
+/**
+ * Clientes, en el orden de la imagen que envió Jon (02/10). Logos recortados de esa
+ * imagen: si Cargoban entrega los originales en buena resolución, se reemplazan en
+ * `public/clientes/` con el mismo nombre. Puerto Antioquia va como cliente con
+ * autorización expresa de Jon (02/10).
+ */
+export const clientes: { nombre: string; logo?: string }[] = [
+  { nombre: 'Puerto de Santa Marta', logo: '/clientes/puerto-santa-marta.webp' },
+  { nombre: 'Puerto Antioquia', logo: '/clientes/puerto-antioquia.webp' },
+  { nombre: 'SMITCO', logo: '/clientes/smitco.webp' },
+  { nombre: 'Uniban', logo: '/clientes/uniban.webp' },
+  { nombre: 'Greenland', logo: '/clientes/greenland.webp' },
+  { nombre: 'Turbaduana', logo: '/clientes/turbaduana.webp' },
+  { nombre: 'LBH Group Colombia', logo: '/clientes/lbh.webp' },
+  { nombre: 'Del Monte', logo: '/clientes/del-monte.webp' },
+  { nombre: 'Tropical Banana Co.', logo: '/clientes/tropical.webp' },
+  { nombre: 'Banafrut', logo: '/clientes/banafrut.webp' },
+  { nombre: 'Cordarién', logo: '/clientes/cordarien.webp' },
+  { nombre: 'Olinsa', logo: '/clientes/olinsa.webp' },
+  { nombre: 'Simbacol', logo: '/clientes/simbacol.webp' },
+  { nombre: 'Transmares', logo: '/clientes/transmares.webp' },
+];
 
 /**
  * La sección de clientes solo existe si hay clientes que mostrar.
@@ -39,8 +59,8 @@ export const clientes: { nombre: string; logo?: string }[] = [];
 export const navegacion = [
   { etiqueta: 'Nosotros', href: '#nosotros' },
   { etiqueta: 'Servicios', href: '#servicios' },
-  { etiqueta: 'Sostenibilidad', href: '#sostenibilidad' },
   ...(clientes.length > 0 ? [{ etiqueta: 'Clientes', href: '#clientes' }] : []),
+  { etiqueta: 'Sostenibilidad', href: '#sostenibilidad' },
   { etiqueta: 'Contacto', href: '#contacto' },
 ];
 

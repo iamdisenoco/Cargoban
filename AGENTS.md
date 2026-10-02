@@ -83,6 +83,8 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   Sus videos no se usan: no se les borra ni tapa la marca de agua, se dejan fuera. Para el
   movimiento del inicio van fotos propias de Cargoban. Si Puerto Antioquia entrega tomas
   limpias con permiso, se evalúa de nuevo.
+  Excepción autorizada por Jon (02/10): su logo sí va en «Nuestros clientes», junto a los
+  demás clientes. Solo ahí; en el resto del sitio la regla sigue igual.
 - Un titular de sección no va dentro de una columna angosta: se parte en cinco renglones y
   se ve gigante (Jon, 25/09, Sostenibilidad). Va a lo ancho, en dos líneas como mucho, con
   `--text-seccion`. Jon pidió frases en verde para dar color, como el referente: una palabra

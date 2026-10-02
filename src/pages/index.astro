@@ -117,6 +117,40 @@ import Instagram from '../components/iconos/Instagram.astro';
 
   <Servicios />
 
+  {/* Nuestros clientes, después de Servicios (Jon, 02/10). Fondo claro entre dos secciones
+      oscuras. Los logos van a color: varios traen fondo propio y en un solo tono quedarían
+      como bloques. Los recortes se aclararon al exportarlos para que su gris de fondo quede blanco. */}
+  {clientes.length > 0 && (
+    <section id="clientes" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
+      <div class="contenedor">
+        <div class="revelar">
+          <Titular texto="Nuestros *clientes*" class="text-navy" style="font-size:var(--text-seccion)" />
+        </div>
+        <p class="revelar mt-6 max-w-2xl text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+          Puertos, exportadores, agencias y operadores que confían su carga a nuestro equipo.
+        </p>
+
+        <ul class="revelar mt-14 grid grid-cols-2 gap-px overflow-hidden border border-ink/10 bg-ink/10 lg:mt-20 lg:grid-cols-7">
+          {clientes.map((cliente) => (
+            <li class="flex h-32 items-center justify-center bg-white p-6 sm:h-40 sm:p-8 lg:p-6">
+              {cliente.logo ? (
+                <img
+                  src={cliente.logo}
+                  alt={cliente.nombre}
+                  class="max-h-full max-w-full object-contain mix-blend-multiply"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <span class="text-center font-display font-semibold text-navy">{cliente.nombre}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
 
   <!-- Sostenibilidad: Fundación Cargoban. Textos PROVISIONALES (ver src/data/sitio.ts).
        Fotos: carpeta «Cargoban fundación» del Drive de Jon (25/09). Hay menores
@@ -226,37 +260,6 @@ import Instagram from '../components/iconos/Instagram.astro';
     </div>
   </section>
 
-  {/* La sección de clientes solo se muestra cuando Cargoban entregue la lista. */}
-  {clientes.length > 0 && (
-    <section id="clientes" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
-      <div class="contenedor">
-        <div class="revelar max-w-3xl">
-          <Titular
-            texto="Quienes nos confían su carga"
-            class="text-white"
-            style="font-size:var(--text-titulo)"
-          />
-        </div>
-
-        <ul class="revelar mt-16 grid grid-cols-2 items-center gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-3 lg:grid-cols-5">
-          {clientes.map((cliente) => (
-            <li class="flex min-h-32 items-center justify-center bg-navy-950 p-8">
-              {cliente.logo ? (
-                <img
-                  src={cliente.logo}
-                  alt={cliente.nombre}
-                  class="max-h-10 w-auto opacity-60 brightness-0 invert transition-opacity hover:opacity-100"
-                />
-              ) : (
-                <span class="text-center font-display font-semibold text-white/70">{cliente.nombre}</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  )}
-
   <!-- Contacto: fondo claro como Nosotros, para que cierre cercano y no como un bloque aparte (Jon, 02/10). -->
   <section id="contacto" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
     <div class="contenedor">
@@ -271,8 +274,8 @@ import Instagram from '../components/iconos/Instagram.astro';
       <div class="mt-12 grid gap-14 lg:mt-16 lg:grid-cols-12 lg:gap-x-20">
         <div class="revelar lg:col-span-5">
           <p class="max-w-md text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
-            Cuéntenos qué carga tiene, por qué puerto sale y para cuándo la necesita.
-            Con gusto lo asesoramos y armamos juntos la mejor forma de moverla.
+            Escríbanos y conversemos. Detrás de cada mensaje hay una persona de nuestro
+            equipo lista para ayudarle.
           </p>
 
           <div class="mt-10 flex flex-wrap gap-4">
