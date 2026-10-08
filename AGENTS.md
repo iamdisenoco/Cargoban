@@ -98,3 +98,7 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - La apertura del intro no usa columnas que caen ni un círculo que se abre (Jon, 02/10:
   no le gustó ninguno). El logo armado vuela a su sitio en la cabecera, arriba a la
   izquierda, mientras el fondo se desvanece y aparece la página.
+- En la versión en inglés, nada de jerga que un traductor automático confunda: alguien vio
+  /en/ traducida por el navegador y «Reefer» salió «Chaquetón» (08/10). Se usa
+  «Refrigerated cargo». Cada versión ofrece la otra con un aviso discreto si el navegador
+  está en el otro idioma; el idioma nunca cambia solo.
