@@ -95,7 +95,8 @@ export const servicios = [
   {
     numero: '01',
     titulo: 'Operaciones portuarias',
-    resumen: 'Estiba, desestiba y manejo de carga a bordo y en muelle.',
+    // Texto de Cargoban (08/10).
+    resumen: 'Trinca, destrinca y manipulación de carga a bordo y en muelle.',
     detalle:
       'Operamos directamente en muelle con personal propio y procedimientos establecidos, cuidando la carga en cada movimiento entre el buque y el patio.',
     // PROVISIONAL: lista por confirmar con Cargoban.

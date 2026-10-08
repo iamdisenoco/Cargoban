@@ -36,7 +36,7 @@ export const servicios: typeof es.servicios = [
   {
     ...es.servicios[0],
     titulo: 'Port operations',
-    resumen: 'Stowage, unstowage and cargo handling on board and at the quay.',
+    resumen: 'Lashing, unlashing and cargo handling on board and at the quay.',
     detalle:
       'We operate directly at the quay with our own crews and established procedures, protecting the cargo in every move between the vessel and the yard.',
     items: [
