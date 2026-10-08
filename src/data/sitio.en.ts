@@ -81,11 +81,11 @@ export const servicios: typeof es.servicios = [
 ];
 
 export const tiposDeCarga = [
-  'Reefer',
+  'Refrigerated cargo',
   'Frozen',
   'Perishables',
   'Bagged cargo',
-  'Project cargo',
+  'Oversized cargo',
   'Machinery',
   'Vehicles',
   'Bulk',

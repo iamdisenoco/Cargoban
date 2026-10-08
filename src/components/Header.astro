@@ -127,19 +127,22 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
   </nav>
 </div>
 
-{/* Aviso discreto para quien tiene el navegador en inglés: no cambia nada solo, solo
-    ofrece la versión en inglés. Nace oculto; si se cierra, no vuelve a salir. */}
-{idioma === 'es' && (
-  <div id="aviso-idioma" class="fixed top-[4.5rem] left-4 z-30 sm:top-auto sm:bottom-6 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:left-6" lang="en" hidden>
-    <a href={rutaInicio.en} hreflang="en" data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
-      View in English
+{/*
+  Aviso discreto cuando el navegador está en el otro idioma: en la página española,
+  «View in English»; en la inglesa, «Ver en español». No cambia nada solo, solo ofrece
+  la otra versión. Nace oculto; si se cierra, no vuelve a salir.
+  El de español se agregó el 08/10: alguien abrió la versión en inglés con el traductor
+  automático del navegador y vio frases como «Chaquetón» (por «Reefer»).
+*/}
+<div id="aviso-idioma" data-idioma-navegador={otro} class="fixed top-[4.5rem] left-4 z-30 sm:top-auto sm:bottom-6 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:left-6" lang={otro} hidden>
+    <a href={rutaInicio[otro]} hreflang={otro} data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
+      {otro === 'en' ? 'View in English' : 'Ver en español'}
       <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" /></svg>
     </a>
-    <button id="aviso-idioma-cerrar" type="button" class="inline-flex size-10 items-center justify-center rounded-full text-white/60 hover:text-white" aria-label="Dismiss">
+    <button id="aviso-idioma-cerrar" type="button" class="inline-flex size-10 items-center justify-center rounded-full text-white/60 hover:text-white" aria-label={otro === 'en' ? 'Dismiss' : 'Cerrar'}>
       <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" /></svg>
     </button>
-  </div>
-)}
+</div>
 
 <script>
   // Al cambiar de idioma se conserva la sección en la que estaba la persona.
@@ -149,21 +152,23 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
     });
   });
 
-  // Aviso «View in English»: solo si el navegador está en inglés y no lo cerró antes.
+  // Aviso de idioma: solo si el navegador está en el otro idioma y no lo cerró antes.
   const aviso = document.getElementById('aviso-idioma');
   if (aviso) {
+    const destino = aviso.dataset.idiomaNavegador ?? 'en';
+    const clave = `cargoban:aviso-idioma-${destino}`;
     let cerrado = false;
     try {
-      cerrado = localStorage.getItem('cargoban:aviso-idioma') === 'cerrado';
+      cerrado = localStorage.getItem(clave) === 'cerrado';
     } catch {
       /* almacenamiento bloqueado: el aviso puede volver a salir, no pasa nada */
     }
-    const enIngles = (navigator.languages?.[0] ?? navigator.language ?? '').toLowerCase().startsWith('en');
-    if (enIngles && !cerrado) aviso.hidden = false;
+    const delNavegador = (navigator.languages?.[0] ?? navigator.language ?? '').toLowerCase();
+    if (delNavegador.startsWith(destino) && !cerrado) aviso.hidden = false;
     document.getElementById('aviso-idioma-cerrar')?.addEventListener('click', () => {
       aviso.hidden = true;
       try {
-        localStorage.setItem('cargoban:aviso-idioma', 'cerrado');
+        localStorage.setItem(clave, 'cerrado');
       } catch {
         /* sin almacenamiento: se cierra solo por esta visita */
       }

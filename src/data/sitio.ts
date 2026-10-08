@@ -152,7 +152,7 @@ export const tiposDeCarga = [
   'Congelados',
   'Perecederos',
   'Sacos',
-  'Proyectos',
+  'Carga sobredimensionada',
   'Maquinaria',
   'Vehículos',
   'Granel',
