@@ -99,13 +99,15 @@ export const servicios = [
     resumen: 'Trinca, destrinca y manipulación de carga a bordo y en muelle.',
     detalle:
       'Operamos directamente en muelle con personal propio y procedimientos establecidos, cuidando la carga en cada movimiento entre el buque y el patio.',
-    // PROVISIONAL: lista por confirmar con Cargoban.
+    // Lista según el brochure de Cargoban, lámina «Operación en buque» (Jon, 12/10).
     items: [
-      'Estiba y desestiba de carga',
-      'Operadores de maquinaria portuaria',
-      'Tarja y trazabilidad de carga',
-      'Trincado y destrincado de contenedores',
+      'Cargue y descargue de carga general y contenedores',
+      'Estiba y desestiba en bodega y cubierta de buque',
+      'Trincado y destrincado',
+      'Izaje de equipos',
+      'Movimiento de tapas de cubierta',
       'Movimiento de vehículos en buques Ro‑Ro',
+      'Tarja y trazabilidad de carga',
       'Apoyo en inspecciones de autoridades',
     ],
     provisional: true,
@@ -146,7 +148,41 @@ export const servicios = [
     items: ['Contenedores', 'Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
     provisional: true,
   },
+  {
+    // Brochure de Cargoban, lámina «Contenedores» (Jon, 12/10).
+    numero: '05',
+    titulo: 'Servicios a contenedores',
+    resumen: 'Cuidado del contenedor antes, durante y después de la operación.',
+    detalle:
+      'Revisamos, preparamos y movemos cada contenedor con el equipo adecuado, y lo dejamos inspeccionado, limpio y en condiciones para su siguiente viaje.',
+    items: [
+      'Enganche e izaje',
+      'Revisión previa de equipos de cargue',
+      'Inspección y monitoreo',
+      'Lavado',
+      'Reparación',
+      'Inspecciones de calidad',
+    ],
+    provisional: false,
+  },
 ];
+
+/**
+ * Tecnología e innovación. Brochure de Cargoban (Jon, 12/10). Faltan los enlaces de
+ * Google Play y App Store: cuando Cargoban los entregue, van en `tiendas`.
+ */
+export const tecnologia = {
+  texto:
+    'Desarrollamos y aplicamos soluciones tecnológicas para mejorar procesos y reducir tiempos en labores operativas y administrativas, con reportes en línea y exactitud en la información.',
+  apps: [
+    { nombre: 'Quality Web', funcion: 'Supervisión de reportes de calidad' },
+    { nombre: 'Cargo Web', funcion: 'Control de operación logística y recursos' },
+    { nombre: 'Cargo Quality', funcion: 'Calidad en empacadora' },
+    { nombre: 'Quality Field', funcion: 'Calidad en campo y cultivo' },
+    { nombre: 'Check Box', funcion: 'Control de trazabilidad' },
+  ],
+  tiendas: { googlePlay: '', appStore: '' },
+};
 
 /** Tipos de carga. Fuente: lámina 3/5 del carrusel de Instagram de Cargoban. */
 export const tiposDeCarga = [

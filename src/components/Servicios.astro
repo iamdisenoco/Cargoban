@@ -8,7 +8,7 @@ interface Props {
 }
 const { idioma } = Astro.props;
 const t = traductor(idioma);
-const { servicios, tiposDeCarga } = contenido(idioma);
+const { servicios, tiposDeCarga, tecnologia } = contenido(idioma);
 ---
 
 <section id="servicios" class="relative isolate scroll-mt-24 bg-navy-950 py-24 lg:py-36">
@@ -144,6 +144,43 @@ const { servicios, tiposDeCarga } = contenido(idioma);
       <div
         class="h-1 w-full"
         style={`background:linear-gradient(to right, var(--color-${servicios.length % 2 === 0 ? 'teal' : 'green'}), transparent 70%)`}
+        aria-hidden="true"
+      >
+      </div>
+    </article>
+
+    <!-- Tecnología e innovación: aplicaciones propias de Cargoban (brochure, Jon 12/10). -->
+    <article
+      id="tecnologia"
+      class="panel-apilado scroll-mt-24 overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
+      style={`--desplazamiento-apilado:calc(8rem + ${(servicios.length + 1) * 1.25}rem); margin-top:1.5rem`}
+    >
+      <div class="grid gap-10 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
+        <div class="lg:col-span-5">
+          <div class="flex items-start gap-5">
+            <span class="cifra font-display text-sm font-semibold text-teal-400">{String(servicios.length + 2).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-white" style="font-size:var(--text-subtitulo)">
+                {t('Tecnología e innovación', 'Technology and innovation')}
+              </h3>
+              <p class="mt-4 max-w-md text-white/60">{tecnologia.texto}</p>
+            </div>
+          </div>
+        </div>
+
+        <ul class="grid grid-cols-1 gap-x-6 min-[400px]:grid-cols-2 sm:gap-x-10 lg:col-span-7">
+          {tecnologia.apps.map((app) => (
+            <li class="border-t border-white/10 py-3">
+              <p class="font-display font-semibold text-white">{app.nombre}</p>
+              <p class="mt-1 text-sm text-white/60">{app.funcion}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div
+        class="h-1 w-full"
+        style={`background:linear-gradient(to right, var(--color-${(servicios.length + 1) % 2 === 0 ? 'teal' : 'green'}), transparent 70%)`}
         aria-hidden="true"
       >
       </div>

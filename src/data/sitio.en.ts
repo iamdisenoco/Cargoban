@@ -40,11 +40,13 @@ export const servicios: typeof es.servicios = [
     detalle:
       'We operate directly at the quay with our own crews and established procedures, protecting the cargo in every move between the vessel and the yard.',
     items: [
-      'Cargo stowage and unstowage',
-      'Port equipment operators',
-      'Cargo tally and traceability',
-      'Container lashing and unlashing',
+      'Loading and discharge of general cargo and containers',
+      'Stowage and unstowage in holds and on deck',
+      'Lashing and unlashing',
+      'Equipment lifting',
+      'Hatch cover handling',
       'Vehicle handling on Ro‑Ro vessels',
+      'Cargo tally and traceability',
       'Support during authority inspections',
     ],
   },
@@ -78,7 +80,35 @@ export const servicios: typeof es.servicios = [
       'We provide containers and the equipment needed for cargo handling, with operators when required.',
     items: ['Containers', 'Forklifts', 'Pallet jacks', 'Operational support equipment'],
   },
+  {
+    ...es.servicios[4],
+    titulo: 'Container services',
+    resumen: 'Care for each container before, during and after the operation.',
+    detalle:
+      'We inspect, prepare and move each container with the right equipment, and leave it inspected, clean and ready for its next voyage.',
+    items: [
+      'Hooking and lifting',
+      'Pre-check of loading equipment',
+      'Inspection and monitoring',
+      'Washing',
+      'Repair',
+      'Quality inspections',
+    ],
+  },
 ];
+
+export const tecnologia: typeof es.tecnologia = {
+  ...es.tecnologia,
+  texto:
+    'We develop and apply technology solutions that improve processes and cut time in operational and administrative tasks, with online reporting and accurate information.',
+  apps: [
+    { nombre: 'Quality Web', funcion: 'Quality report supervision' },
+    { nombre: 'Cargo Web', funcion: 'Logistics operation and resource control' },
+    { nombre: 'Cargo Quality', funcion: 'Quality at the packing plant' },
+    { nombre: 'Quality Field', funcion: 'Quality in the field and on the farm' },
+    { nombre: 'Check Box', funcion: 'Traceability control' },
+  ],
+};
 
 export const tiposDeCarga = [
   'Refrigerated cargo',
