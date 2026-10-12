@@ -140,9 +140,10 @@ export const servicios = [
     titulo: 'Alquiler de equipos',
     resumen: 'Equipos disponibles para apoyar la operación.',
     detalle:
-      'Ponemos a disposición los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
+      'Ponemos a disposición contenedores y los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
     // PROVISIONAL: inventario real de equipos por confirmar.
-    items: ['Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
+    // Contenedores agregados por Jon (12/10).
+    items: ['Contenedores', 'Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
     provisional: true,
   },
 ];

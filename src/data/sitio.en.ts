@@ -75,8 +75,8 @@ export const servicios: typeof es.servicios = [
     titulo: 'Equipment rental',
     resumen: 'Equipment available to support the operation.',
     detalle:
-      'We provide the equipment needed for cargo handling, with operators when required.',
-    items: ['Forklifts', 'Pallet jacks', 'Operational support equipment'],
+      'We provide containers and the equipment needed for cargo handling, with operators when required.',
+    items: ['Containers', 'Forklifts', 'Pallet jacks', 'Operational support equipment'],
   },
 ];
 
