@@ -102,3 +102,6 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   /en/ traducida por el navegador y «Reefer» salió «Chaquetón» (08/10). Se usa
   «Refrigerated cargo». Cada versión ofrece la otra con un aviso discreto si el navegador
   está en el otro idioma; el idioma nunca cambia solo.
+- El logo de Cargoban (cabecera y pie) vuelve al inicio con `data-ir-inicio`, no con un
+  ancla `#inicio`: la portada es `sticky` y el navegador la da por visible, así que el ancla
+  no movía la página (Jon, 12/10).

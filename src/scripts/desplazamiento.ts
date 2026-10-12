@@ -11,9 +11,32 @@
 import Lenis from 'lenis';
 
 const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)');
+let lenis: Lenis | null = null;
+
+/*
+  El logo de Cargoban, en la cabecera o en el pie, siempre vuelve al inicio (Jon, 12/10).
+  No se usa un ancla #inicio: la portada es `sticky` y el navegador cree que ya está a la
+  vista, así que el clic no movía nada. Se sube al principio de la página; si se está en
+  la otra versión de idioma, el enlace lleva a su portada normalmente.
+*/
+document.addEventListener('click', (e) => {
+  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const enlace = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[data-ir-inicio]');
+  if (!enlace || enlace.pathname !== location.pathname) return;
+  e.preventDefault();
+  history.pushState(null, '', location.pathname);
+  if (lenis && !document.documentElement.style.overflow && !document.body.style.overflow) {
+    lenis.start();
+    lenis.scrollTo(0);
+  } else {
+    window.scrollTo({ top: 0, behavior: menosMovimiento.matches ? 'auto' : 'smooth' });
+  }
+  document.getElementById('contenido')?.focus({ preventScroll: true });
+});
 
 if (!menosMovimiento.matches) {
-  const lenis = new Lenis({ autoRaf: true, lerp: 0.1 });
+  const suave = new Lenis({ autoRaf: true, lerp: 0.1 });
+  lenis = suave;
   const html = document.documentElement;
 
   /*
@@ -30,9 +53,9 @@ if (!menosMovimiento.matches) {
     rueda y la página bajaría al cerrar el intro.
   */
   const sincronizar = () => {
-    if (bloqueado()) return lenis.stop();
+    if (bloqueado()) return suave.stop();
     requestAnimationFrame(() => {
-      if (!bloqueado()) lenis.start();
+      if (!bloqueado()) suave.start();
     });
   };
   const observador = new MutationObserver(sincronizar);
@@ -61,8 +84,8 @@ if (!menosMovimiento.matches) {
 
     // El menú móvil suelta el bloqueo en este mismo clic. Se reanuda Lenis ya:
     // si lo reanudara el fotograma de `sincronizar`, su reset() cortaría el viaje.
-    if (!bloqueado()) lenis.start();
-    lenis.scrollTo(destino);
+    if (!bloqueado()) suave.start();
+    suave.scrollTo(destino);
 
     if (!destino.hasAttribute('tabindex')) destino.setAttribute('tabindex', '-1');
     destino.focus({ preventScroll: true });

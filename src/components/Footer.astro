@@ -1,6 +1,6 @@
 ---
 import { contenido } from '../data/contenido';
-import { traductor, type Idioma } from '../i18n/idioma';
+import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
 import Instagram from './iconos/Instagram.astro';
 import WhatsApp from './iconos/WhatsApp.astro';
 const anio = new Date().getFullYear();
@@ -18,13 +18,15 @@ const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)'
   <div class="contenedor py-16 lg:py-20">
     <div class="grid gap-12 lg:grid-cols-12">
       <div class="lg:col-span-5">
-        <img
-          src="/marca/logo-vertical-blanco.svg"
-          alt={`${empresa.nombre}, ${empresa.lema}`}
-          width="200"
-          height="123"
-          class="h-24 w-auto"
-        />
+        <a href={rutaInicio[idioma]} data-ir-inicio class="inline-block" aria-label={t(`${empresa.nombre}, ir al inicio`, `${empresa.nombre}, go to top`)}>
+          <img
+            src="/marca/logo-vertical-blanco.svg"
+            alt={`${empresa.nombre}, ${empresa.lema}`}
+            width="200"
+            height="123"
+            class="h-24 w-auto"
+          />
+        </a>
         <p class="mt-7 max-w-sm text-white/60">
           {t(
             `Operador logístico y portuario con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}.`,

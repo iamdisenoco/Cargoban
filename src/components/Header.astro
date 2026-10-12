@@ -16,7 +16,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
   class="fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500"
 >
   <div id="cabecera-barra" class="contenedor flex h-20 items-center justify-between gap-6 transition-[height] duration-500 ease-suave lg:h-24">
-    <a href="#inicio" class="inline-flex min-h-11 shrink-0 items-center" aria-label={t(`${empresa.nombre}, ir al inicio`, `${empresa.nombre}, go to top`)}>
+    <a href={rutaInicio[idioma]} data-ir-inicio class="inline-flex min-h-11 shrink-0 items-center" aria-label={t(`${empresa.nombre}, ir al inicio`, `${empresa.nombre}, go to top`)}>
       <img
         src="/marca/logo-horizontal-blanco.svg"
         alt=""
