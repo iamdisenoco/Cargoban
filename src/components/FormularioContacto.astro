@@ -1,0 +1,148 @@
+---
+/**
+ * Formulario de contacto (Jon, 23/10): más formal que los botones sueltos, como en los
+ * sitios de otros operadores. Destino PROVISIONAL: mientras Cargoban no defina un correo
+ * o un servicio de recepción, el envío abre WhatsApp con la solicitud ya redactada para
+ * la línea comercial. No se guarda nada en ningún servidor.
+ */
+import { traductor, type Idioma } from '../i18n/idioma';
+import { contenido } from '../data/contenido';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, servicios, sedes } = contenido(idioma);
+
+const campo =
+  'mt-2 block w-full rounded-xl border border-ink/20 bg-white px-4 py-3.5 text-ink placeholder:text-ink-soft/60 transition-colors focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/25';
+const etiqueta = 'block font-display text-sm font-semibold text-navy';
+---
+
+<form
+  id="formulario-contacto"
+  class="grid gap-6 sm:grid-cols-2"
+  data-whatsapp={empresa.whatsapp.numero}
+  data-idioma={idioma}
+  novalidate
+>
+  <div>
+    <label for="fc-nombre" class={etiqueta}>{t('Nombre y apellido', 'Full name')} <span class="text-teal" aria-hidden="true">*</span></label>
+    <input id="fc-nombre" name="nombre" type="text" autocomplete="name" required class={campo} />
+  </div>
+  <div>
+    <label for="fc-empresa" class={etiqueta}>{t('Empresa', 'Company')}</label>
+    <input id="fc-empresa" name="empresa" type="text" autocomplete="organization" class={campo} />
+  </div>
+  <div>
+    <label for="fc-correo" class={etiqueta}>{t('Correo electrónico', 'Email')} <span class="text-teal" aria-hidden="true">*</span></label>
+    <input id="fc-correo" name="correo" type="email" autocomplete="email" required class={campo} />
+  </div>
+  <div>
+    <label for="fc-telefono" class={etiqueta}>{t('Teléfono', 'Phone')}</label>
+    <input id="fc-telefono" name="telefono" type="tel" autocomplete="tel" class={campo} />
+  </div>
+  <div>
+    <label for="fc-ciudad" class={etiqueta}>{t('Ciudad de la operación', 'Operation city')}</label>
+    <div class="relative">
+      <select id="fc-ciudad" name="ciudad" class={`${campo} appearance-none pr-11`}>
+      <option value="">{t('Seleccione', 'Select')}</option>
+      {sedes.map((sede) => <option>{sede.ciudad}</option>)}
+      <option>{t('Otra', 'Other')}</option>
+    </select>
+      <svg class="pointer-events-none absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-navy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+    </div>
+  </div>
+  <div>
+    <label for="fc-servicio" class={etiqueta}>{t('Servicio de interés', 'Service of interest')}</label>
+    <div class="relative">
+      <select id="fc-servicio" name="servicio" class={`${campo} appearance-none pr-11`}>
+      <option value="">{t('Seleccione', 'Select')}</option>
+      {servicios.map((s) => <option>{s.titulo}</option>)}
+      <option>{t('Otro', 'Other')}</option>
+    </select>
+      <svg class="pointer-events-none absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-navy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+    </div>
+  </div>
+  <div class="sm:col-span-2">
+    <label for="fc-mensaje" class={etiqueta}>{t('Mensaje', 'Message')} <span class="text-teal" aria-hidden="true">*</span></label>
+    <textarea
+      id="fc-mensaje"
+      name="mensaje"
+      rows="5"
+      required
+      placeholder={t('Cuéntenos el tipo de carga, volúmenes y fechas estimadas.', 'Tell us the cargo type, volumes and estimated dates.')}
+      class={`${campo} resize-y`}
+    ></textarea>
+  </div>
+  <!-- PROVISIONAL: falta enlazar la política de tratamiento de datos de Cargoban. -->
+  <label class="flex gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
+    <input name="autorizo" type="checkbox" required class="mt-1 size-4 shrink-0 accent-teal" />
+    <span>
+      {t(
+        'Autorizo a Cargoban el tratamiento de mis datos personales para atender esta solicitud, conforme a la Ley 1581 de 2012.',
+        'I authorize Cargoban to process my personal data to handle this request, in accordance with Colombian Law 1581 of 2012.',
+      )}
+    </span>
+  </label>
+  <div class="flex flex-wrap items-center gap-x-6 gap-y-3 sm:col-span-2">
+    <button
+      type="submit"
+      class="inline-flex items-center gap-3 rounded-full bg-navy px-8 py-4 font-display font-semibold text-white transition-colors hover:bg-teal"
+    >
+      {t('Enviar mensaje', 'Send message')}
+      <span aria-hidden="true">→</span>
+    </button>
+    <p class="text-sm text-ink-soft">{t('* Campos obligatorios', '* Required fields')}</p>
+  </div>
+  <p id="fc-aviso" class="text-sm font-semibold sm:col-span-2" aria-live="polite"></p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#formulario-contacto');
+  const aviso = document.querySelector<HTMLElement>('#fc-aviso');
+  if (form && aviso) {
+    const en = form.dataset.idioma === 'en';
+    const tx = (es: string, eng: string) => (en ? eng : es);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const campos = [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')];
+      const invalido = campos.find((el) => !el.checkValidity());
+      form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+      if (invalido) {
+        invalido.setAttribute('aria-invalid', 'true');
+        invalido.focus();
+        aviso.className = 'text-sm font-semibold text-red-700 sm:col-span-2';
+        aviso.textContent =
+          invalido.type === 'checkbox'
+            ? tx('Para enviar, autorice el tratamiento de sus datos.', 'To send, please authorize the processing of your data.')
+            : invalido.type === 'email' && invalido.value
+              ? tx('Revise el correo electrónico.', 'Please check the email address.')
+              : tx('Complete los campos obligatorios.', 'Please fill in the required fields.');
+        return;
+      }
+      const d = new FormData(form);
+      const v = (k: string) => String(d.get(k) ?? '').trim();
+      const lineas = [
+        tx('Hola, Cargoban. Envío esta solicitud desde el sitio web:', 'Hello, Cargoban. I am sending this request from the website:'),
+        '',
+        `${tx('Nombre', 'Name')}: ${v('nombre')}`,
+        v('empresa') ? `${tx('Empresa', 'Company')}: ${v('empresa')}` : null,
+        `${tx('Correo', 'Email')}: ${v('correo')}`,
+        v('telefono') ? `${tx('Teléfono', 'Phone')}: ${v('telefono')}` : null,
+        v('ciudad') ? `${tx('Ciudad', 'City')}: ${v('ciudad')}` : null,
+        v('servicio') ? `${tx('Servicio', 'Service')}: ${v('servicio')}` : null,
+        '',
+        v('mensaje'),
+      ].filter((l) => l !== null);
+      const texto = lineas.join('\n');
+      window.open(`https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+      aviso.className = 'text-sm font-semibold text-teal sm:col-span-2';
+      aviso.textContent = tx(
+        'Abrimos WhatsApp con su solicitud lista. Solo falta tocar «Enviar».',
+        'We opened WhatsApp with your request ready. Just tap “Send”.',
+      );
+    });
+  }
+</script>
