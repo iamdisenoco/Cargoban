@@ -1,14 +1,24 @@
 ---
 import { contenido } from '../data/contenido';
 import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
+import { rutaServicio } from '../data/paginasServicios';
 
 interface Props {
   idioma: Idioma;
+  /** Dirección de la página actual en cada idioma, para el selector ES | EN. */
+  rutas?: Record<Idioma, string>;
 }
-const { idioma } = Astro.props;
+const { idioma, rutas = rutaInicio } = Astro.props;
 const t = traductor(idioma);
-const { navegacion, empresa } = contenido(idioma);
+const { navegacion, empresa, servicios } = contenido(idioma);
 const otro: Idioma = idioma === 'es' ? 'en' : 'es';
+
+// Fuera de la portada, los enlaces a secciones (#servicios) llevan a la portada.
+const esPortada = Object.values(rutaInicio).includes(Astro.url.pathname);
+const aSeccion = (href: string) => (href.startsWith('#') && !esPortada ? `${rutaInicio[idioma]}${href}` : href);
+// Servicios del menú desplegable (Jon, 23/10), cada uno con su página.
+const subservicios = servicios.map((s) => ({ numero: s.numero, titulo: s.titulo, href: rutaServicio(idioma, s.numero) }));
+const actual = Astro.url.pathname;
 ---
 
 <header
@@ -28,15 +38,56 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
     </a>
 
     <nav class="hidden items-center gap-5 lg:flex xl:gap-10" aria-label={t('Principal', 'Main')}>
-      {navegacion.map((item) => (
-        <a
-          href={item.href}
-          class="group relative font-display text-[15px] font-medium text-white/85 xl:text-base transition-colors hover:text-white"
-        >
-          {item.etiqueta}
-          <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-green transition-all duration-300 ease-suave group-hover:w-full"></span>
-        </a>
-      ))}
+      {navegacion.map((item) =>
+        item.href === '#servicios' ? (
+          <div class="group/menu relative flex items-center gap-0.5" data-menu-servicios>
+            <a
+              href={aSeccion(item.href)}
+              class="group relative font-display text-[15px] font-medium text-white/85 xl:text-base transition-colors hover:text-white"
+            >
+              {item.etiqueta}
+              <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-green transition-all duration-300 ease-suave group-hover:w-full"></span>
+            </a>
+            <button
+              type="button"
+              class="inline-flex size-8 items-center justify-center rounded-full text-white/70 transition-colors hover:text-white"
+              aria-expanded="false"
+              aria-controls="submenu-servicios"
+              aria-label={t('Ver los servicios', 'Show the services')}
+              data-menu-servicios-boton
+            >
+              <svg class="size-3.5 transition-transform duration-300 group-hover/menu:rotate-180 [[aria-expanded=true]>&]:rotate-180" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.5 6h9L8 11.2 3.5 6Z" /></svg>
+            </button>
+            <div
+              id="submenu-servicios"
+              class="invisible absolute top-full left-1/2 w-[22rem] -translate-x-1/2 translate-y-1 pt-4 opacity-0 transition-[opacity,translate,visibility] duration-200 group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 [&.abierto]:visible [&.abierto]:translate-y-0 [&.abierto]:opacity-100"
+            >
+              <ul class="rounded-2xl border border-white/12 bg-navy-950/95 p-2 backdrop-blur-xl">
+                {subservicios.map((sub) => (
+                  <li>
+                    <a
+                      href={sub.href}
+                      aria-current={actual === sub.href ? 'page' : undefined}
+                      class="flex items-baseline gap-4 rounded-xl px-4 py-3 font-display text-[15px] font-medium text-white/85 transition-colors hover:bg-white/8 hover:text-white aria-[current=page]:text-green"
+                    >
+                      <span class="cifra w-5 shrink-0 text-xs text-teal-400">{sub.numero}</span>
+                      {sub.titulo}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <a
+            href={aSeccion(item.href)}
+            class="group relative font-display text-[15px] font-medium text-white/85 xl:text-base transition-colors hover:text-white"
+          >
+            {item.etiqueta}
+            <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-green transition-all duration-300 ease-suave group-hover:w-full"></span>
+          </a>
+        ),
+      )}
     </nav>
 
     <div class="flex items-center gap-3">
@@ -45,7 +96,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
         idioma nunca cambia solo. Lleva a la misma sección en el otro idioma.
       -->
       <a
-        href={rutaInicio[otro]}
+        href={rutas[otro]}
         hreflang={otro}
         data-cambiar-idioma
         class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-2 font-display text-sm font-medium"
@@ -110,13 +161,26 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
 >
   <nav class="contenedor mt-20 flex h-[calc(100%-5rem)] flex-col justify-center gap-2 overflow-y-auto pt-4 pb-10 [@media(max-height:560px)]:justify-start" aria-label={t('Principal móvil', 'Main mobile')}>
     {navegacion.map((item, i) => (
-      <a
-        href={item.href}
-        class="flex items-baseline gap-5 border-b border-white/10 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl [@media(max-height:560px)]:py-3 [@media(max-height:560px)]:text-2xl"
-      >
-        <span class="w-5 shrink-0 font-sans text-xs text-green tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-        {item.etiqueta}
-      </a>
+      <>
+        <a
+          href={aSeccion(item.href)}
+          class:list={['flex items-baseline gap-5 py-5 font-display text-4xl font-semibold text-white transition-colors hover:text-green sm:text-5xl [@media(max-height:560px)]:py-3 [@media(max-height:560px)]:text-2xl', item.href === '#servicios' ? 'pb-3' : 'border-b border-white/10']}
+        >
+          <span class="w-5 shrink-0 font-sans text-xs text-green tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+          {item.etiqueta}
+        </a>
+        {item.href === '#servicios' && (
+          <ul class="border-b border-white/10 pb-4 pl-10">
+            {subservicios.map((sub) => (
+              <li>
+                <a href={sub.href} aria-current={actual === sub.href ? 'page' : undefined} class="flex min-h-11 items-center font-display text-lg text-white/75 transition-colors hover:text-green aria-[current=page]:text-green">
+                  {sub.titulo}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </>
     ))}
     <a
       href="#contacto"
@@ -135,7 +199,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
   automático del navegador y vio frases como «Chaquetón» (por «Reefer»).
 */}
 <div id="aviso-idioma" data-idioma-navegador={otro} class="fixed top-[4.5rem] left-4 z-30 sm:top-auto sm:bottom-6 flex items-center gap-1 rounded-full border border-white/15 bg-navy-950/90 py-1 pl-4 pr-1 text-sm text-white shadow-lg shadow-black/20 backdrop-blur-md sm:left-6" lang={otro} hidden>
-    <a href={rutaInicio[otro]} hreflang={otro} data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
+    <a href={rutas[otro]} hreflang={otro} data-cambiar-idioma class="inline-flex min-h-10 items-center gap-2 font-display font-medium hover:text-green">
       {otro === 'en' ? 'View in English' : 'Ver en español'}
       <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" /></svg>
     </a>
@@ -174,6 +238,31 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
       }
     });
   }
+
+  // Menú desplegable de Servicios: se abre al pasar el cursor (CSS) o con el botón de la
+  // flecha (teclado y pantallas táctiles). Escape o salir del menú lo cierra.
+  document.querySelectorAll<HTMLElement>('[data-menu-servicios]').forEach((grupo) => {
+    const boton = grupo.querySelector<HTMLButtonElement>('[data-menu-servicios-boton]');
+    const panel = grupo.querySelector<HTMLElement>('#submenu-servicios');
+    if (!boton || !panel) return;
+    const poner = (abierto: boolean) => {
+      panel.classList.toggle('abierto', abierto);
+      boton.setAttribute('aria-expanded', String(abierto));
+    };
+    boton.addEventListener('click', () => poner(boton.getAttribute('aria-expanded') !== 'true'));
+    grupo.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && boton.getAttribute('aria-expanded') === 'true') {
+        poner(false);
+        boton.focus();
+      }
+    });
+    grupo.addEventListener('focusout', (e) => {
+      if (!grupo.contains(e.relatedTarget as Node | null)) poner(false);
+    });
+    document.addEventListener('click', (e) => {
+      if (!grupo.contains(e.target as Node)) poner(false);
+    });
+  });
 
   const cabecera = document.getElementById('cabecera');
   const boton = document.getElementById('menu-boton');

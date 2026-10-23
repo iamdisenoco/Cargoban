@@ -10,8 +10,10 @@ import { contenido } from '../data/contenido';
 
 interface Props {
   idioma: Idioma;
+  /** Servicio ya elegido, en la página de un servicio. */
+  servicio?: string;
 }
-const { idioma } = Astro.props;
+const { idioma, servicio: elegido } = Astro.props;
 const t = traductor(idioma);
 const { empresa, servicios, sedes } = contenido(idioma);
 
@@ -59,7 +61,7 @@ const etiqueta = 'block font-display text-sm font-semibold text-navy';
     <div class="relative">
       <select id="fc-servicio" name="servicio" class={`${campo} appearance-none pr-11`}>
       <option value="">{t('Seleccione', 'Select')}</option>
-      {servicios.map((s) => <option>{s.titulo}</option>)}
+      {servicios.map((s) => <option selected={s.titulo === elegido}>{s.titulo}</option>)}
       <option>{t('Otro', 'Other')}</option>
     </select>
       <svg class="pointer-events-none absolute right-4 top-1/2 mt-1 size-4 -translate-y-1/2 text-navy" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>

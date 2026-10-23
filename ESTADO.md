@@ -2,7 +2,18 @@
 
 Estado vivo del proyecto. Lo lee cualquier sesión antes de empezar y lo actualiza al terminar.
 
-## Situación actual (2026-09-23)
+## Situación actual (2026-10-23)
+- Rama `claude/happy-knuth-4l56e4`, publicada en el proyecto de prueba `cargoban-prueba` de Vercel.
+- **Páginas de servicio** (Jon, 23/10): `/servicios/<ruta>/` y `/en/services/<route>/`, una por
+  servicio, con menú desplegable en la cabecera. Rutas y fotos en `src/data/paginasServicios.ts`;
+  textos en `sitio.ts` / `sitio.en.ts`. **Falta de Cargoban:** el texto ampliado de cada servicio.
+- **Formulario de contacto** en la portada y en cada servicio. PROVISIONAL: abre WhatsApp con la
+  solicitud redactada, porque no hay correo configurado. Falta: correo de destino y permiso de Jon
+  para un servicio de recepción (p. ej. Web3Forms), y la política de tratamiento de datos para
+  enlazarla en la casilla de autorización (la misma que pide el PQRS).
+- Otros pendientes: 45 o 50 años (`empresa.anios`), enlaces de Google Play y App Store.
+
+## Situación anterior (2026-09-23)
 - **Bloque 2 MERGEADO en `main`** (PR #2, commit d1c6494). `main` compila y pasa `astro check`.
   La rama `claude/nuevo-sitio-web-g9z253` se reinició desde `main`: lo que venga es un PR nuevo.
 - **Bloque 3 en curso: movimientos de cargokite** (análisis en `docs/referencias/cargokite.md`).

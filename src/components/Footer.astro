@@ -12,6 +12,8 @@ const { idioma } = Astro.props;
 const t = traductor(idioma);
 const { empresa, navegacion, sedes, enlaceWhatsapp, numeroMarcable } = contenido(idioma);
 const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');
+// Fuera de la portada, los enlaces a secciones llevan a la portada.
+const esPortada = Object.values(rutaInicio).includes(Astro.url.pathname);
 ---
 
 <footer class="border-t border-white/10 bg-navy-950">
@@ -64,7 +66,7 @@ const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)'
         <ul class="mt-4">
           {navegacion.map((item) => (
             <li>
-              <a href={item.href} class="inline-flex min-h-11 items-center text-white/80 transition-colors hover:text-green">
+              <a href={item.href.startsWith('#') && !esPortada ? `${rutaInicio[idioma]}${item.href}` : item.href} class="inline-flex min-h-11 items-center text-white/80 transition-colors hover:text-green">
                 {item.etiqueta}
               </a>
             </li>

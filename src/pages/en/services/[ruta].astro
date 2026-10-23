@@ -1,0 +1,11 @@
+---
+import PaginaServicio from '../../../components/PaginaServicio.astro';
+import { paginasServicios } from '../../../data/paginasServicios';
+
+export function getStaticPaths() {
+  return paginasServicios.map((p) => ({ params: { ruta: p.ruta.en }, props: { numero: p.numero } }));
+}
+const { numero } = Astro.props;
+---
+
+<PaginaServicio idioma="en" numero={numero} />

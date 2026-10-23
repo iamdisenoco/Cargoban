@@ -11,9 +11,11 @@ interface Props {
   idioma: Idioma;
   titulo?: string;
   descripcion?: string;
+  /** Dirección de esta página en cada idioma. Por defecto, la portada. */
+  rutas?: Record<Idioma, string>;
 }
 
-const { idioma } = Astro.props;
+const { idioma, rutas = rutaInicio } = Astro.props;
 const t = traductor(idioma);
 const { empresa } = contenido(idioma);
 const {
@@ -40,10 +42,10 @@ const tituloCompleto = titulo
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
-    <link rel="canonical" href={new URL(rutaInicio[idioma], Astro.site).href} />
+    <link rel="canonical" href={new URL(rutas[idioma], Astro.site).href} />
     {/* Cada versión anuncia a la otra, así los buscadores muestran el idioma correcto. */}
-    {idiomas.map((i) => <link rel="alternate" hreflang={i} href={new URL(rutaInicio[i], Astro.site).href} />)}
-    <link rel="alternate" hreflang="x-default" href={new URL(rutaInicio.es, Astro.site).href} />
+    {idiomas.map((i) => <link rel="alternate" hreflang={i} href={new URL(rutas[i], Astro.site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(rutas.es, Astro.site).href} />
     <link rel="icon" type="image/svg+xml" href="/marca/isotipo.svg" />
     <meta name="theme-color" content="#070b26" />
 
@@ -86,7 +88,7 @@ const tituloCompleto = titulo
       {t('Saltar al contenido', 'Skip to content')}
     </a>
 
-    <Header idioma={idioma} />
+    <Header idioma={idioma} rutas={rutas} />
     <main id="contenido" tabindex="-1">
       <slot />
     </main>
