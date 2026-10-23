@@ -86,6 +86,9 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
   Excepción autorizada por Jon (02/10): su logo sí va en «Nuestros clientes» y en la franja
   «Confían en nosotros» de la portada, junto a los demás clientes. Solo como logo de
   cliente; sus videos y fotos siguen fuera.
+  Aclaración de Jon (23/10): en las tomas propias de Cargoban el rótulo «Puerto Antioquia»
+  (grúas, chasis, camiones) puede verse; no se difumina. Lo prohibido son los videos y
+  fotos de Puerto Antioquia, los que llevan su marca de agua.
 - Un titular de sección no va dentro de una columna angosta: se parte en cinco renglones y
   se ve gigante (Jon, 25/09, Sostenibilidad). Va a lo ancho, en dos líneas como mucho, con
   `--text-seccion`. Jon pidió frases en verde para dar color, como el referente: una palabra

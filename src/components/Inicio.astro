@@ -23,6 +23,16 @@ const { idioma } = Astro.props;
 const t = traductor(idioma);
 const { empresa, razones, valores, cifras, fundacion, fondecar, clientes, sedes, enlaceWhatsapp, numeroMarcable } = contenido(idioma);
 const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');
+
+// Fotos propias del carrusel de Nosotros, en el orden en que pasan (Jon, 23/10).
+const fotosNosotros = [
+  { src: '/fotos/nosotros-caminando.webp', clase: 'object-[50%_58%]', alt: t('Supervisor de Cargoban caminando por el muelle frente a las grúas pórtico', 'Cargoban supervisor walking along the quay in front of the gantry cranes') },
+  { src: '/fotos/nosotros-equipo.webp', clase: '', alt: t('Charla de seguridad con el equipo de Cargoban en el muelle', 'Safety briefing with the Cargoban crew at the quay') },
+  { src: '/fotos/nosotros-planilla.webp', clase: '', alt: t('Operarios de Cargoban revisando una planilla junto a un contenedor', 'Cargoban crew reviewing a checklist next to a container') },
+  { src: '/fotos/nosotros-cafe.webp', clase: '', alt: t('Operarios de Cargoban cargando sacos de café en un contenedor', 'Cargoban workers loading coffee sacks into a container') },
+  { src: '/fotos/nosotros-montacargas.webp', clase: '', alt: t('Operario de Cargoban moviendo un palé de banano con montacargas', 'Cargoban operator moving a pallet of bananas with a forklift') },
+  { src: '/fotos/nosotros-vehiculos.webp', clase: '', alt: t('Conductor de Cargoban bajando un vehículo de una niñera', 'Cargoban driver unloading a car from a car carrier') },
+];
 ---
 
 <Base idioma={idioma}>
@@ -61,25 +71,31 @@ const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)'
                 class="text-navy"
                 style="font-size:var(--text-titulo)"
               />
-              <figure class="foto-abre mt-12 hidden aspect-[4/5] overflow-hidden rounded-2xl lg:block">
-                <img
-                  src="/fotos/nosotros-caminando.webp"
-                  alt={t('Supervisor de Cargoban caminando por el muelle frente a las grúas pórtico', 'Cargoban supervisor walking along the quay in front of the gantry cranes')}
-                  class="size-full object-cover object-[50%_58%]"
-                  loading="lazy"
-                  decoding="async"
-                />
+              <!--
+                Carrusel de fotos propias (Jon, 23/10): se funden una con otra cada 4,5 s, solo
+                mientras están en pantalla. Con «menos movimiento» queda la primera, fija.
+              -->
+              <figure class="carrusel-nosotros foto-abre relative mt-12 hidden aspect-[4/5] overflow-hidden rounded-2xl lg:block">
+                {fotosNosotros.map((foto, i) => (
+                  <img
+                    src={foto.src}
+                    alt={foto.alt}
+                    class:list={['absolute inset-0 size-full object-cover transition-opacity duration-[1200ms] ease-out', foto.clase, i === 0 ? 'opacity-100' : 'opacity-0']}
+                    aria-hidden={i === 0 ? undefined : 'true'}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ))}
               </figure>
             </div>
 
             <div class="lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:self-end">
               <!--
-                Video propio de dron (DJI_0582 del Drive de Jon), en lugar de la foto IMG_2894
-                (Jon, 23/10): los operarios en la caseta junto al contenedor. Tramo del segundo 7
-                al final, a media velocidad y en bucle sin corte. Recortado para dejar fuera el
-                tractocamión y las grúas con la marca de Puerto Antioquia; el «…quia» que se ve
-                por la ventana de la caseta en el chasis de un remolque va desenfocado.
-                Revisado cuadro a cuadro. Con «menos movimiento» se ve la imagen fija.
+                Video propio de dron (DJI_0587 del Drive de Jon, 23/10): los operarios en la caseta
+                y el dron que se aleja hasta el Polar Brasil. A velocidad real, en bucle con un
+                fundido de 0,8 s del final al comienzo. El encuadre 4:3 sube con el dron.
+                El rótulo de Puerto Antioquia en el chasis de un remolque se deja: en tomas
+                propias está permitido (Jon, 23/10). Con «menos movimiento» se ve la imagen fija.
               -->
               <figure class="foto-abre relative aspect-[4/3] max-h-[85svh] overflow-hidden rounded-2xl">
                 <img
@@ -397,6 +413,37 @@ const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)'
 </Base>
 
 <script>
+  // Carrusel de Nosotros: cambia de foto cada 4,5 s mientras se ve, nunca con «menos movimiento».
+  {
+    const carrusel = document.querySelector<HTMLElement>('.carrusel-nosotros');
+    const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const fotos = carrusel ? [...carrusel.querySelectorAll('img')] : [];
+    if (carrusel && fotos.length > 1 && !quieto.matches && 'IntersectionObserver' in window) {
+      let actual = 0;
+      let reloj: number | undefined;
+      const pasar = () => {
+        const siguiente = (actual + 1) % fotos.length;
+        fotos[siguiente].loading = 'eager';
+        fotos[(siguiente + 1) % fotos.length].loading = 'eager';
+        fotos[siguiente].classList.replace('opacity-0', 'opacity-100');
+        fotos[actual].classList.replace('opacity-100', 'opacity-0');
+        actual = siguiente;
+      };
+      new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            fotos[1].loading = 'eager';
+            reloj ??= window.setInterval(pasar, 4500);
+          } else {
+            window.clearInterval(reloj);
+            reloj = undefined;
+          }
+        },
+        { rootMargin: '200px 0px' },
+      ).observe(carrusel);
+    }
+  }
+
   // Video de Nosotros: carga y corre solo cerca de la pantalla, nunca con «menos movimiento».
   {
     const video = document.querySelector<HTMLVideoElement>('.video-nosotros');
