@@ -73,7 +73,7 @@ const fotosNosotros = [
                 style="font-size:var(--text-titulo)"
               />
               <!--
-                Carrusel de fotos propias (Jon, 23/10): se funden una con otra cada 4,5 s, solo
+                Carrusel de fotos propias (Jon, 23/10): se funden una con otra cada 3,2 s y se alejan despacio, solo
                 mientras están en pantalla. Con «menos movimiento» queda la primera, fija.
               -->
               <figure class="carrusel-nosotros foto-abre relative mt-12 hidden aspect-[4/5] overflow-hidden rounded-2xl lg:block">
@@ -417,27 +417,53 @@ const fotosNosotros = [
 </Base>
 
 <script>
-  // Carrusel de Nosotros: cambia de foto cada 4,5 s mientras se ve, nunca con «menos movimiento».
+  // Carrusel de Nosotros: cambia de foto cada 3,2 s mientras se ve y cada foto se aleja
+  // despacio mientras está a la vista (Jon, 23/10). Nunca con «menos movimiento».
+  // El alejamiento usa la propiedad `scale`, no `transform`: así no choca con el
+  // acercamiento de `.foto-abre > img` al hacer scroll. La caja tiene overflow-hidden.
   {
     const carrusel = document.querySelector<HTMLElement>('.carrusel-nosotros');
     const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
     const fotos = carrusel ? [...carrusel.querySelectorAll('img')] : [];
     if (carrusel && fotos.length > 1 && !quieto.matches && 'IntersectionObserver' in window) {
+      const PAUSA = 3200;
+      const FUNDIDO = 1200;
+      const LEJOS = '1.12';
       let actual = 0;
       let reloj: number | undefined;
+      const encender = (foto: HTMLImageElement) => {
+        foto.style.transition = `opacity ${FUNDIDO}ms ease-out, scale ${PAUSA + FUNDIDO}ms linear`;
+        foto.style.scale = '1';
+        foto.classList.replace('opacity-0', 'opacity-100');
+      };
+      const apagar = (foto: HTMLImageElement) => {
+        foto.classList.replace('opacity-100', 'opacity-0');
+        window.setTimeout(() => {
+          foto.style.transition = `opacity ${FUNDIDO}ms ease-out`;
+          foto.style.scale = LEJOS;
+        }, FUNDIDO + 50);
+      };
+      fotos.forEach((foto) => {
+        foto.style.transition = 'none';
+        foto.style.scale = LEJOS;
+      });
       const pasar = () => {
         const siguiente = (actual + 1) % fotos.length;
-        fotos[siguiente].loading = 'eager';
         fotos[(siguiente + 1) % fotos.length].loading = 'eager';
-        fotos[siguiente].classList.replace('opacity-0', 'opacity-100');
-        fotos[actual].classList.replace('opacity-100', 'opacity-0');
+        encender(fotos[siguiente]);
+        apagar(fotos[actual]);
         actual = siguiente;
       };
+      let primera = true;
       new IntersectionObserver(
         ([e]) => {
           if (e.isIntersecting) {
             fotos[1].loading = 'eager';
-            reloj ??= window.setInterval(pasar, 4500);
+            if (primera) {
+              primera = false;
+              requestAnimationFrame(() => requestAnimationFrame(() => encender(fotos[0])));
+            }
+            reloj ??= window.setInterval(pasar, PAUSA);
           } else {
             window.clearInterval(reloj);
             reloj = undefined;
