@@ -55,8 +55,9 @@ export const clientes: { nombre: string; logo?: string }[] = [
 /**
  * Certificaciones, debajo de Clientes (Jon, 02/10). Cada una abre su certificado en PDF
  * en una pestaña nueva; el archivo va en `public/certificados/` y aquí su ruta.
- * PROVISIONAL: los certificados que mostró Jon ya vencieron (ISO 9001 el 21/12/2025,
- * BASC el 12/02/2026). Falta el PDF vigente de cada uno; mientras `pdf` esté vacío, la
+ * PDF vigentes entregados por Jon (23/10): BASC COLSMR00081-1-7, vigente hasta el
+ * 12/02/2027; ISO 9001 SC-2000253 de ICONTEC, ciclo vigente hasta el 21/12/2028.
+ * Al renovarse, se reemplaza el archivo con el mismo nombre. Si `pdf` queda vacío, la
  * tarjeta dice que el certificado está por publicarse en vez de enlazar uno vencido.
  * No se muestran fechas aquí: cambian con cada renovación y quedarían desactualizadas.
  */
@@ -65,13 +66,13 @@ export const certificaciones: { sigla: string; nombre: string; emisor: string; p
     sigla: 'BASC',
     nombre: 'Sistema de Gestión en Seguridad',
     emisor: 'World BASC Organization',
-    pdf: '',
+    pdf: '/certificados/cargoban-basc.pdf',
   },
   {
     sigla: 'ISO 9001:2015',
     nombre: 'Sistema de Gestión de Calidad',
     emisor: 'ICONTEC · IQNet',
-    pdf: '',
+    pdf: '/certificados/cargoban-iso-9001.pdf',
   },
 ];
 
