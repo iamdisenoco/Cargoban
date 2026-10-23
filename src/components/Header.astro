@@ -60,17 +60,17 @@ const actual = Astro.url.pathname;
             </button>
             <div
               id="submenu-servicios"
-              class="invisible absolute top-full left-1/2 w-[22rem] -translate-x-1/2 translate-y-1 pt-4 opacity-0 transition-[opacity,translate,visibility] duration-200 group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 [&.abierto]:visible [&.abierto]:translate-y-0 [&.abierto]:opacity-100"
+              class="invisible absolute top-full left-1/2 w-[19rem] -translate-x-1/2 translate-y-1 pt-4 opacity-0 transition-[opacity,translate,visibility] duration-200 group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:opacity-100 [&.abierto]:visible [&.abierto]:translate-y-0 [&.abierto]:opacity-100"
             >
-              <ul class="rounded-2xl border border-white/12 bg-navy-950/95 p-2 backdrop-blur-xl">
+              <!-- Vidrio «liquid glass» (Jon, 23/10): translúcido, con brillo en el borde. -->
+              <ul class="vidrio rounded-[1.75rem] p-2">
                 {subservicios.map((sub) => (
                   <li>
                     <a
                       href={sub.href}
                       aria-current={actual === sub.href ? 'page' : undefined}
-                      class="flex items-baseline gap-4 rounded-xl px-4 py-3 font-display text-[15px] font-medium text-white/85 transition-colors hover:bg-white/8 hover:text-white aria-[current=page]:text-green"
+                      class="flex rounded-[1.25rem] px-5 py-3 font-display text-[15px] font-medium text-white/90 transition-colors hover:bg-white/12 hover:text-white aria-[current=page]:text-green"
                     >
-                      <span class="cifra w-5 shrink-0 text-xs text-teal-400">{sub.numero}</span>
                       {sub.titulo}
                     </a>
                   </li>
