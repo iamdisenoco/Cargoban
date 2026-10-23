@@ -66,11 +66,11 @@ export const servicios: typeof es.servicios = [
   },
   {
     ...es.servicios[2],
-    titulo: 'Storage',
-    resumen: 'Warehousing for customs-cleared cargo in Urabá.',
+    titulo: 'Storage and warehousing',
+    resumen: 'Cargo warehousing in Urabá.',
     detalle:
-      'Space to store cargo after customs clearance, with inventory control and tracking of every movement.',
-    items: ['Customs-cleared cargo', 'Inventory control', 'Movement traceability'],
+      'Space to store cargo, including customs-cleared cargo, with inventory control and tracking of every movement.',
+    items: ['Cargo warehousing', 'Customs-cleared cargo', 'Inventory control', 'Movement traceability'],
   },
   {
     ...es.servicios[3],
@@ -121,23 +121,29 @@ export const tiposDeCarga = [
   'Bulk',
 ];
 
-export const razones = [
+export const razones: typeof es.razones = [
+  { titulo: `More than ${es.empresa.anios} years of experience` },
+  { titulo: 'Process innovation' },
+  { titulo: 'High operational performance' },
+  { titulo: 'Legal compliance' },
+  { titulo: 'Occupational health and safety management system' },
+  { titulo: 'Competitive costs' },
+  { titulo: 'Adapted to each client’s needs' },
+  { titulo: 'Highly trained personnel' },
+];
+
+export const valores: typeof es.valores = [
   {
-    titulo: 'Proven track record',
-    texto: 'More than five decades operating in the ports of the Colombian Caribbean.',
+    nombre: 'Integrity',
+    texto: 'We fully comply with the processes we work in, in an ethical, respectful and transparent way.',
   },
   {
-    titulo: 'Cargo integrity',
-    texto:
-      'Standardized procedures and qualified personnel in every handling step, from the vessel to final delivery.',
+    nombre: 'Commitment',
+    texto: 'We work with motivation, constant analysis and passion, building credibility in our services.',
   },
   {
-    titulo: 'Traceability of every move',
-    texto: 'Cargo tally and records at every stage, from the quay to the warehouse.',
-  },
-  {
-    titulo: 'Presence in two ports',
-    texto: 'Offices in Urabá and Santa Marta, two strategic hubs of Colombian foreign trade.',
+    nombre: 'Responsibility',
+    texto: 'We provide timely service with quality, safety and on-time delivery.',
   },
 ];
 

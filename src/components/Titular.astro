@@ -24,8 +24,18 @@ const { texto, as: Etiqueta = 'h2', class: clase, style } = Astro.props;
 const escapar = (s: string) =>
   s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
-const esResaltada = (p: string) => p.length > 2 && p.startsWith('*') && p.endsWith('*');
-const sinMarca = (p: string) => (esResaltada(p) ? p.slice(1, -1) : p);
+// Una palabra marcada puede llevar signos pegados por fuera: «*elegirnos*?».
+const partes = (p: string) => {
+  const a = p.indexOf('*');
+  const b = p.lastIndexOf('*');
+  if (a === -1 || b - a < 2) return null;
+  return { antes: p.slice(0, a), nucleo: p.slice(a + 1, b), despues: p.slice(b + 1) };
+};
+const esResaltada = (p: string) => partes(p) !== null;
+const sinMarca = (p: string) => {
+  const x = partes(p);
+  return x ? x.antes + x.nucleo + x.despues : p;
+};
 
 const palabras = texto.trim().split(/\s+/);
 const limpio = palabras.map(sinMarca).join(' ');
@@ -34,9 +44,11 @@ const limpio = palabras.map(sinMarca).join(' ');
 // espacio real, que es lo que permite que el titular corte línea donde toca.
 const partido = palabras
   .map((p, i) => {
-    const contenido = escapar(sinMarca(p));
-    const clases = esResaltada(p) ? 'palabra-in text-green' : 'palabra-in';
-    return `<span class="palabra"><span class="${clases}" style="--i:${i}">${contenido}</span></span>`;
+    const x = partes(p);
+    const contenido = x
+      ? `${escapar(x.antes)}<span class="text-green">${escapar(x.nucleo)}</span>${escapar(x.despues)}`
+      : escapar(p);
+    return `<span class="palabra"><span class="palabra-in" style="--i:${i}">${contenido}</span></span>`;
   })
   .join(' ');
 ---

@@ -23,15 +23,15 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
         width="220"
         height="60"
         id="cabecera-logo"
-        class="h-9 w-auto transition-[height] duration-500 ease-suave lg:h-11"
+        class="h-11 w-auto transition-[height] duration-500 ease-suave lg:h-12 xl:h-14"
       />
     </a>
 
-    <nav class="hidden items-center gap-10 lg:flex" aria-label={t('Principal', 'Main')}>
+    <nav class="hidden items-center gap-5 lg:flex xl:gap-10" aria-label={t('Principal', 'Main')}>
       {navegacion.map((item) => (
         <a
           href={item.href}
-          class="group relative font-display text-sm font-medium text-white/85 transition-colors hover:text-white"
+          class="group relative font-display text-[15px] font-medium text-white/85 xl:text-base transition-colors hover:text-white"
         >
           {item.etiqueta}
           <span class="absolute -bottom-1.5 left-0 h-px w-0 bg-green transition-all duration-300 ease-suave group-hover:w-full"></span>
@@ -58,7 +58,7 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
 
       <a
         href="#contacto"
-        class="hidden rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 lg:inline-flex"
+        class="hidden whitespace-nowrap rounded-full bg-green px-6 py-2.5 font-display text-sm font-semibold text-navy-950 transition-colors hover:bg-green-300 lg:inline-flex"
       >
         {t('Cotizar operación', 'Request a quote')}
       </a>
@@ -204,10 +204,12 @@ const otro: Idioma = idioma === 'es' ? 'en' : 'es';
       barra?.classList.toggle('h-14', solido);
       barra?.classList.toggle('lg:h-16', solido);
       const logo = document.getElementById('cabecera-logo');
-      logo?.classList.toggle('h-9', !solido);
-      logo?.classList.toggle('lg:h-11', !solido);
-      logo?.classList.toggle('h-7', solido);
-      logo?.classList.toggle('lg:h-8', solido);
+      // Logo más grande para que se lea «Operador logístico y portuario» (Jon, 23/10).
+      logo?.classList.toggle('h-11', !solido);
+      logo?.classList.toggle('lg:h-12', !solido);
+      logo?.classList.toggle('xl:h-14', !solido);
+      logo?.classList.toggle('h-9', solido);
+      logo?.classList.toggle('lg:h-11', solido);
     }).observe(centinela);
   }
 

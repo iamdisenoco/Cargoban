@@ -130,11 +130,12 @@ export const servicios = [
   },
   {
     numero: '03',
-    titulo: 'Almacenamiento',
-    resumen: 'Bodegaje de carga nacionalizada en Urabá.',
+    // Bodegaje agregado por Jon (23/10).
+    titulo: 'Almacenamiento y bodegaje',
+    resumen: 'Bodegaje de carga en Urabá.',
     detalle:
-      'Espacio para guardar la carga después de nacionalizada, con control de inventario y seguimiento de cada movimiento.',
-    items: ['Carga nacionalizada', 'Control de inventario', 'Trazabilidad de movimientos'],
+      'Espacio para guardar la carga, incluida la nacionalizada, con control de inventario y seguimiento de cada movimiento.',
+    items: ['Bodegaje de carga', 'Carga nacionalizada', 'Control de inventario', 'Trazabilidad de movimientos'],
     provisional: true,
   },
   {
@@ -196,23 +197,34 @@ export const tiposDeCarga = [
   'Granel',
 ];
 
-export const razones = [
+/**
+ * ¿Por qué elegirnos? Lista «Nos diferencia» del brochure de Cargoban (Jon, 23/10).
+ * Reemplaza las cuatro razones anteriores, incluida «Presencia en dos puertos».
+ */
+export const razones: { titulo: string; texto?: string }[] = [
+  { titulo: `Más de ${empresa.anios} años de experiencia` },
+  { titulo: 'Innovación en procesos' },
+  { titulo: 'Alto rendimiento operativo' },
+  { titulo: 'Cumplimiento legal' },
+  { titulo: 'Sistema de Gestión SST' },
+  { titulo: 'Costos competitivos' },
+  { titulo: 'Adaptación a las necesidades del cliente' },
+  { titulo: 'Personal altamente capacitado' },
+];
+
+/** Valores de Cargoban. Fuente: brochure, lámina «Valores» (Jon, 23/10). */
+export const valores = [
   {
-    titulo: 'Trayectoria comprobada',
-    texto: 'Más de cinco décadas de operación en los puertos del Caribe colombiano.',
+    nombre: 'Integridad',
+    texto: 'Cumplimos a cabalidad con los procesos en los que trabajamos, de manera ética, respetuosa y transparente.',
   },
   {
-    titulo: 'Integridad de la carga',
-    texto:
-      'Procedimientos estandarizados y personal calificado en cada manipulación, desde el buque hasta la entrega.',
+    nombre: 'Compromiso',
+    texto: 'Trabajamos con motivación, análisis permanente y pasión, brindando credibilidad en nuestros servicios.',
   },
   {
-    titulo: 'Trazabilidad de cada movimiento',
-    texto: 'Tarja y registro de la carga en cada etapa, del muelle a la bodega.',
-  },
-  {
-    titulo: 'Presencia en dos puertos',
-    texto: 'Sedes en Urabá y Santa Marta, dos puntos estratégicos del comercio exterior colombiano.',
+    nombre: 'Responsabilidad',
+    texto: 'Brindamos un servicio oportuno, con calidad, seguridad y entrega a tiempo.',
   },
 ];
 
