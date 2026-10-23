@@ -202,15 +202,26 @@ export const tiposDeCarga = [
  * ¿Por qué elegirnos? Lista «Nos diferencia» del brochure de Cargoban (Jon, 23/10).
  * Reemplaza las cuatro razones anteriores, incluida «Presencia en dos puertos».
  */
-export const razones: { titulo: string; texto?: string }[] = [
-  { titulo: `Más de ${empresa.anios} años de experiencia` },
-  { titulo: 'Innovación en procesos' },
-  { titulo: 'Alto rendimiento operativo' },
-  { titulo: 'Cumplimiento legal' },
-  { titulo: 'Sistema de Gestión SST' },
-  { titulo: 'Costos competitivos' },
-  { titulo: 'Adaptación a las necesidades del cliente' },
-  { titulo: 'Personal altamente capacitado' },
+/** Ícono de cada razón (dibujos en src/components/iconos/Razon.astro). */
+export type IconoRazon =
+  | 'experiencia'
+  | 'innovacion'
+  | 'rendimiento'
+  | 'legal'
+  | 'sst'
+  | 'costos'
+  | 'adaptacion'
+  | 'personal';
+
+export const razones: { icono: IconoRazon; titulo: string; texto?: string }[] = [
+  { icono: 'experiencia', titulo: `Más de ${empresa.anios} años de experiencia` },
+  { icono: 'innovacion', titulo: 'Innovación en procesos' },
+  { icono: 'rendimiento', titulo: 'Alto rendimiento operativo' },
+  { icono: 'legal', titulo: 'Cumplimiento legal' },
+  { icono: 'sst', titulo: 'Sistema de Gestión SST' },
+  { icono: 'costos', titulo: 'Costos competitivos' },
+  { icono: 'adaptacion', titulo: 'Adaptación a las necesidades del cliente' },
+  { icono: 'personal', titulo: 'Personal altamente capacitado' },
 ];
 
 /** Valores de Cargoban. Fuente: brochure, lámina «Valores» (Jon, 23/10). */

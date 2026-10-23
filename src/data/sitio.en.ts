@@ -122,14 +122,14 @@ export const tiposDeCarga = [
 ];
 
 export const razones: typeof es.razones = [
-  { titulo: `More than ${es.empresa.anios} years of experience` },
-  { titulo: 'Process innovation' },
-  { titulo: 'High operational performance' },
-  { titulo: 'Legal compliance' },
-  { titulo: 'Occupational health and safety management system' },
-  { titulo: 'Competitive costs' },
-  { titulo: 'Adapted to each client’s needs' },
-  { titulo: 'Highly trained personnel' },
+  { icono: 'experiencia', titulo: `More than ${es.empresa.anios} years of experience` },
+  { icono: 'innovacion', titulo: 'Process innovation' },
+  { icono: 'rendimiento', titulo: 'High operational performance' },
+  { icono: 'legal', titulo: 'Legal compliance' },
+  { icono: 'sst', titulo: 'Occupational health and safety management system' },
+  { icono: 'costos', titulo: 'Competitive costs' },
+  { icono: 'adaptacion', titulo: 'Adapted to each client’s needs' },
+  { icono: 'personal', titulo: 'Highly trained personnel' },
 ];
 
 export const valores: typeof es.valores = [

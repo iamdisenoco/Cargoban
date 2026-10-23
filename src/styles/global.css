@@ -177,6 +177,35 @@
     }
   }
 
+  /* «¿Por qué elegirnos?»: cada columna entra un poco después que la anterior y el
+     ícono da un salto pequeño. Mismas reglas que .revelar: el estado final es el de
+     partida y solo se anima si el navegador lo soporta y no se pidió menos movimiento. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* El escalonado es por columna: solo cuando hay cuatro columnas. */
+      @media (min-width: 64rem) {
+        .razon { --desfase: var(--orden, 0); }
+      }
+      .razon.revelar {
+        animation-range: entry calc(5% + var(--desfase, 0) * 6%) cover calc(28% + var(--desfase, 0) * 6%);
+      }
+      .razon__icono {
+        animation-name: icono-saltar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry calc(10% + var(--desfase, 0) * 6%) cover calc(34% + var(--desfase, 0) * 6%);
+      }
+    }
+  }
+
+  @keyframes icono-saltar {
+    0% { transform: scale(0.4) rotate(-25deg); }
+    70% { transform: scale(1.12) rotate(4deg); }
+    100% { transform: none; }
+  }
+
   @keyframes aparecer {
     from {
       opacity: 0;
