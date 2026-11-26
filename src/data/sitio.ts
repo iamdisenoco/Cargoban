@@ -251,25 +251,13 @@ export const cifras = [
 ];
 
 /**
- * Fundación Cargoban (sección Sostenibilidad).
- * Fuente: información pública de la fundación (fundacioncargoban.org.co y directorios
- * de ONG). PROVISIONAL: Cargoban debe confirmar textos, cifras y fotos antes de publicar.
+ * Fundación Cargoban (sección Sostenibilidad). El texto y las líneas de acción, con su
+ * página cada una, están en src/data/fundacion.ts.
  */
 export const fundacion = {
   nombre: 'Fundación Cargoban',
   desde: 2006,
-  // Donde trabaja: Urabá y Santa Marta, según los directorios públicos. Confirmar.
-  regiones: ['Urabá', 'Santa Marta'],
-  // La dirección pública (fundacioncargoban.org.co) no resuelve en DNS al 25/09.
-  // Sin web confirmada no se muestra el botón. Pedir a Cargoban la vigente, con https.
-  web: '',
-  lineas: [
-    'Emprendimiento y bisutería',
-    'Recreación, cultura y deporte',
-    'Resignificación de comunidades',
-    'Escuelas y espacios comunitarios',
-    'Fortalecimiento ambiental',
-  ],
+  // Textos y líneas de acción en src/data/fundacion.ts (Jon, 26/11).
 };
 
 /**

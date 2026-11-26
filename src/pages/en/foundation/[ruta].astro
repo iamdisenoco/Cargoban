@@ -1,0 +1,11 @@
+---
+import PaginaFundacion from '../../../components/PaginaFundacion.astro';
+import { lineasFundacion } from '../../../data/fundacion';
+
+export function getStaticPaths() {
+  return lineasFundacion.map((l, indice) => ({ params: { ruta: l.ruta.en }, props: { indice } }));
+}
+const { indice } = Astro.props;
+---
+
+<PaginaFundacion idioma="en" indice={indice} />
