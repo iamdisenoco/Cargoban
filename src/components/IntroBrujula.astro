@@ -6,6 +6,10 @@
  * junto a la fotografía de una): el arco es la caja y las dos cuñas verde y turquesa
  * son las dos mitades de la aguja. La animación parte de eso: se dibuja el bisel,
  * la aguja busca el norte, se forma el arco y el logotipo completo queda armado.
+ * Todo pasa sobre un telón que tapa la página. Al final el logo armado vuela a su sitio
+ * en la cabecera (arriba a la izquierda) mientras el telón se desvanece, y queda la
+ * página. Antes fueron columnas que caían y después un círculo; a Jon no le gustó
+ * ninguno de los dos (02/10).
  *
  * Los trazos NO se copian a mano: se leen del SVG oficial del logo horizontal, para
  * que el logo que queda al final del intro sea exactamente el logo aprobado y no una
@@ -74,6 +78,12 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     cardinal,
   };
 });
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const t = traductor(Astro.props.idioma);
 ---
 
 <div
@@ -82,9 +92,11 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   hidden
   role="dialog"
   aria-modal="true"
-  aria-label="Animación de apertura de Cargoban"
+  aria-label={t('Animación de apertura de Cargoban', 'Cargoban opening animation')}
 >
-  <button id="intro-saltar" class="intro__saltar" type="button">Saltar animación</button>
+  <div class="intro__telon" aria-hidden="true"></div>
+
+  <button id="intro-saltar" class="intro__saltar" type="button">{t('Saltar animación', 'Skip animation')}</button>
 
   <svg
     class="intro__svg"
@@ -140,8 +152,22 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     display: grid;
     place-items: center;
     overflow: hidden;
+  }
+
+  /*
+    El telón: tapa la página mientras se arma el logo. Lo desvanece el script cuando el
+    logo sale volando hacia la cabecera; al aterrizar, el intro se retira.
+  */
+  .intro__telon {
+    position: absolute;
+    inset: 0;
     background: var(--color-navy-950);
-    animation: intro-salir calc(0.5s * var(--r)) ease-in calc(3.0s * var(--r)) both;
+  }
+
+  /* Mientras el intro está abierto, el logo de la cabecera no se ve: el del intro aterriza
+     justo encima, y al retirarse el intro el de la cabecera ocupa su lugar sin salto. */
+  :global(html[data-intro='abierto'] #cabecera-logo) {
+    opacity: 0;
   }
 
   .intro[hidden] {
@@ -149,6 +175,9 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
   }
 
   .intro__svg {
+    /* Por encima del telón, que es absoluto y taparía a un elemento sin posición. */
+    position: relative;
+    z-index: 1;
     /* --z es cuánto se amplía la brújula antes de recomponerse como logotipo. */
     --z: 2;
     width: clamp(15rem, 84vw, 44rem);
@@ -212,6 +241,9 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     z-index: 1;
     border-radius: 9999px;
     border: 1px solid rgb(255 255 255 / 0.25);
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
     padding: 0.55rem 1.1rem;
     font-family: var(--font-display);
     font-size: 0.8125rem;
@@ -221,6 +253,7 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     background: transparent;
     cursor: pointer;
     transition: color 0.2s, border-color 0.2s;
+    animation: intro-desvanecer calc(0.35s * var(--r)) ease-in calc(3s * var(--r)) both;
   }
 
   .intro__saltar:hover {
@@ -264,9 +297,6 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     to { opacity: 0; }
   }
 
-  @keyframes intro-salir {
-    to { opacity: 0; visibility: hidden; }
-  }
 </style>
 
 <script is:inline>
@@ -319,6 +349,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
 
     intro.hidden = false;
     document.documentElement.style.overflow = 'hidden';
+    // Aviso para quien espera al intro (los titulares del hero, ver titulares.ts).
+    document.documentElement.dataset.intro = 'abierto';
 
     /*
       Mientras el intro tapa la pantalla, el resto del documento queda inerte:
@@ -351,6 +383,8 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
       for (var i = 0; i < inertes.length; i++) inertes[i].inert = false;
       document.removeEventListener('keydown', porTecla);
       document.removeEventListener('DOMContentLoaded', aislarFondo);
+      delete document.documentElement.dataset.intro;
+      document.dispatchEvent(new Event('intro:cerrado'));
     }
 
     // Solo Escape cierra con el teclado: si cerrara cualquier tecla, el primer
@@ -365,12 +399,50 @@ const marcas = Array.from({ length: 16 }, (_, i) => {
     window.addEventListener('wheel', cerrar, { once: true, passive: true });
     window.addEventListener('touchmove', cerrar, { once: true, passive: true });
 
-    // Al terminar el fundido de salida, el intro se retira del documento.
-    intro.addEventListener('animationend', function (e) {
-      if (e.target === intro) cerrar();
+    /*
+      Vuelo final: cuando el logo termina de armarse, espera un momento y viaja hasta
+      el logo de la cabecera, encogiéndose hasta su mismo tamaño, mientras el telón se
+      desvanece y aparece la página. Las medidas salen del viewBox: el del intro es
+      (165.85 444 404 140) y el del logo de la cabecera (165.85 462.60 382.16 104.61).
+    */
+    var svg = intro.querySelector('.intro__svg');
+    var telon = intro.querySelector('.intro__telon');
+    var ritmo = parseFloat(getComputedStyle(intro).getPropertyValue('--r')) || 1;
+
+    function volar() {
+      if (cerrado) return;
+      var destino = document.getElementById('cabecera-logo');
+      if (!destino || !svg.animate) return cerrar();
+      var r1 = svg.getBoundingClientRect();
+      var r2 = destino.getBoundingClientRect();
+      var anchoLogo = r1.width * (382.16 / 404);
+      var arribaLogo = r1.height * ((462.6 - 444) / 140);
+      var escala = r2.width / anchoLogo;
+      var dx = r2.left - r1.left;
+      var dy = r2.top - r1.top - arribaLogo * escala;
+
+      document.dispatchEvent(new Event('intro:destapando'));
+      telon.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: 750 * ritmo,
+        delay: 150 * ritmo,
+        easing: 'ease-in-out',
+        fill: 'forwards',
+      });
+      var vuelo = svg.animate(
+        [
+          { transformOrigin: '0 0', transform: 'none' },
+          { transformOrigin: '0 0', transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + escala + ')' },
+        ],
+        { duration: 950 * ritmo, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' },
+      );
+      vuelo.onfinish = cerrar;
+    }
+
+    svg.addEventListener('animationend', function (e) {
+      if (e.animationName === 'intro-armar') setTimeout(volar, 450 * ritmo);
     });
 
     // Red de seguridad: si alguna animación no dispara, el intro se quita igual.
-    setTimeout(cerrar, 4800);
+    setTimeout(cerrar, 6000);
   })();
 </script>

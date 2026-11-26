@@ -1,96 +1,122 @@
 ---
-import { empresa, tiposDeCarga } from '../data/sitio';
+import Titular from './Titular.astro';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, clientes } = contenido(idioma);
 
 /**
- * Fotografía de fondo del hero.
- * Cuando Cargoban entregue su banco de imágenes, se pone la ruta aquí
- * (por ejemplo '/fotos/muelle.jpg') y el fondo de marca pasa a segundo plano.
+ * Fondo del hero: fotos propias de Cargoban en Santa Marta que se funden una en otra
+ * con un acercamiento lento. Sin JavaScript y sin animación se ve la primera, quieta.
+ * Nada de material de terceros aquí: ni videos ni fotos de Puerto Antioquia (AGENTS.md).
+ * Con una lista vacía queda el fondo de marca.
  */
-const foto: string | null = null;
+// `foco`: qué parte de la foto se conserva cuando la pantalla la recorta.
+// `focoMovil`: lo mismo en la franja de foto del móvil, que es casi cuadrada y recorta
+// los costados. Se eligió mirando cada foto: la llanta, el grupo con su jefe, el operario.
+const fotos: { src: string; foco: string; focoMovil: string }[] = [
+  { src: '/fotos/portada-izaje.webp', foco: '50% 50%', focoMovil: '72% 50%' },
+  { src: '/fotos/portada-equipo.webp', foco: '55% 50%', focoMovil: '33% 50%' },
+  { src: '/fotos/portada-operario.webp', foco: '30% 50%', focoMovil: '27% 50%' },
+];
+
+// Logos en blanco para la franja «Confían en nosotros» (siluetas con fondo transparente
+// en public/clientes/silueta/). Los cuatro que eligió Jon (02/10).
+const destacados = ['puerto-santa-marta', 'puerto-antioquia', 'uniban', 'greenland'].map((id) => ({
+  id,
+  nombre: clientes.find((c) => c.logo?.includes(id))?.nombre ?? id,
+}));
 ---
 
-<section id="inicio" class="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden">
-  <!-- Capa de fondo -->
-  <div class="absolute inset-0 -z-10 fondo-marca">
-    {foto && (
-      <img
-        src={foto}
-        alt=""
-        class="parallax-lento size-full object-cover"
-        fetchpriority="high"
-        decoding="async"
-      />
+<!--
+  En móvil la foto va arriba, limpia, y el texto debajo sobre el azul: con el texto
+  encima de la foto a pantalla completa, el titular tapaba las caras (Jon, 25/09).
+  Desde md vuelve a ser foto de fondo a pantalla completa con el texto encima.
+-->
+<section id="inicio" class="portada-fija relative isolate flex flex-col overflow-hidden bg-navy-950 md:min-h-[100svh] md:justify-end">
+  <!-- Capa de fondo: fotos propias o, sin fotos, la textura derivada del símbolo (permitida por el manual de marca) -->
+  <div class="portada-fondo relative -z-10 h-[62svh] min-h-80 overflow-hidden fondo-marca md:absolute md:inset-0 md:h-auto">
+    {fotos.length > 0 ? (
+      <>
+        {fotos.map(({ src, foco, focoMovil }, i) => (
+          <img
+            src={src}
+            alt=""
+            class="portada-foto absolute inset-0 size-full object-cover"
+            style={`--n:${fotos.length}; --i:${i}; --foco:${foco}; --foco-movil:${focoMovil}`}
+            fetchpriority={i === 0 ? 'high' : 'low'}
+            decoding="async"
+          />
+        ))}
+        {/* Velo azul de marca sobre las fotos: el titular se lee siempre. */}
+        <div class="absolute inset-0 bg-navy-950/20 md:bg-transparent" aria-hidden="true" style="background-image:var(--velo-portada,none)"></div>
+      </>
+    ) : (
+      <div
+        class="absolute inset-0 opacity-[0.07] mix-blend-overlay"
+        style="background-image:url('/marca/isotipo-blanco.svg');background-size:clamp(90px,11vw,180px);background-repeat:repeat"
+        aria-hidden="true"
+      >
+      </div>
     )}
-    <!-- Textura derivada del símbolo, permitida por el manual de marca -->
+    <!-- Sombra arriba: la cabecera transparente se lee igual sobre fotos claras (revisión móvil, 02/10). -->
     <div
-      class="absolute inset-0 opacity-[0.07] mix-blend-overlay"
-      style="background-image:url('/marca/isotipo-blanco.svg');background-size:clamp(90px,11vw,180px);background-repeat:repeat"
+      class="absolute inset-x-0 top-0 h-40"
+      style="background:linear-gradient(to bottom,rgb(6 10 40 / 0.6),transparent)"
       aria-hidden="true"
     >
     </div>
     <div
       class="absolute inset-0"
-      style="background:linear-gradient(to top,var(--color-navy-950) 3%,transparent 45%)"
+      style="background:linear-gradient(to top,var(--color-navy-950) 8%,transparent 60%)"
       aria-hidden="true"
     >
     </div>
   </div>
 
-  <div class="contenedor pb-16 pt-32 lg:pb-24">
-    <p class="etiqueta flex items-center gap-3 text-green">
-      <span class="h-px w-10 bg-green"></span>
-      {empresa.lema}
-    </p>
-
-    <h1 class="mt-7 max-w-[16ch] font-display font-bold text-white" style="font-size:var(--text-hero)">
-      Operamos la <span class="text-green">carga</span> que mueve al Caribe
-    </h1>
-
-    <div class="mt-10 flex flex-col gap-10 border-t border-white/15 pt-8 lg:flex-row lg:items-end lg:justify-between">
-      <p class="max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">
-        Medio siglo moviendo carga en {empresa.sedes.join(' y ')}. Personal propio,
-        procedimientos establecidos y trazabilidad en cada movimiento.
-      </p>
-
-      <div class="flex flex-wrap items-center gap-4">
-        <a
-          href="#servicios"
-          class="group inline-flex items-center gap-3 rounded-full bg-white px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green"
-        >
-          Ver servicios
-          <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-            <path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </a>
-        <a
-          href="#contacto"
-          class="inline-flex items-center rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
-        >
-          Hablar con nosotros
-        </a>
-      </div>
+  <!--
+    Composición tomada de cargokite.com (Jon, 02/10: «más impactante y limpio»): titular
+    grande en peso medio a media altura, sin botones ni línea; abajo a la izquierda los
+    clientes en blanco y abajo a la derecha un texto corto con una frase en verde.
+  -->
+  <div class="portada-texto contenedor relative -mt-10 flex flex-1 flex-col pb-12 md:mt-0 md:pt-40 md:pb-14 lg:pb-16">
+    <div class="md:flex md:flex-1 md:items-center">
+      <Titular
+        as="h1"
+        texto={t('Operador logístico y *portuario*', 'Logistics and *port* operator')}
+        class:list={['portada-titular font-display text-white', idioma === 'en' ? 'max-w-[11.6em]' : 'max-w-[9.8em]']}
+        style="font-size:clamp(2.6rem, 1rem + 5.4vw, 6.25rem)"
+      />
     </div>
 
-    <!-- Datos de la operación. Solo hechos verificables, sin cifras inventadas. -->
-    <dl class="mt-14 grid gap-px overflow-hidden rounded-xl bg-white/10 sm:grid-cols-3">
-      {[
-        { cifra: `+${empresa.anios}`, texto: 'años de experiencia' },
-        { cifra: String(empresa.sedes.length), texto: `sedes: ${empresa.sedes.join(' y ')}` },
-        { cifra: String(tiposDeCarga.length), texto: 'tipos de carga que manejamos' },
-      ].map((dato) => (
-        <div class="bg-navy-950/60 px-6 py-5 backdrop-blur-sm">
-          <dt class="text-sm text-white/65">{dato.texto}</dt>
-          <dd class="cifra mt-1 font-display text-4xl font-bold leading-none text-white lg:text-5xl">
-            {dato.cifra}
-          </dd>
-        </div>
-      ))}
-    </dl>
+    <div class="mt-10 flex flex-col gap-10 md:mt-16 md:flex-row-reverse md:items-end md:justify-between">
+      <p class="max-w-md text-white md:mr-16 md:max-w-[25rem]" style="font-size:var(--text-cuerpo-lg);line-height:1.45">
+        {idioma === 'en' ? (
+          <>More than {empresa.anios} years moving cargo in {empresa.sedes.join(' and ')},
+          with <span class="text-green">specialized equipment and crews</span> in every operation.</>
+        ) : (
+          <>Más de {empresa.anios} años moviendo carga en {empresa.sedes.join(' y ')},
+          con <span class="text-green">equipos y personal especializado</span> en cada operación.</>
+        )}
+      </p>
+
+      <div>
+        <p class="text-sm text-white/70">{t('Confían en nosotros:', 'Trusted by:')}</p>
+        <ul class="mt-4 flex flex-wrap items-center gap-x-7 gap-y-4 lg:gap-x-9">
+          {destacados.map((c) => (
+            <li>
+              <img src={`/clientes/silueta/${c.id}.webp`} alt={c.nombre} class="h-8 w-auto opacity-90 lg:h-10" loading="lazy" decoding="async" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </div>
 
-  <!--
-    Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio.
-    Mientras parte de esa franja se vea, la cabecera queda transparente.
-  -->
-  <div id="centinela-cabecera" class="absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
 </section>
+

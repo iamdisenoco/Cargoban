@@ -1,0 +1,11 @@
+// Configuración de Cloudflare (Workers con archivos estáticos). El sitio es estático:
+// Cloudflare compila con `npm run build` y sirve la carpeta dist/ tal cual, sin código
+// de servidor. Las direcciones que no existen muestran dist/404.html con código 404.
+{
+  "name": "cargoban",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

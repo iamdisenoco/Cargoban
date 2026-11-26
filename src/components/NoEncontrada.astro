@@ -1,0 +1,35 @@
+---
+/**
+ * Página 404. Sin ella, Cloudflare Pages responde con la portada y código 200 a cualquier
+ * dirección que no exista, y los buscadores lo toman como contenido repetido.
+ */
+import Base from '../layouts/Base.astro';
+import Titular from './Titular.astro';
+import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+---
+
+<Base idioma={idioma} titulo={t('Página no encontrada', 'Page not found')}>
+  <section class="relative bg-navy-950 pt-40 pb-32 text-white lg:pt-52 lg:pb-44">
+    <div id="centinela-cabecera" class="pointer-events-none absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
+    <div class="contenedor">
+      <p class="cifra font-display text-sm font-semibold text-teal-400">404</p>
+      <Titular as="h1" texto={t('Esta página no *existe*', 'This page does not *exist*')} class="mt-4 text-white" style="font-size:var(--text-titulo)" />
+      <p class="mt-8 max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">
+        {t('Puede que la dirección haya cambiado o tenga un error.', 'The address may have changed or contain a typo.')}
+      </p>
+      <a
+        href={rutaInicio[idioma]}
+        class="mt-10 inline-flex items-center gap-3 rounded-full bg-green px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green-300"
+      >
+        {t('Volver al inicio', 'Back to home')}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>

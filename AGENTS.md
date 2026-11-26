@@ -15,12 +15,22 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - La contraseña se lee de la variable de entorno `JON_CLAVE`. Nunca se escribe en el repo.
 
 ## Stack
-- Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Hosting previsto: Cloudflare Pages.
-- Tipografías: Jost Variable (titulares) y Archivo Variable (texto), autoalojadas con Fontsource.
+- Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Alojamiento: Cloudflare, en la cuenta de
+  Cargoban (26/11), como Worker con archivos estáticos conectado a GitHub: cada cambio que se une
+  a `main` se publica solo. Cloudflare marca Pages como «legacy»; la configuración está en
+  `wrangler.jsonc` (sirve `dist/`, y lo que no existe responde `dist/404.html` con código 404).
+  Se prueba en local con `npx wrangler dev`. Vercel quedó suspendido: el plan gratis no admite
+  sitios comerciales.
+- Tipografía: Inter Variable con eje de tamaño óptico (`@fontsource-variable/inter/opsz.css`), una sola
+  familia para titulares y texto, autoalojada. Jon la pidió «similar a la que usa Apple» (24/09).
 - `npm run dev` para desarrollar, `npm run build` compila a `dist/`, `npm run check` hace el chequeo de tipos.
 - Contenido editable en `src/data/sitio.ts`. Lo marcado PROVISIONAL espera confirmación de Cargoban.
 - Marca: tokens en `src/styles/global.css`, logos en `public/marca/`, reglas en `docs/marca.md`.
 - Estilos base (body, h1…) siempre dentro de `@layer base`; fuera de la capa pisan las utilidades de Tailwind.
+- Animaciones de scroll: con propiedades sueltas (`animation-name`, `animation-duration: auto`…) y la
+  línea de tiempo dentro de `var()`, nunca `animation:` más `animation-timeline:`. El minificador del
+  build junta ese par en un solo atajo que Chromium rechaza y la animación desaparece sin error
+  (pasó hasta el 25/09: ninguna `.revelar` corría). Comprobar con `getComputedStyle(el).animationName`.
 - Animaciones de scroll (`animation-timeline`) siempre dentro de `@supports` y de
   `prefers-reduced-motion: no-preference`, y con el estado final como estado por defecto.
   Firefox estable todavía no las activa: si se ocultan por defecto, ahí no se ve nada.
@@ -36,14 +46,28 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - El SVG del logo se trae con `import ... from '…svg?raw'`, no con `fs` y `process.cwd()`:
   en el build de Astro el componente se empaqueta y las rutas relativas dejan de valer.
 - Para abrir un sitio externo con Chromium hace falta que confíe en el CA del proxy del
-  entorno. El Chromium empaquetado con Playwright no lee ese almacén, y las dos maneras de
-  arreglarlo están bloqueadas por el clasificador de permisos. Con `curl` sí se puede bajar
-  el HTML y los paquetes de JavaScript, que es como se hizo `docs/referencias/cargokite.md`.
+  entorno; el Chromium de Playwright no lee ese almacén (`ERR_CERT_AUTHORITY_INVALID`).
+  Jon lo autorizó expresamente el 23/09 y funciona así, sin apagar la verificación:
+  `SPKI=$(openssl x509 -in /root/.ccr/agent-proxy-ca.crt -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64)`
+  y `chromium.launch({ args: ['--ignore-certificate-errors-spki-list=' + SPKI], proxy: { server: process.env.HTTPS_PROXY } })`.
+  Sin esa autorización en la conversación, el clasificador de permisos lo bloquea: se pide a Jon.
+- Desplazamiento suave con Lenis (`src/scripts/desplazamiento.ts`). Todo lo que bloquee el
+  scroll lo hace con `overflow: hidden` en el `style` de `<html>` o de `<body>`: Lenis vigila
+  esos dos atributos y se detiene. Un bloqueo hecho de otra forma deja la rueda moviendo la
+  página por debajo. Los enlaces `#seccion` los lleva ese mismo script; no activar la opción
+  `anchors` de Lenis, que no cancela el salto nativo ni mueve el foco.
+- Los titulares de sección (h1 y h2) se escriben con `Titular.astro`, no a mano: así entran
+  por palabras y los lectores de pantalla oyen la frase entera. `*palabra*` la pone en verde.
+- En el frontmatter de un `.astro`, nada de expresiones regulares con comillas (`/"/g`):
+  el build pasa, pero `astro check` se come el resto del archivo y da decenas de errores
+  falsos. Usar `replaceAll('"', …)`.
+- `astro preview` en Astro 7 se queda como demonio: el comando termina, el servidor sigue. Solo corre uno: si ya
+  hay uno levantado, pedir otro puerto no arranca nada (`astro preview status` dice cuál está).
 - `pkill -f "astro preview"` mata también esta sesión (salida 144). Para liberar un puerto,
   usar otro puerto en vez de matar procesos.
 - Nada de tarjetas blancas con sombra difusa: el sistema separa con línea de 1 px, no con sombra.
 - El verde de marca es acento escaso. Si aparece en todas las secciones, pierde fuerza.
-- Fotos propias antes que banco de imágenes, siempre. Ver `public/fotos/LEEME.md`.
+- Fotos propias antes que banco de imágenes, siempre. Ver `docs/fotos.md`.
 - Al interpolar en Astro, cuidado con el espacio antes de `{variable}`: un salto de línea
   entre la palabra y la llave se colapsa y las pega ("más de50 años").
 - El build sale a `dist/recursos/`, no a `_astro/`: el guion bajo inicial rompe en varios
@@ -53,4 +77,39 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - Antes de dar un bloque por terminado: `npm run build`, `npm run check` y capturas con Chromium en escritorio y móvil.
 
 ## Reglas aprendidas
-- (vacío por ahora)
+- Una referencia visual se estudia **viéndola en el navegador** antes de construir, no solo
+  leyendo su código. Con el código se sacaron los tiempos de cargokite, pero no su forma
+  (fondo claro, tipografía de peso medio, hero fijo, sección horizontal), y Jon dijo
+  «no se me parece». Primero se mira y se captura; después se construye.
+- Nada de etiquetas pequeñas en mayúsculas con una raya encima del titular («— NOSOTROS»).
+  Jon las rechazó el 24/09: el titular abre la sección solo.
+- Jost y Archivo quedaron descartadas por Jon (24/09). Tipografía de estilo Apple: Inter.
+- La marca de Puerto Antioquia no puede aparecer en el sitio (Jon, 24/09: «es muy importante»).
+  Sus videos no se usan: no se les borra ni tapa la marca de agua, se dejan fuera. Para el
+  movimiento del inicio van fotos propias de Cargoban. Si Puerto Antioquia entrega tomas
+  limpias con permiso, se evalúa de nuevo.
+  Excepción autorizada por Jon (02/10): su logo sí va en «Nuestros clientes» y en la franja
+  «Confían en nosotros» de la portada, junto a los demás clientes. Solo como logo de
+  cliente; sus videos y fotos siguen fuera.
+  Aclaración de Jon (23/10): en las tomas propias de Cargoban el rótulo «Puerto Antioquia»
+  (grúas, chasis, camiones) puede verse; no se difumina. Lo prohibido son los videos y
+  fotos de Puerto Antioquia, los que llevan su marca de agua.
+- Un titular de sección no va dentro de una columna angosta: se parte en cinco renglones y
+  se ve gigante (Jon, 25/09, Sostenibilidad). Va a lo ancho, en dos líneas como mucho, con
+  `--text-seccion`. Jon pidió frases en verde para dar color, como el referente: una palabra
+  en el titular (`*palabra*`) y una frase en el párrafo principal, no más.
+- Las capturas con `reducedMotion: 'reduce'` no bastan: esconden lo que hacen las animaciones.
+  El acercamiento de las fotos de portada las hacía crecer 26 px fuera de su caja y en el
+  teléfono de Jon se veía una franja de foto bajo el degradado (25/09). Toda caja con una
+  imagen que se escala lleva `overflow-hidden`, y se revisa también con la animación
+  congelada en su punto máximo.
+- La apertura del intro no usa columnas que caen ni un círculo que se abre (Jon, 02/10:
+  no le gustó ninguno). El logo armado vuela a su sitio en la cabecera, arriba a la
+  izquierda, mientras el fondo se desvanece y aparece la página.
+- En la versión en inglés, nada de jerga que un traductor automático confunda: alguien vio
+  /en/ traducida por el navegador y «Reefer» salió «Chaquetón» (08/10). Se usa
+  «Refrigerated cargo». Cada versión ofrece la otra con un aviso discreto si el navegador
+  está en el otro idioma; el idioma nunca cambia solo.
+- El logo de Cargoban (cabecera y pie) vuelve al inicio con `data-ir-inicio`, no con un
+  ancla `#inicio`: la portada es `sticky` y el navegador la da por visible, así que el ancla
+  no movía la página (Jon, 12/10).

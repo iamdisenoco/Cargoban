@@ -17,10 +17,64 @@ export const empresa = {
   // PROVISIONAL: datos de contacto pendientes de Cargoban.
   telefono: '',
   correo: '',
+  // WhatsApp de la burbuja y del botón de Contacto: línea «Costos Cargoban» (Jon, 25/09).
+  whatsapp: {
+    numero: '573245794431',
+    visible: '+57 324 579 4431',
+    mensaje: 'Hola, quiero información sobre una operación con Cargoban.',
+  },
+  instagram: 'https://www.instagram.com/cargobanoperador/',
 };
 
-/** PROVISIONAL: lista y logos de clientes pendientes de Cargoban. */
-export const clientes: { nombre: string; logo?: string }[] = [];
+/** Enlace de WhatsApp con el mensaje inicial ya escrito. */
+export const enlaceWhatsapp = `https://wa.me/${empresa.whatsapp.numero}?text=${encodeURIComponent(empresa.whatsapp.mensaje)}`;
+
+/**
+ * Clientes, en el orden de la imagen que envió Jon (02/10). Logos recortados de esa
+ * imagen: si Cargoban entrega los originales en buena resolución, se reemplazan en
+ * `public/clientes/` con el mismo nombre. Puerto Antioquia va como cliente con
+ * autorización expresa de Jon (02/10).
+ */
+export const clientes: { nombre: string; logo?: string }[] = [
+  { nombre: 'Puerto de Santa Marta', logo: '/clientes/puerto-santa-marta.webp' },
+  { nombre: 'Puerto Antioquia', logo: '/clientes/puerto-antioquia.webp' },
+  { nombre: 'SMITCO', logo: '/clientes/smitco.webp' },
+  { nombre: 'Uniban', logo: '/clientes/uniban.webp' },
+  { nombre: 'Greenland', logo: '/clientes/greenland.webp' },
+  { nombre: 'Turbaduana', logo: '/clientes/turbaduana.webp' },
+  { nombre: 'LBH Group Colombia', logo: '/clientes/lbh.webp' },
+  { nombre: 'Del Monte', logo: '/clientes/del-monte.webp' },
+  { nombre: 'Tropical Banana Co.', logo: '/clientes/tropical.webp' },
+  { nombre: 'Banafrut', logo: '/clientes/banafrut.webp' },
+  { nombre: 'Cordarién', logo: '/clientes/cordarien.webp' },
+  { nombre: 'Olinsa', logo: '/clientes/olinsa.webp' },
+  { nombre: 'Simbacol', logo: '/clientes/simbacol.webp' },
+  { nombre: 'Transmares', logo: '/clientes/transmares.webp' },
+];
+
+/**
+ * Certificaciones, debajo de Clientes (Jon, 02/10). Cada una abre su certificado en PDF
+ * en una pestaña nueva; el archivo va en `public/certificados/` y aquí su ruta.
+ * PDF vigentes entregados por Jon (23/10): BASC COLSMR00081-1-7, vigente hasta el
+ * 12/02/2027; ISO 9001 SC-2000253 de ICONTEC, ciclo vigente hasta el 21/12/2028.
+ * Al renovarse, se reemplaza el archivo con el mismo nombre. Si `pdf` queda vacío, la
+ * tarjeta dice que el certificado está por publicarse en vez de enlazar uno vencido.
+ * No se muestran fechas aquí: cambian con cada renovación y quedarían desactualizadas.
+ */
+export const certificaciones: { sigla: string; nombre: string; emisor: string; pdf: string }[] = [
+  {
+    sigla: 'BASC',
+    nombre: 'Sistema de Gestión en Seguridad',
+    emisor: 'World BASC Organization',
+    pdf: '/certificados/cargoban-basc.pdf',
+  },
+  {
+    sigla: 'ISO 9001:2015',
+    nombre: 'Sistema de Gestión de Calidad',
+    emisor: 'ICONTEC · IQNet',
+    pdf: '/certificados/cargoban-iso-9001.pdf',
+  },
+];
 
 /**
  * La sección de clientes solo existe si hay clientes que mostrar.
@@ -29,8 +83,8 @@ export const clientes: { nombre: string; logo?: string }[] = [];
 export const navegacion = [
   { etiqueta: 'Nosotros', href: '#nosotros' },
   { etiqueta: 'Servicios', href: '#servicios' },
-  { etiqueta: 'Carga', href: '#carga' },
   ...(clientes.length > 0 ? [{ etiqueta: 'Clientes', href: '#clientes' }] : []),
+  { etiqueta: 'Sostenibilidad', href: '#sostenibilidad' },
   { etiqueta: 'Contacto', href: '#contacto' },
 ];
 
@@ -42,16 +96,19 @@ export const servicios = [
   {
     numero: '01',
     titulo: 'Operaciones portuarias',
-    resumen: 'Estiba, desestiba y manejo de carga a bordo y en muelle.',
+    // Texto de Cargoban (08/10).
+    resumen: 'Trinca, destrinca y manipulación de carga a bordo y en muelle.',
     detalle:
       'Operamos directamente en muelle con personal propio y procedimientos establecidos, cuidando la carga en cada movimiento entre el buque y el patio.',
-    // PROVISIONAL: lista por confirmar con Cargoban.
+    // Lista según el brochure de Cargoban, lámina «Operación en buque» (Jon, 12/10).
     items: [
-      'Estiba y desestiba de carga',
-      'Operadores de maquinaria portuaria',
+      'Cargue y descargue de carga general y contenedores',
+      'Estiba y desestiba en bodega y cubierta de buque',
+      'Trincado y destrincado',
+      'Izaje de equipos',
+      'Movimiento de tapas de cubierta',
+      'Movimiento de vehículos en buques Ro‑Ro',
       'Tarja y trazabilidad de carga',
-      'Trincado y destrincado de contenedores',
-      'Movimiento de vehículos en buques Ro-Ro',
       'Apoyo en inspecciones de autoridades',
     ],
     provisional: true,
@@ -74,11 +131,12 @@ export const servicios = [
   },
   {
     numero: '03',
-    titulo: 'Almacenamiento',
-    resumen: 'Bodegaje de carga nacionalizada en Urabá.',
+    // Bodegaje agregado por Jon (23/10).
+    titulo: 'Almacenamiento y bodegaje',
+    resumen: 'Bodegaje de carga en Urabá.',
     detalle:
-      'Espacio para guardar la carga después de nacionalizada, con control de inventario y seguimiento de cada movimiento.',
-    items: ['Carga nacionalizada', 'Control de inventario', 'Trazabilidad de movimientos'],
+      'Espacio para guardar la carga, incluida la nacionalizada, con control de inventario y seguimiento de cada movimiento.',
+    items: ['Bodegaje de carga', 'Carga nacionalizada', 'Control de inventario', 'Trazabilidad de movimientos'],
     provisional: true,
   },
   {
@@ -86,12 +144,47 @@ export const servicios = [
     titulo: 'Alquiler de equipos',
     resumen: 'Equipos disponibles para apoyar la operación.',
     detalle:
-      'Ponemos a disposición los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
+      'Ponemos a disposición contenedores y los equipos necesarios para el manejo de carga, con operarios cuando se requiere.',
     // PROVISIONAL: inventario real de equipos por confirmar.
-    items: ['Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
+    // Contenedores agregados por Jon (12/10).
+    items: ['Contenedores', 'Montacargas', 'Transpaletas', 'Equipos de apoyo a la operación'],
     provisional: true,
   },
+  {
+    // Brochure de Cargoban, lámina «Contenedores» (Jon, 12/10).
+    numero: '05',
+    titulo: 'Servicios a contenedores',
+    resumen: 'Cuidado del contenedor antes, durante y después de la operación.',
+    detalle:
+      'Revisamos, preparamos y movemos cada contenedor con el equipo adecuado, y lo dejamos inspeccionado, limpio y en condiciones para su siguiente viaje.',
+    items: [
+      'Enganche e izaje',
+      'Revisión previa de equipos de cargue',
+      'Inspección y monitoreo',
+      'Lavado',
+      'Reparación',
+      'Inspecciones de calidad',
+    ],
+    provisional: false,
+  },
 ];
+
+/**
+ * Tecnología e innovación. Brochure de Cargoban (Jon, 12/10). Faltan los enlaces de
+ * Google Play y App Store: cuando Cargoban los entregue, van en `tiendas`.
+ */
+export const tecnologia = {
+  texto:
+    'Desarrollamos y aplicamos soluciones tecnológicas para mejorar procesos y reducir tiempos en labores operativas y administrativas, con reportes en línea y exactitud en la información.',
+  apps: [
+    { nombre: 'Quality Web', funcion: 'Supervisión de reportes de calidad' },
+    { nombre: 'Cargo Web', funcion: 'Control de operación logística y recursos' },
+    { nombre: 'Cargo Quality', funcion: 'Calidad en empacadora' },
+    { nombre: 'Quality Field', funcion: 'Calidad en campo y cultivo' },
+    { nombre: 'Check Box', funcion: 'Control de trazabilidad' },
+  ],
+  tiendas: { googlePlay: '', appStore: '' },
+};
 
 /** Tipos de carga. Fuente: lámina 3/5 del carrusel de Instagram de Cargoban. */
 export const tiposDeCarga = [
@@ -99,37 +192,136 @@ export const tiposDeCarga = [
   'Congelados',
   'Perecederos',
   'Sacos',
-  'Proyectos',
+  'Carga sobredimensionada',
   'Maquinaria',
   'Vehículos',
   'Granel',
 ];
 
-export const razones = [
+/**
+ * ¿Por qué elegirnos? Lista «Nos diferencia» del brochure de Cargoban (Jon, 23/10).
+ * Reemplaza las cuatro razones anteriores, incluida «Presencia en dos puertos».
+ */
+/** Ícono de cada razón (dibujos en src/components/iconos/Razon.astro). */
+export type IconoRazon =
+  | 'experiencia'
+  | 'innovacion'
+  | 'rendimiento'
+  | 'legal'
+  | 'sst'
+  | 'costos'
+  | 'adaptacion'
+  | 'personal';
+
+export const razones: { icono: IconoRazon; titulo: string; texto?: string }[] = [
+  { icono: 'experiencia', titulo: `Más de ${empresa.anios} años de experiencia` },
+  { icono: 'innovacion', titulo: 'Innovación en procesos' },
+  { icono: 'rendimiento', titulo: 'Alto rendimiento operativo' },
+  { icono: 'legal', titulo: 'Cumplimiento legal' },
+  { icono: 'sst', titulo: 'Sistema de Gestión SST' },
+  { icono: 'costos', titulo: 'Costos competitivos' },
+  { icono: 'adaptacion', titulo: 'Adaptación a las necesidades del cliente' },
+  { icono: 'personal', titulo: 'Personal altamente capacitado' },
+];
+
+/** Valores de Cargoban. Fuente: brochure, lámina «Valores» (Jon, 23/10). */
+export const valores = [
   {
-    titulo: 'Medio siglo en el oficio',
-    texto:
-      'Más de 50 años operando carga nos enseñaron que la experiencia no se improvisa. Está en la gente que mueve el contenedor.',
+    nombre: 'Integridad',
+    texto: 'Cumplimos a cabalidad con los procesos en los que trabajamos, de manera ética, respetuosa y transparente.',
   },
   {
-    titulo: 'La carga llega como salió',
-    texto:
-      'Procedimientos establecidos y personal con experiencia para que cada movimiento sea el mismo movimiento, siempre.',
+    nombre: 'Compromiso',
+    texto: 'Trabajamos con motivación, análisis permanente y pasión, brindando credibilidad en nuestros servicios.',
   },
   {
-    titulo: 'Usted sabe dónde está su carga',
-    texto: 'Tarja y trazabilidad de cada movimiento, del muelle a la bodega.',
-  },
-  {
-    titulo: 'Dos puertos, una operación',
-    texto: 'Presencia propia en Urabá y Santa Marta, dos puntos clave del Caribe colombiano.',
+    nombre: 'Responsabilidad',
+    texto: 'Brindamos un servicio oportuno, con calidad, seguridad y entrega a tiempo.',
   },
 ];
 
-/** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
-export const sedes = [
-  // Urabá es una subregión de Antioquia, no un municipio. Confirmar con Cargoban
-  // el municipio exacto de la sede (Turbo, Apartadó o Necoclí) antes de publicar.
-  { ciudad: 'Urabá', region: 'Antioquia', direccion: '', telefono: '' },
-  { ciudad: 'Santa Marta', region: 'Magdalena', direccion: '', telefono: '' },
+/**
+ * Cifras de la sección Nosotros, que cuentan hacia arriba al entrar en pantalla.
+ * Fuente: Jon (25/09/2026). PROVISIONAL hasta que Cargoban las confirme por escrito.
+ */
+export const cifras = [
+  { prefijo: '+', valor: 50, texto: 'años de experiencia' },
+  { prefijo: '+', valor: 50000, texto: 'contenedores movilizados' },
+  { prefijo: '', valor: 250000, texto: 'cajas movilizadas' },
 ];
+
+/**
+ * Fundación Cargoban (sección Sostenibilidad).
+ * Fuente: información pública de la fundación (fundacioncargoban.org.co y directorios
+ * de ONG). PROVISIONAL: Cargoban debe confirmar textos, cifras y fotos antes de publicar.
+ */
+export const fundacion = {
+  nombre: 'Fundación Cargoban',
+  desde: 2006,
+  // Donde trabaja: Urabá y Santa Marta, según los directorios públicos. Confirmar.
+  regiones: ['Urabá', 'Santa Marta'],
+  // La dirección pública (fundacioncargoban.org.co) no resuelve en DNS al 25/09.
+  // Sin web confirmada no se muestra el botón. Pedir a Cargoban la vigente, con https.
+  web: '',
+  lineas: [
+    'Emprendimiento y bisutería',
+    'Recreación, cultura y deporte',
+    'Resignificación de comunidades',
+    'Escuelas y espacios comunitarios',
+    'Fortalecimiento ambiental',
+  ],
+};
+
+/**
+ * Fondo de empleados de Cargoban. Fuente: presentación corporativa que envió Jon (25/09).
+ */
+export const fondecar = {
+  nombre: 'FONDECAR',
+  beneficios: [
+    'Ahorro',
+    'Créditos de vivienda y/o vehículo',
+    'Torneos deportivos',
+    'Ayuda social',
+    'Bonos y subsidios escolares',
+  ],
+};
+
+/** PROVISIONAL: direcciones y teléfonos pendientes de Cargoban. */
+export const sedes: {
+  ciudad: string;
+  region: string;
+  direccion: string[];
+  telefono: string;
+  celular: string;
+}[] = [
+  // Datos de la papelería de Cargoban que envió Jon (25/09).
+  {
+    ciudad: 'Apartadó',
+    region: 'Antioquia',
+    direccion: ['Calle 100 No. 103-27', 'Barrio Ortiz'],
+    telefono: '(604) 524 7028',
+    celular: '+57 317 585 2899',
+  },
+  {
+    ciudad: 'Santa Marta',
+    region: 'Magdalena',
+    direccion: ['Calle 24 No. 3-99, Of. 603 y 701', 'Edificio Banco de Bogotá'],
+    telefono: '(605) 431 9861',
+    celular: '+57 312 775 8504',
+  },
+  {
+    ciudad: 'Medellín',
+    region: 'Antioquia',
+    direccion: ['Calle 4 Sur No. 43A-195, Of. 243', 'Centro Ejecutivo'],
+    telefono: '(604) 540 3261',
+    celular: '+57 316 740 7225',
+  },
+];
+
+/** Para enlaces tel:, sin espacios ni paréntesis. */
+// Los fijos se escriben sin indicativo, (604) 524 7028; para que marquen también desde
+// fuera de Colombia, el enlace tel: lleva siempre +57.
+export const numeroMarcable = (n: string) => {
+  const digitos = n.replace(/[^+\d]/g, '');
+  return digitos.startsWith('+') ? digitos : `+57${digitos}`;
+};

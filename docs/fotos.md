@@ -24,8 +24,8 @@ pero no cuentan lo que Cargoban hace.
 
 ## Cómo se conectan al sitio
 
-Una vez estén aquí, se referencian desde `src/data/sitio.ts` y desde
-`src/components/Hero.astro` (variable `foto`). No hace falta tocar el diseño.
+Una vez estén en `public/fotos/`, se referencian desde `src/data/sitio.ts` y desde
+`src/components/Hero.astro` (lista `fotos`, con el encuadre de cada una). No hace falta tocar el diseño.
 
 ## Criterio
 

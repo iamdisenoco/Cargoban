@@ -1,23 +1,61 @@
 ---
-import { servicios } from '../data/sitio';
+import Titular from './Titular.astro';
+import { contenido } from '../data/contenido';
+import { traductor, type Idioma } from '../i18n/idioma';
+import { rutaServicio } from '../data/paginasServicios';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { servicios, tiposDeCarga, tecnologia } = contenido(idioma);
 ---
 
-<section id="servicios" class="scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+<section id="servicios" class="relative isolate scroll-mt-24 bg-navy-950 py-24 lg:py-36">
+  <!--
+    Fondo: un tramo de video propio (DJI_0587, del segundo 12 al 21,5: el buque Polar Brasil
+    y los remolques en el muelle), siempre hacia adelante; el final se funde en 1 s con el
+    principio para que el bucle no se note (8,5 s). No empieza antes del segundo 12: hasta el
+    11 se ve el rótulo de Puerto Antioquia en la grúa. Queda fijo detrás
+    mientras se recorre la sección. Recortado para dejar fuera la grúa y el camión que llevan
+    la marca de Puerto Antioquia, que no puede aparecer (AGENTS.md). Revisado cuadro a cuadro.
+    Versión alta para pantallas verticales (recorte 2:3 desde x=720: más abierta que antes,
+    pero deja fuera el remolque azul rotulado «Puerto Antioquia» que entra por la izquierda
+    desde el segundo 15; la toma vertical completa no se puede usar), ancha para el resto. Quien pidió menos
+    movimiento ve la imagen fija.
+  -->
+  <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+    <div class="sticky top-0 h-[100svh] overflow-hidden">
+      <picture>
+        <source srcset="/video/servicios-alto.jpg" media="(max-aspect-ratio: 1/1)" />
+        <img src="/video/servicios-ancho.jpg" alt="" class="absolute inset-0 size-full object-cover" />
+      </picture>
+      <video
+        class="video-servicios absolute inset-0 size-full object-cover"
+        muted
+        loop
+        playsinline
+        preload="none"
+        tabindex="-1"
+      >
+        <source src="/video/servicios-alto.webm" type="video/webm" media="(max-aspect-ratio: 1/1)" />
+        <source src="/video/servicios-alto.mp4" type="video/mp4" media="(max-aspect-ratio: 1/1)" />
+        <source src="/video/servicios-ancho.mp4" type="video/mp4" />
+        <source src="/video/servicios-ancho.webm" type="video/webm" />
+      </video>
+      <div class="absolute inset-0 bg-navy-950/70"></div>
+    </div>
+  </div>
   <div class="contenedor">
     <div class="revelar flex flex-col gap-8 border-b border-white/15 pb-10 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <p class="etiqueta flex items-center gap-3 text-teal-400">
-          <span class="h-px w-10 bg-teal-400"></span>
-          Servicios
-        </p>
-        <h2 class="mt-6 max-w-[14ch] text-white" style="font-size:var(--text-titulo)">
-          De la bodega del buque a la puerta del cliente
-        </h2>
+        <Titular
+          texto={t('Nuestros servicios', 'Our services')}
+          class="max-w-[14ch] text-white"
+          style="font-size:var(--text-titulo)"
+        />
       </div>
-      <p class="max-w-md text-white/65">
-        Cuatro frentes de operación que se sostienen entre sí. La carga no cambia de manos
-        entre un proveedor y otro: se queda con nosotros.
-      </p>
     </div>
   </div>
 
@@ -28,7 +66,7 @@ import { servicios } from '../data/sitio';
   <div class="contenedor mt-4">
     {servicios.map((servicio, i) => (
       <article
-        class="panel-apilado overflow-hidden rounded-2xl border border-white/12 bg-navy-900 lg:rounded-3xl"
+        class="panel-apilado overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
         style={`--desplazamiento-apilado:calc(8rem + ${i * 1.25}rem); margin-top:${i === 0 ? '2rem' : '1.5rem'}`}
       >
         <div class="grid gap-8 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
@@ -38,6 +76,15 @@ import { servicios } from '../data/sitio';
               <div>
                 <h3 class="text-white" style="font-size:var(--text-subtitulo)">{servicio.titulo}</h3>
                 <p class="mt-4 text-white/60">{servicio.resumen}</p>
+                <!-- Cada servicio tiene su página con más información (Jon, 23/10). -->
+                <a
+                  href={rutaServicio(idioma, servicio.numero)}
+                  class="group mt-8 inline-flex items-center gap-3 rounded-full border border-white/25 px-6 py-3 font-display text-sm font-semibold text-white transition-colors hover:border-green hover:bg-green hover:text-navy-950"
+                >
+                  {t('Ver el servicio', 'View service')}
+                  <span class="sr-only">: {servicio.titulo}</span>
+                  <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">→</span>
+                </a>
               </div>
             </div>
           </div>
@@ -67,5 +114,110 @@ import { servicios } from '../data/sitio';
         </div>
       </article>
     ))}
+
+    <!-- Tipos de carga: antes era una sección aparte; Jon la pidió dentro de Servicios (25/09).
+         Va como último panel apilado, igual que los servicios: suelto debajo, los paneles
+         fijos se iban y este entraba solo, desordenado (Jon, 02/10). -->
+    <article
+      id="carga"
+      class="panel-apilado scroll-mt-24 overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
+      style={`--desplazamiento-apilado:calc(8rem + ${servicios.length * 1.25}rem); margin-top:1.5rem`}
+    >
+      <div class="grid gap-10 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
+        <div class="lg:col-span-5">
+          <div class="flex items-start gap-5">
+            <span class="cifra font-display text-sm font-semibold text-teal-400">{String(servicios.length + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-white" style="font-size:var(--text-subtitulo)">
+                {t('Experiencia en todo tipo de carga', 'Experience with every type of cargo')}
+              </h3>
+              <p class="mt-4 max-w-md text-white/60">
+                {t(
+                  'Desde contenedores refrigerados hasta carga sobredimensionada, aplicamos a cada tipo de carga el procedimiento, los equipos y el personal que requiere.',
+                  'From refrigerated containers to oversized cargo, we apply the procedure, equipment and crew that each type of cargo requires.',
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <ul class="grid grid-cols-1 gap-x-6 min-[400px]:grid-cols-2 sm:gap-x-10 lg:col-span-7">
+          {tiposDeCarga.map((tipo) => (
+            <li class="flex items-start gap-3 border-t border-white/10 py-3 text-white/85">
+              <span class="mt-2 size-1.5 shrink-0 rotate-45 bg-white/40" aria-hidden="true"></span>
+              {tipo}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div
+        class="h-1 w-full"
+        style={`background:linear-gradient(to right, var(--color-${servicios.length % 2 === 0 ? 'teal' : 'green'}), transparent 70%)`}
+        aria-hidden="true"
+      >
+      </div>
+    </article>
+
+    <!-- Tecnología e innovación: aplicaciones propias de Cargoban (brochure, Jon 12/10). -->
+    <article
+      id="tecnologia"
+      class="panel-apilado scroll-mt-24 overflow-hidden rounded-2xl border border-white/12 bg-navy-900/90 backdrop-blur-md lg:rounded-3xl"
+      style={`--desplazamiento-apilado:calc(8rem + ${(servicios.length + 1) * 1.25}rem); margin-top:1.5rem`}
+    >
+      <div class="grid gap-10 p-7 sm:p-10 lg:grid-cols-12 lg:gap-12 lg:p-14">
+        <div class="lg:col-span-5">
+          <div class="flex items-start gap-5">
+            <span class="cifra font-display text-sm font-semibold text-teal-400">{String(servicios.length + 2).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-white" style="font-size:var(--text-subtitulo)">
+                {t('Tecnología e innovación', 'Technology and innovation')}
+              </h3>
+              <p class="mt-4 max-w-md text-white/60">{tecnologia.texto}</p>
+            </div>
+          </div>
+        </div>
+
+        <ul class="grid grid-cols-1 gap-x-6 min-[400px]:grid-cols-2 sm:gap-x-10 lg:col-span-7">
+          {tecnologia.apps.map((app) => (
+            <li class="border-t border-white/10 py-3">
+              <p class="font-display font-semibold text-white">{app.nombre}</p>
+              <p class="mt-1 text-sm text-white/60">{app.funcion}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div
+        class="h-1 w-full"
+        style={`background:linear-gradient(to right, var(--color-${(servicios.length + 1) % 2 === 0 ? 'teal' : 'green'}), transparent 70%)`}
+        aria-hidden="true"
+      >
+      </div>
+    </article>
   </div>
+
 </section>
+
+<script>
+  // El video solo se carga y corre cuando la sección está cerca de la pantalla, y nunca
+  // para quien pidió menos movimiento: ahí queda la imagen fija de debajo.
+  const video = document.querySelector<HTMLVideoElement>('.video-servicios');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (video && !quieto.matches && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada.isIntersecting) {
+          if (video.preload === 'none') {
+            video.preload = 'auto';
+            video.load();
+          }
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: '200px 0px' },
+    ).observe(video.closest('section')!);
+  }
+</script>

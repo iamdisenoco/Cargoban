@@ -1,56 +1,104 @@
 ---
-import { empresa, navegacion, sedes } from '../data/sitio';
+import { contenido } from '../data/contenido';
+import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
+import Instagram from './iconos/Instagram.astro';
+import WhatsApp from './iconos/WhatsApp.astro';
 const anio = new Date().getFullYear();
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, navegacion, sedes, enlaceWhatsapp, numeroMarcable } = contenido(idioma);
+const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');
+// Fuera de la portada, los enlaces a secciones llevan a la portada.
+const esPortada = Object.values(rutaInicio).includes(Astro.url.pathname);
 ---
 
 <footer class="border-t border-white/10 bg-navy-950">
   <div class="contenedor py-16 lg:py-20">
     <div class="grid gap-12 lg:grid-cols-12">
       <div class="lg:col-span-5">
-        <img
-          src="/marca/logo-vertical-blanco.svg"
-          alt={`${empresa.nombre}, ${empresa.lema}`}
-          width="200"
-          height="123"
-          class="h-24 w-auto"
-        />
+        <a href={rutaInicio[idioma]} data-ir-inicio class="inline-block" aria-label={t(`${empresa.nombre}, ir al inicio`, `${empresa.nombre}, go to top`)}>
+          <img
+            src="/marca/logo-vertical-blanco.svg"
+            alt={`${empresa.nombre}, ${empresa.lema}`}
+            width="200"
+            height="123"
+            class="h-24 w-auto"
+          />
+        </a>
         <p class="mt-7 max-w-sm text-white/60">
-          Operador logístico y portuario con más de {empresa.anios} años de experiencia
-          en {empresa.sedes.join(' y ')}.
+          {t(
+            `Operador logístico y portuario con más de ${empresa.anios} años de experiencia en ${empresa.sedes.join(' y ')}.`,
+            `Logistics and port operator with more than ${empresa.anios} years of experience in ${empresa.sedes.join(' and ')}.`,
+          )}
         </p>
+        <ul class="mt-6 flex gap-3" aria-label={t('Redes sociales', 'Social media')}>
+          <li>
+            <a
+              href={empresa.instagram}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
+            >
+              <Instagram class="size-5" />
+              <span class="sr-only">{t(`Instagram de ${empresa.nombre}`, `${empresa.nombre} on Instagram`)} {nuevaPestana}</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={enlaceWhatsapp}
+              target="_blank"
+              rel="noopener"
+              class="inline-flex size-11 items-center justify-center rounded-full border border-white/20 text-white/80 transition-colors hover:border-green hover:text-green"
+            >
+              <WhatsApp class="size-5" />
+              <span class="sr-only">{t(`WhatsApp de ${empresa.nombre}`, `${empresa.nombre} on WhatsApp`)} {nuevaPestana}</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
-      <nav class="lg:col-span-3" aria-label="Pie de página">
-        <p class="etiqueta text-white/60">Navegación</p>
-        <ul class="mt-6 space-y-3">
+      <nav class="lg:col-span-3 lg:col-start-10" aria-label={t('Pie de página', 'Footer')}>
+        <p class="etiqueta text-white/60">{t('Navegación', 'Navigation')}</p>
+        <ul class="mt-4">
           {navegacion.map((item) => (
             <li>
-              <a href={item.href} class="text-white/80 transition-colors hover:text-green">
+              <a href={item.href.startsWith('#') && !esPortada ? `${rutaInicio[idioma]}${item.href}` : item.href} class="inline-flex min-h-11 items-center text-white/80 transition-colors hover:text-green">
                 {item.etiqueta}
               </a>
             </li>
           ))}
         </ul>
       </nav>
-
-      <div class="lg:col-span-4">
-        <p class="etiqueta text-white/60">Sedes</p>
-        <ul class="mt-6 space-y-6">
-          {sedes.map((sede) => (
-            <li>
-              <p class="font-display font-semibold text-white">{sede.ciudad}</p>
-              <p class="text-sm text-white/55">{sede.region}</p>
-              {sede.direccion && <p class="mt-1 text-sm text-white/70">{sede.direccion}</p>}
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
+
+    <!-- Sedes con sus datos de contacto, en letra pequeña (Jon, 25/09). -->
+    <ul class="mt-14 grid gap-10 border-t border-white/10 pt-10 text-sm sm:grid-cols-2 lg:grid-cols-3">
+      {sedes.map((sede) => (
+        <li>
+          <p class="font-display font-semibold text-white">{sede.ciudad}</p>
+          <address class="mt-2 not-italic leading-relaxed text-white/60">
+            {sede.direccion.map((linea) => <span class="block">{linea}</span>)}
+            <span class="block">{sede.ciudad}, {sede.region}</span>
+          </address>
+          <p class="mt-2 leading-relaxed text-white/60">
+            {t('Tel.', 'Phone')} <a href={`tel:${numeroMarcable(sede.telefono)}`} class="inline-block py-2 text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.telefono}</a>
+            <span class="block">
+              {t('Cel.', 'Mobile')} <a href={`tel:${numeroMarcable(sede.celular)}`} class="inline-block py-2 text-white/80 underline-offset-4 hover:text-green hover:underline">{sede.celular}</a>
+            </span>
+          </p>
+        </li>
+      ))}
+    </ul>
   </div>
 
   <div class="border-t border-white/10">
-    <div class="contenedor flex flex-col gap-3 py-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {anio} {empresa.nombre}. Todos los derechos reservados.</p>
+    <!-- Espacio para la burbuja de WhatsApp: abajo en móvil, a la derecha en pantallas anchas. -->
+    <div class="contenedor flex flex-col gap-3 pt-6 pb-24 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between sm:pb-6 sm:!pr-28">
+      <p>© {anio} {empresa.nombre}. {t('Todos los derechos reservados.', 'All rights reserved.')}</p>
       <p>{empresa.lema}</p>
     </div>
   </div>

@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "@fontsource-variable/jost";
-@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/inter/opsz.css";
+@import "lenis/dist/lenis.css";
 
 /*
   Tokens de marca Cargoban.
@@ -19,15 +19,17 @@
   --color-ink-faint: #b3b3b3;
   --color-paper: #f4f6f8;
 
-  /* Jost es una geométrica derivada de Futura, la familia a la que pertenece
-     Century Gothic (la fuente del logo). Variable: un archivo cubre todos los pesos.
-     Archivo es la grotesca de texto: legible en párrafos, listas y datos. */
-  --font-display: "Jost Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Una sola familia, como Apple con San Francisco. Inter es la pariente libre
+     más cercana de SF Pro, y con el eje de tamaño óptico (opsz) hace lo mismo que
+     SF Pro Display y SF Pro Text: dibujo más apretado en titulares y más abierto
+     en texto chico, sin cargar dos fuentes. En Apple se usa la propia SF Pro. */
+  --font-display: "Inter Variable", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif;
 
   /* Escala tipográfica fluida: se adapta al ancho sin saltos por breakpoint. */
   --text-hero: clamp(2.75rem, 1.2rem + 7vw, 8rem);
   --text-titulo: clamp(2rem, 1rem + 4vw, 4.5rem);
+  --text-seccion: clamp(2rem, 1.25rem + 2.4vw, 3.5rem);
   --text-subtitulo: clamp(1.5rem, 1rem + 2vw, 2.75rem);
   --text-cuerpo-lg: clamp(1.0625rem, 0.95rem + 0.6vw, 1.375rem);
 
@@ -42,8 +44,21 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* Donde Lenis no corre (sin JavaScript), los saltos a una sección se deslizan
+     igual. Nunca para quien pidió menos movimiento. */
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.lenis) {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Destino de un ancla o del "Saltar al contenido": recibe el foco para que el
+     teclado siga desde ahí, pero no se enmarca la sección entera. */
+  [tabindex="-1"]:focus {
+    outline: none;
   }
 
   body {
@@ -54,8 +69,14 @@
   h1, h2, h3, h4 {
     @apply font-display font-semibold;
     text-wrap: balance;
-    letter-spacing: -0.02em;
-    line-height: 0.98;
+    /* Como en Apple: cuanto más grande el titular, más apretado. Los chicos
+       (h3, h4) casi no se aprietan o las letras se tocan. */
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+  }
+
+  h1, h2 {
+    letter-spacing: -0.035em;
   }
 
   p { text-wrap: pretty; }
@@ -136,6 +157,22 @@
 }
 
 @layer utilities {
+  /* Vidrio «liquid glass» del menú de Servicios (Jon, 23/10). Fondo azul translúcido para
+     que el texto blanco se lea también cuando el menú cae sobre una sección blanca; el
+     desenfoque con saturación y los brillos internos del borde hacen el efecto de vidrio.
+     Sin sombra difusa: el sistema separa con línea, no con sombra. */
+  .vidrio {
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.02)),
+      rgb(7 11 38 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      inset 0 -1px 0 rgb(255 255 255 / 0.06);
+    -webkit-backdrop-filter: blur(28px) saturate(1.8);
+    backdrop-filter: blur(28px) saturate(1.8);
+  }
+
   /* Aparición al entrar en pantalla.
      Por defecto el contenido es visible: si el navegador no soporta
      scroll-driven animations, no se oculta nada. */
@@ -146,11 +183,43 @@
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .revelar {
-        animation: aparecer linear both;
-        animation-timeline: view();
+        animation-name: aparecer;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
         animation-range: entry 5% cover 28%;
       }
     }
+  }
+
+  /* «¿Por qué elegirnos?»: cada columna entra un poco después que la anterior y el
+     ícono da un salto pequeño. Mismas reglas que .revelar: el estado final es el de
+     partida y solo se anima si el navegador lo soporta y no se pidió menos movimiento. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* El escalonado es por columna: solo cuando hay cuatro columnas. */
+      @media (min-width: 64rem) {
+        .razon { --desfase: var(--orden, 0); }
+      }
+      .razon.revelar {
+        animation-range: entry calc(5% + var(--desfase, 0) * 6%) cover calc(28% + var(--desfase, 0) * 6%);
+      }
+      .razon__icono {
+        animation-name: icono-saltar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry calc(10% + var(--desfase, 0) * 6%) cover calc(34% + var(--desfase, 0) * 6%);
+      }
+    }
+  }
+
+  @keyframes icono-saltar {
+    0% { transform: scale(0.4) rotate(-25deg); }
+    70% { transform: scale(1.12) rotate(4deg); }
+    100% { transform: none; }
   }
 
   @keyframes aparecer {
@@ -166,20 +235,294 @@
     }
   }
 
+  /*
+    Titulares palabra por palabra (componente Titular.astro).
+    Cada palabra es una ventana con overflow oculto y la palabra sube desde abajo.
+    El relleno con margen negativo agranda la ventana para no cortar tildes arriba
+    ni la cola de la g y la p abajo. `vertical-align: top` es lo que evita que
+    mueva el texto: un inline-block con overflow oculto apoya la línea base en su
+    borde inferior, y sin esto cada línea del titular crece un 15 %.
+    Por defecto no hay nada oculto: lo oculta `titulares-listos`, que solo se pone
+    cuando hay un script que lo va a mostrar (ver Base.astro).
+  */
+  .titular .palabra {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-block: 0.12em 0.16em;
+    margin-block: -0.12em -0.16em;
+  }
+
+  .titular .palabra-in {
+    display: inline-block;
+  }
+
+  .titulares-listos .titular .palabra-in {
+    transform: translateY(130%);
+    transition: transform 1.1s var(--ease-suave);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .titulares-listos .titular.titular-visible .palabra-in {
+    transform: none;
+  }
+
+  /* Al imprimir no hay scroll que los haga entrar: todos visibles. */
+  @media print {
+    .titulares-listos .titular .palabra-in {
+      transform: none;
+      transition: none;
+    }
+  }
+
   /* Desplazamiento lento del fondo del hero mientras se baja. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .parallax-lento {
-        animation: desplazar linear both;
-        animation-timeline: view();
+        animation-name: desplazar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
         animation-range: cover;
       }
     }
   }
 
+  /*
+    Fotos de portada que se funden una en otra (Hero.astro).
+    Por defecto se ve la primera, quieta; las demás esperan ocultas. Cada foto
+    tiene su turno de 6 s dentro del ciclo y se acerca despacio mientras se ve.
+  */
+  /* Velo de la portada en pantallas anchas: oscurece la izquierda, donde va el titular,
+     y deja la foto limpia a la derecha (antes era un velo parejo del 65 %). */
+  @media (min-width: 48rem) {
+    .portada-fondo {
+      --velo-portada: linear-gradient(to right, rgb(6 10 40 / 0.72) 0%, rgb(6 10 40 / 0.45) 45%, rgb(6 10 40 / 0.12) 100%);
+    }
+  }
+
+  /* Titular de portada en peso medio, como el referente: impacta por tamaño, no por grosor. */
+  .portada-titular {
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .portada-foto {
+    object-position: var(--foco-movil, 50% 50%);
+  }
+  @media (min-width: 48rem) {
+    .portada-foto {
+      object-position: var(--foco, 50% 50%);
+    }
+  }
+  .portada-foto {
+    opacity: 0;
+  }
+
+  .portada-foto:first-of-type {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .portada-foto {
+      animation: portada-turno calc(var(--n) * 6s) linear infinite both;
+      animation-delay: calc(var(--i) * 6s - 1.2s);
+    }
+  }
+
+  /* Porcentajes para tres fotos (ciclo de 18 s): 1,2 s de fundido, 6 s visible. */
+  @keyframes portada-turno {
+    0% { opacity: 0; transform: scale(1.02); }
+    6.7% { opacity: 1; }
+    33.3% { opacity: 1; }
+    40% { opacity: 0; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.1); }
+  }
+
+  /*
+    Animaciones atadas al scroll: siempre con propiedades sueltas y la línea de
+    tiempo dentro de var(). Si se escriben con el atajo `animation:` más
+    `animation-timeline:`, el minificador del build las junta en un solo atajo
+    que Chromium rechaza, y la animación desaparece sin avisar.
+  */
+
+  /*
+    Escena de apertura (index.astro): portada fija y cortina que sube encima.
+    Valores medidos en cargokite (docs/referencias/cargokite.md): en la primera
+    pantalla de scroll el texto sube y el fondo baja un 15 %, los dos lineales.
+    Solo en pantallas anchas y altas: en móvil la portada no entra entera y
+    fijarla taparía su propio final. Sin soporte, la cortina funciona igual
+    (es solo sticky) y el texto y el fondo quedan quietos.
+  */
+  @media (min-width: 48rem) and (min-height: 40rem) {
+    .portada-escena > .portada-fija {
+      position: sticky;
+      top: 0;
+      z-index: 0;
+    }
+    .portada-escena > .portada-cortina {
+      position: relative;
+      z-index: 10;
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) and (min-height: 40rem) {
+      .portada-escena .portada-texto {
+        animation-name: portada-subir;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-scroll, scroll(root));
+        animation-range: 0 100vh;
+      }
+      .portada-escena .portada-fondo {
+        top: -15%;
+        animation-name: portada-bajar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-scroll, scroll(root));
+        animation-range: 0 100vh;
+      }
+    }
+  }
+
+  @keyframes portada-subir {
+    to { transform: translateY(-35%); }
+  }
+
+  @keyframes portada-bajar {
+    to { transform: translateY(13%); }
+  }
+
+  /*
+    Fotos que se abren desde un recorte al entrar en pantalla (como cargokite:
+    inset 10 % → 0 y la imagen de 1,2 a 1). Estado final por defecto.
+  */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .foto-abre {
+        animation-name: foto-abrir;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry 0% cover 35%;
+      }
+      .foto-abre > img {
+        animation-name: foto-acercar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-duration: auto;
+        animation-timeline: var(--linea-vista, view());
+        animation-range: entry 0% cover 35%;
+      }
+    }
+  }
+
+  @keyframes foto-abrir {
+    from { clip-path: inset(10% round 1rem); }
+    to { clip-path: inset(0% round 1rem); }
+  }
+
+  @keyframes foto-acercar {
+    from { transform: scale(1.2); }
+    to { transform: scale(1); }
+  }
+
   @keyframes desplazar {
     from { transform: translateY(-6%) scale(1.08); }
     to { transform: translateY(6%) scale(1.08); }
+  }
+
+  /* Buque que recorre la línea de las razones (Nosotros). `--avance` va de 0 a 1 y lo
+     pone el script; por defecto vale 1: buque al final y estela completa. */
+  .ruta-barco { --avance: 1; --barco: 3.25rem; }
+  @media (min-width: 64rem) { .ruta-barco { --barco: 4.25rem; } }
+  .ruta-barco__estela {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 2px;
+    width: calc((100% - var(--barco)) * var(--avance) + var(--barco) * 0.5);
+    background: linear-gradient(to right, transparent, var(--color-teal) 40%);
+    pointer-events: none;
+  }
+  .ruta-barco__barco {
+    position: absolute;
+    top: 0;
+    left: calc((100% - var(--barco)) * var(--avance));
+    width: var(--barco);
+    translate: 0 -82%; /* el casco queda un poco hundido en la línea, como en el agua */
+    pointer-events: none;
+    z-index: 1;
+  }
+  .ruta-barco__svg { display: block; width: 100%; height: auto; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ruta-barco__svg {
+      transform-origin: 50% 90%;
+      animation-name: mecerse;
+      animation-duration: 3.2s;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+    }
+  }
+  @keyframes mecerse {
+    0%, 100% { transform: rotate(-2deg) translateY(0); }
+    50% { transform: rotate(2deg) translateY(1px); }
+  }
+
+  /* Nuestros clientes. De partida, cuadrícula quieta dentro del ancho del contenido;
+     con la clase `activa` (la pone el script) pasa a dos cintas a todo el ancho. */
+  .clientes-marquesina {
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem; /* igual que .contenedor */
+  }
+  @media (min-width: 40rem) { .clientes-marquesina { padding-inline: 2rem; } }
+  @media (min-width: 64rem) { .clientes-marquesina { padding-inline: 3.5rem; } }
+  .clientes-pista {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .clientes-fila + .clientes-fila { margin-top: -1px; }
+  .clientes-celda {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 8rem;
+    padding: 1.5rem;
+    margin-right: -1px;
+    border: 1px solid color-mix(in oklab, var(--color-ink) 10%, transparent);
+    background: var(--color-white);
+  }
+  .clientes-celda img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .clientes-copia { display: none; }
+  @media (min-width: 40rem) {
+    .clientes-celda { width: 25%; height: 10rem; padding: 2rem; }
+  }
+  @media (min-width: 64rem) {
+    .clientes-celda { width: calc(100% / 7); padding: 1.5rem; }
+  }
+
+  .clientes-marquesina.activa { max-width: none; padding-inline: 0; }
+  .clientes-marquesina.activa .clientes-fila { overflow: hidden; }
+  .clientes-marquesina.activa .clientes-pista {
+    flex-wrap: nowrap;
+    width: max-content;
+    will-change: transform;
+  }
+  .clientes-marquesina.activa .clientes-copia { display: flex; }
+  .clientes-marquesina.activa .clientes-celda { width: 11rem; flex-shrink: 0; }
+  @media (min-width: 40rem) {
+    .clientes-marquesina.activa .clientes-celda { width: 15rem; }
+  }
+  @media (min-width: 64rem) {
+    .clientes-marquesina.activa .clientes-celda { width: 17rem; padding: 2rem; }
   }
 
   /* Cinta de tipos de carga en movimiento continuo. */
@@ -195,4 +538,14 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+}
+
+/* La burbuja de WhatsApp entra poco después de cargar. Su estado final es el de partida. */
+@media (prefers-reduced-motion: no-preference) {
+  .burbuja-whatsapp {
+    animation: burbuja-entrar 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.2s backwards;
+  }
+}
+@keyframes burbuja-entrar {
+  from { opacity: 0; transform: translateY(1rem) scale(0.8); }
 }

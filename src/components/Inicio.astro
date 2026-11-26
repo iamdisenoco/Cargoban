@@ -1,0 +1,512 @@
+---
+/**
+ * La portada completa. La usan `pages/index.astro` (español) y `pages/en/index.astro`
+ * (inglés): cada texto va con su traducción al lado, t('español', 'English').
+ */
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import Cinta from './Cinta.astro';
+import Servicios from './Servicios.astro';
+import Clientes from './Clientes.astro';
+import Certificaciones from './Certificaciones.astro';
+import Barco from './iconos/Barco.astro';
+import IconoRazon from './iconos/Razon.astro';
+import FormularioContacto from './FormularioContacto.astro';
+import Titular from './Titular.astro';
+import { contenido } from '../data/contenido';
+import { traductor, regional, type Idioma } from '../i18n/idioma';
+import WhatsApp from './iconos/WhatsApp.astro';
+
+interface Props {
+  idioma: Idioma;
+}
+const { idioma } = Astro.props;
+const t = traductor(idioma);
+const { empresa, razones, valores, cifras, fundacion, fondecar, clientes, sedes, enlaceWhatsapp, numeroMarcable } = contenido(idioma);
+const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');
+
+// Fotos propias del carrusel de Nosotros, en el orden en que pasan (Jon, 23/10).
+const fotosNosotros = [
+  { src: '/fotos/nosotros-caminando.webp', clase: 'object-[50%_58%]', alt: t('Supervisor de Cargoban caminando por el muelle frente a las grúas pórtico', 'Cargoban supervisor walking along the quay in front of the gantry cranes') },
+  { src: '/fotos/nosotros-equipo.webp', clase: '', alt: t('Charla de seguridad con el equipo de Cargoban en el muelle', 'Safety briefing with the Cargoban crew at the quay') },
+  { src: '/fotos/nosotros-planilla.webp', clase: '', alt: t('Operarios de Cargoban revisando una planilla junto a un contenedor', 'Cargoban crew reviewing a checklist next to a container') },
+  { src: '/fotos/nosotros-cafe.webp', clase: '', alt: t('Operarios de Cargoban cargando sacos de café en un contenedor', 'Cargoban workers loading coffee sacks into a container') },
+  { src: '/fotos/nosotros-montacargas.webp', clase: '', alt: t('Operario de Cargoban moviendo un palé de banano con montacargas', 'Cargoban operator moving a pallet of bananas with a forklift') },
+  { src: '/fotos/nosotros-vehiculos.webp', clase: '', alt: t('Conductor de Cargoban bajando un vehículo de una niñera', 'Cargoban driver unloading a car from a car carrier') },
+];
+---
+
+<Base idioma={idioma}>
+  <!--
+    Escena de apertura, como cargokite: la portada queda fija (sticky) y la cinta
+    con "Nosotros" sube encima como una cortina. Mientras sube, el texto de la
+    portada se va hacia arriba y el fondo baja un poco (global.css, .portada-escena).
+    En pantallas angostas o bajas no hay cortina: el scroll es el normal.
+  -->
+  <div class="portada-escena relative">
+    <!--
+      Centinela de la cabecera: ocupa la franja que la cabecera cubre al inicio de la
+      página. Mientras parte de esa franja se vea, la cabecera queda transparente.
+      Va aquí y no dentro de la portada: la portada queda fija y el centinela nunca saldría.
+    -->
+    <div id="centinela-cabecera" class="pointer-events-none absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
+    <Hero idioma={idioma} />
+
+    <div class="portada-cortina">
+      <Cinta idioma={idioma} />
+
+      <!-- Nosotros: tres filas a todo el ancho para que ninguna columna quede colgando.
+           1) titular y foto vertical | foto horizontal y presentación
+           2) cifras en una franja   3) las cuatro razones en una fila -->
+      <section id="nosotros" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
+        <div class="contenedor">
+          <!--
+            Dos filas en pantallas anchas (Jon, 23/10): arriba titular y foto vertical | foto
+            horizontal (alineadas por abajo); abajo valores | presentación, que empiezan a la
+            misma altura y terminan a la misma altura. En móvil, una sola columna en este orden.
+          -->
+          <div class="grid gap-12 lg:grid-cols-12 lg:gap-x-20 lg:gap-y-14">
+            <div class="flex flex-col lg:col-span-5 lg:row-start-1">
+              <Titular
+                texto={t('Bienvenido a *Cargoban*', 'Welcome to *Cargoban*')}
+                class="text-navy"
+                style="font-size:var(--text-titulo)"
+              />
+              <!--
+                Carrusel de fotos propias (Jon, 23/10): se funden una con otra cada 3,2 s y se alejan despacio, solo
+                mientras están en pantalla. Con «menos movimiento» queda la primera, fija.
+              -->
+              <figure class="carrusel-nosotros foto-abre relative mt-12 hidden aspect-[4/5] overflow-hidden rounded-2xl lg:block">
+                {fotosNosotros.map((foto, i) => (
+                  <img
+                    src={foto.src}
+                    alt={foto.alt}
+                    class:list={['absolute inset-0 size-full object-cover transition-opacity duration-[1200ms] ease-out', foto.clase, i === 0 ? 'opacity-100' : 'opacity-0']}
+                    aria-hidden={i === 0 ? undefined : 'true'}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ))}
+              </figure>
+            </div>
+
+            <div class="lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:self-end">
+              <!--
+                Video propio de dron (DJI_0587 del Drive de Jon, 23/10): los operarios en la caseta
+                y el dron que se aleja hasta el Polar Brasil. A velocidad real, en bucle con un
+                fundido de 0,8 s del final al comienzo. El encuadre 4:3 sube con el dron.
+                El rótulo de Puerto Antioquia en el chasis de un remolque se deja: en tomas
+                propias está permitido (Jon, 23/10). Con «menos movimiento» se ve la imagen fija.
+              -->
+              <figure class="foto-abre relative aspect-[4/3] max-h-[85svh] overflow-hidden rounded-2xl">
+                <img
+                  src="/video/nosotros.jpg"
+                  alt={t('Operarios de Cargoban junto a un contenedor refrigerado en el muelle', 'Cargoban crew next to a refrigerated container at the quay')}
+                  class="absolute inset-0 size-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <video
+                  class="video-nosotros absolute inset-0 size-full object-cover"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  poster="/video/nosotros.jpg"
+                >
+                  <source src="/video/nosotros.webm" type="video/webm" />
+                  <source src="/video/nosotros.mp4" type="video/mp4" />
+                </video>
+              </figure>
+            </div>
+
+            <div class="lg:col-span-7 lg:col-start-6 lg:row-start-2">
+              <p class="revelar max-w-2xl font-display font-semibold text-navy" style="font-size:var(--text-subtitulo);line-height:1.2;letter-spacing:-0.02em">
+                {t(
+                  `Somos un operador logístico y portuario Colombiano con más de ${empresa.anios} años de trayectoria en ${empresa.sedes.join(' y ')}.`,
+                  `We are a Colombian logistics and port operator with more than ${empresa.anios} years of experience in ${empresa.sedes.join(' and ')}.`,
+                )}
+              </p>
+              <!-- Texto basado en el brochure de Cargoban, aprobado por Jon (12/10). -->
+              <p class="revelar mt-6 max-w-2xl text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+                {t(
+                  'Operamos en zonas de fondeo, buques, embarcaderos y terminales portuarios, con todo tipo de carga: contenedores, carga general, acero, carga refrigerada y congelada, perecederos, carga sobredimensionada, maquinaria y vehículos en buques Ro‑Ro, y carga a granel.',
+                  'We operate at anchorage areas, on vessels, at piers and in port terminals, handling every type of cargo: containers, general cargo, steel, refrigerated and frozen cargo, perishables, oversized cargo, machinery and vehicles on Ro‑Ro vessels, and bulk cargo.',
+                )}
+              </p>
+              <p class="revelar mt-4 max-w-2xl text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+                {t(
+                  'A la carga le prestamos servicios de izaje, traslado, consolidación, preparación, control y trazabilidad, e inspecciones de calidad. A los contenedores, de inspección, monitoreo, lavado y reparación.',
+                  'For cargo, we provide lifting, transfer, consolidation, preparation, control and traceability, and quality inspections. For containers, we provide inspection, monitoring, washing and repair.',
+                )}
+              </p>
+            </div>
+
+            <!-- Valores: el bloque se estira a la altura de la presentación y reparte los tres. -->
+            <div class="revelar flex flex-col lg:col-span-5 lg:col-start-1 lg:row-start-2">
+              <!-- Mismo tamaño que «Somos un operador…»: arrancan a la misma altura. La última línea
+                   de valores termina donde termina el último párrafo (Jon, 23/10). -->
+              <h3 class="font-display font-semibold text-navy" style="font-size:var(--text-subtitulo);line-height:1.2;letter-spacing:-0.02em">{t('Nuestros valores', 'Our values')}</h3>
+              <ul class="mt-6 flex flex-1 flex-col justify-between gap-6">
+                  {valores.map((valor) => (
+                    <li class="flex gap-4 border-t border-ink/15 pt-6">
+                      <span class="mt-3 block size-2 shrink-0 rotate-45 bg-teal" aria-hidden="true"></span>
+                      <p class="text-ink-soft" style="font-size:var(--text-cuerpo-lg)"><strong class="font-semibold text-navy">{valor.nombre}.</strong> {valor.texto}</p>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+
+          <!-- Cifras: cuentan hacia arriba al entrar en pantalla (src/scripts/contadores.ts).
+               El número final va escrito en el HTML: sin JavaScript se lee igual. -->
+          <dl class="revelar mt-24 grid border-y border-ink/10 lg:mt-32 lg:grid-cols-3">
+            {cifras.map((cifra, i) => (
+              <div
+                class:list={[
+                  'flex flex-col-reverse justify-end gap-3 py-10 lg:px-8 lg:py-14',
+                  i > 0 && 'border-t border-ink/10 lg:border-t-0 lg:border-l',
+                  i === 0 && 'lg:pl-0',
+                ]}
+              >
+                <dt class="text-ink-soft">{cifra.texto}</dt>
+                <dd
+                  class="cifra font-display font-semibold leading-none text-navy"
+                  style="font-size:clamp(3rem,2rem + 3.5vw,5.5rem);letter-spacing:-0.035em"
+                  data-contador={cifra.valor}
+                  data-prefijo={cifra.prefijo}
+                >
+                  {cifra.prefijo}{cifra.valor.toLocaleString(regional[idioma].numeros)}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <!-- Un buque recorre la línea de arriba mientras se baja, y deja una estela
+               turquesa (Jon, 02/10). Sin JavaScript o con «menos movimiento» queda quieto
+               al final de la ruta, con la estela completa. -->
+          <!-- «¿Por qué elegirnos?» dentro de Nosotros (Jon, 23/10). -->
+          <div class="revelar mt-24 lg:mt-32">
+            <Titular texto={t('¿Por qué *elegirnos*?', 'Why *choose* us?')} class="text-navy" style="font-size:var(--text-seccion)" />
+          </div>
+          <div class="ruta-barco relative mt-14 lg:mt-16" data-ruta-barco>
+          <div class="ruta-barco__estela" aria-hidden="true"></div>
+          <div class="ruta-barco__barco" aria-hidden="true"><Barco class="ruta-barco__svg" /></div>
+          <!-- Íconos del brochure en un círculo (Jon, 23/10): entran uno tras otro al bajar y
+               el círculo se llena de turquesa al pasar el cursor. -->
+          <ul class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {razones.map((razon, i) => (
+              <li class="razon group revelar flex items-center gap-5 border-t border-ink/15 pt-6" style={`--orden:${i % 4}`}>
+                <span class="razon__icono grid size-16 shrink-0 place-items-center rounded-full border border-navy/25 text-navy transition-colors duration-300 group-hover:border-teal group-hover:bg-teal group-hover:text-white">
+                  <IconoRazon icono={razon.icono} class="size-8 transition-transform duration-300 group-hover:scale-110" />
+                </span>
+                <div>
+                  <h3 class="font-display text-xl font-semibold text-navy">{razon.titulo}</h3>
+                  {razon.texto && <p class="mt-3 leading-relaxed text-ink-soft">{razon.texto}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <Servicios idioma={idioma} />
+
+  {/* Nuestros clientes, después de Servicios (Jon, 02/10). */}
+  {clientes.length > 0 && <Clientes idioma={idioma} />}
+
+  {/* Certificaciones, debajo de Clientes (Jon, 02/10). */}
+  <Certificaciones idioma={idioma} />
+
+
+  <!-- Sostenibilidad: Fundación Cargoban. Textos PROVISIONALES (ver src/data/sitio.ts).
+       Fotos: carpeta «Cargoban fundación» del Drive de Jon (25/09). Hay menores
+       identificables: confirmar con la fundación el permiso de uso antes de publicar. -->
+  <section id="sostenibilidad" class="scroll-mt-24 bg-navy-950 pt-12 pb-20 sm:py-24 lg:py-36">
+    <div class="contenedor">
+      <!-- El titular va a lo ancho, en dos líneas: en una columna angosta quedaba
+           partido en cinco renglones gigantes (Jon, 25/09). -->
+      <Titular
+        texto={t('Compromiso con las *comunidades* donde operamos', 'Committed to the *communities* where we operate')}
+        class="max-w-[24ch] text-white"
+        style="font-size:var(--text-seccion)"
+      />
+
+      <div class="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-x-20">
+        <figure class="foto-abre aspect-square max-h-[85svh] overflow-hidden rounded-2xl lg:col-span-5">
+          <img
+            src="/fotos/fundacion-nina.webp"
+            alt={t('Niña de una comunidad acompañada por la Fundación Cargoban', 'Girl from a community supported by the Cargoban Foundation')}
+            class="size-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+
+        <div class="lg:col-span-7 lg:self-center">
+          <p class="revelar font-display font-medium text-white" style="font-size:clamp(1.25rem, 1rem + 0.9vw, 1.75rem);line-height:1.3;letter-spacing:-0.015em">
+            {idioma === 'en' ? (
+              <>Since {fundacion.desde}, the {fundacion.nombre} has developed sustainable social
+              projects that <span class="text-green">improve the quality of life</span> of
+              vulnerable communities in {fundacion.regiones.join(' and ')}.</>
+            ) : (
+              <>Desde {fundacion.desde}, la {fundacion.nombre} desarrolla proyectos sociales
+              sostenibles que <span class="text-green">mejoran la calidad de vida</span> de
+              comunidades vulnerables en {fundacion.regiones.join(' y ')}.</>
+            )}
+          </p>
+          <p class="revelar mt-6 max-w-prose text-white/65" style="font-size:var(--text-cuerpo-lg)">
+            {t(
+              'Nació en el Urabá antioqueño como iniciativa de Cargoban para responder a necesidades de educación, emprendimiento y espacios de encuentro en la región.',
+              'It was born in the Urabá region of Antioquia as a Cargoban initiative to meet local needs for education, entrepreneurship and community spaces.',
+            )}
+          </p>
+
+          <ul class="revelar mt-12 grid gap-x-10 sm:grid-cols-2">
+            {fundacion.lineas.map((linea) => (
+              <li class="flex items-center gap-4 border-t border-white/15 py-5">
+                <span class="block size-2 shrink-0 rotate-45 bg-green" aria-hidden="true"></span>
+                <span class="font-display text-lg font-semibold text-white">{linea}</span>
+              </li>
+            ))}
+          </ul>
+
+          {fundacion.web && (
+          <a
+            href={fundacion.web}
+            target="_blank"
+            rel="noopener"
+            class="group mt-10 inline-flex items-center gap-3 rounded-full border border-white/30 px-7 py-4 font-display font-semibold text-white transition-colors hover:bg-white/10"
+          >
+            {t(`Conocer la ${fundacion.nombre}`, `Discover the ${fundacion.nombre}`)}
+            <svg class="size-4 transition-transform duration-300 ease-suave group-hover:translate-x-1" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <path d="M2 8h12M9 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="sr-only">{nuevaPestana}</span>
+          </a>
+          )}
+        </div>
+      </div>
+
+      <!-- Franja de fotos de los proyectos -->
+      <ul class="mt-20 grid grid-cols-2 gap-4 lg:mt-28 lg:grid-cols-4 lg:gap-6">
+        {[
+          { src: '/fotos/fundacion-taller.webp', alt: t('Mujer sonriendo durante un taller de la fundación', 'Woman smiling during a foundation workshop') },
+          { src: '/fotos/fundacion-sonrisa.webp', alt: t('Niña sonriendo junto a su familia', 'Girl smiling with her family') },
+          { src: '/fotos/fundacion-pintura.webp', alt: t('Joven pintando en un taller de arte', 'Young person painting at an art workshop') },
+          { src: '/fotos/fundacion-mural.webp', alt: t('Mural de un perezoso en una casa de la región', 'Mural of a sloth on a house in the region') },
+        ].map((foto) => (
+          <li class="foto-abre aspect-[3/4] overflow-hidden rounded-2xl">
+            <img src={foto.src} alt={foto.alt} class="size-full object-cover" loading="lazy" decoding="async" />
+          </li>
+        ))}
+      </ul>
+
+      <!-- Fondo de empleados. Foto: colaboradora de Cargoban en muelle (Drive de Jon, 25/09). -->
+      <div class="mt-16 grid gap-12 border-t border-white/15 pt-16 sm:mt-24 sm:pt-24 lg:mt-36 lg:grid-cols-12 lg:gap-x-20 lg:pt-36">
+        <div class="lg:col-span-5 lg:self-center">
+          <h3 class="revelar font-display font-semibold text-white" style="font-size:var(--text-subtitulo);line-height:1.1;letter-spacing:-0.03em">
+            {t('Fondo de empleados', 'Employee fund')} <span class="text-green">{fondecar.nombre}</span>
+          </h3>
+          <p class="revelar mt-6 max-w-prose text-white/65" style="font-size:var(--text-cuerpo-lg)">
+            {idioma === 'en' ? (
+              <>Our employee fund offers solutions that <span class="text-white">improve the
+              quality of life</span> of its members and their families.</>
+            ) : (
+              <>Nuestro fondo de empleados brinda soluciones para <span class="text-white">mejorar
+              la calidad de vida</span> de los asociados y sus familias.</>
+            )}
+          </p>
+          <ul class="revelar mt-10">
+            {fondecar.beneficios.map((beneficio) => (
+              <li class="flex items-center gap-4 border-t border-white/15 py-4 last:border-b">
+                <span class="block size-2 shrink-0 rotate-45 bg-green" aria-hidden="true"></span>
+                <span class="font-display text-lg font-semibold text-white">{beneficio}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <figure class="foto-abre order-first aspect-[4/3] max-h-[85svh] overflow-hidden rounded-2xl lg:col-span-7">
+          <img
+            src="/fotos/fondecar-colaboradora.webp"
+            alt={t('Colaboradora de Cargoban con casco y gafas de seguridad en el muelle', 'Cargoban team member wearing a hard hat and safety glasses at the quay')}
+            class="size-full object-cover"
+            style="object-position:55% 40%"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacto: fondo claro como Nosotros, para que cierre cercano y no como un bloque aparte (Jon, 02/10). -->
+  <section id="contacto" class="scroll-mt-24 bg-white py-24 text-ink lg:py-36">
+    <div class="contenedor">
+      <div class="revelar">
+        <Titular
+          texto={t('Hablemos de su próxima *operación*', 'Let’s talk about your next *operation*')}
+          class="text-navy"
+          style="font-size:var(--text-seccion)"
+        />
+      </div>
+
+      <!-- Formulario a la derecha, sedes y WhatsApp a la izquierda (Jon, 23/10). Instagram
+           queda solo en el pie de página. -->
+      <div class="mt-12 grid gap-14 lg:mt-16 lg:grid-cols-12 lg:gap-x-20">
+        <div class="revelar lg:col-span-5">
+          <p class="max-w-md text-ink-soft" style="font-size:var(--text-cuerpo-lg)">
+            {t(
+              'Escríbanos y conversemos. Detrás de cada mensaje hay una persona de nuestro equipo lista para ayudarle.',
+              'Write to us and let’s talk. Behind every message there is a person on our team ready to help you.',
+            )}
+          </p>
+
+          <ul class="mt-10 border-b border-ink/15">
+            {sedes.map((sede) => (
+              <li class="flex flex-col gap-1 border-t border-ink/15 py-5">
+                <div class="flex items-baseline gap-3">
+                  <span class="block size-2 shrink-0 -translate-y-0.5 rotate-45 bg-teal" aria-hidden="true"></span>
+                  <h3 class="font-display text-xl font-semibold text-navy">{sede.ciudad}</h3>
+                  <p class="text-sm text-ink-soft">{sede.region}</p>
+                </div>
+                <p class="pl-5 text-ink-soft">
+                  {t('Cel.', 'Mobile')} <a href={`tel:${numeroMarcable(sede.celular)}`} class="inline-block py-1.5 font-semibold text-navy underline-offset-4 hover:underline">{sede.celular}</a>
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={enlaceWhatsapp}
+            target="_blank"
+            rel="noopener"
+            class="mt-10 inline-flex items-center gap-3 rounded-full bg-green px-7 py-4 font-display font-semibold text-navy-950 transition-colors hover:bg-green-300"
+          >
+            <WhatsApp class="size-5" />
+            {t('Escribir por WhatsApp', 'Message us on WhatsApp')}
+            <span class="sr-only">{nuevaPestana}</span>
+          </a>
+          {empresa.correo && (
+            <p class="mt-6 text-ink-soft">
+              {t('Correo', 'Email')}: <a href={`mailto:${empresa.correo}`} class="font-semibold text-navy underline-offset-4 hover:underline">{empresa.correo}</a>
+            </p>
+          )}
+        </div>
+
+        <div class="revelar lg:col-span-7">
+          <FormularioContacto idioma={idioma} />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Carrusel de Nosotros: cambia de foto cada 3,2 s mientras se ve y cada foto se aleja
+  // despacio mientras está a la vista (Jon, 23/10). Nunca con «menos movimiento».
+  // El alejamiento usa la propiedad `scale`, no `transform`: así no choca con el
+  // acercamiento de `.foto-abre > img` al hacer scroll. La caja tiene overflow-hidden.
+  {
+    const carrusel = document.querySelector<HTMLElement>('.carrusel-nosotros');
+    const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const fotos = carrusel ? [...carrusel.querySelectorAll('img')] : [];
+    if (carrusel && fotos.length > 1 && !quieto.matches && 'IntersectionObserver' in window) {
+      const PAUSA = 3200;
+      const FUNDIDO = 1200;
+      const LEJOS = '1.12';
+      let actual = 0;
+      let reloj: number | undefined;
+      const encender = (foto: HTMLImageElement) => {
+        foto.style.transition = `opacity ${FUNDIDO}ms ease-out, scale ${PAUSA + FUNDIDO}ms linear`;
+        foto.style.scale = '1';
+        foto.classList.replace('opacity-0', 'opacity-100');
+      };
+      const apagar = (foto: HTMLImageElement) => {
+        foto.classList.replace('opacity-100', 'opacity-0');
+        window.setTimeout(() => {
+          foto.style.transition = `opacity ${FUNDIDO}ms ease-out`;
+          foto.style.scale = LEJOS;
+        }, FUNDIDO + 50);
+      };
+      fotos.forEach((foto) => {
+        foto.style.transition = 'none';
+        foto.style.scale = LEJOS;
+      });
+      const pasar = () => {
+        const siguiente = (actual + 1) % fotos.length;
+        fotos[(siguiente + 1) % fotos.length].loading = 'eager';
+        encender(fotos[siguiente]);
+        apagar(fotos[actual]);
+        actual = siguiente;
+      };
+      let primera = true;
+      new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            fotos[1].loading = 'eager';
+            if (primera) {
+              primera = false;
+              requestAnimationFrame(() => requestAnimationFrame(() => encender(fotos[0])));
+            }
+            reloj ??= window.setInterval(pasar, PAUSA);
+          } else {
+            window.clearInterval(reloj);
+            reloj = undefined;
+          }
+        },
+        { rootMargin: '200px 0px' },
+      ).observe(carrusel);
+    }
+  }
+
+  // Video de Nosotros: carga y corre solo cerca de la pantalla, nunca con «menos movimiento».
+  {
+    const video = document.querySelector<HTMLVideoElement>('.video-nosotros');
+    const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (video && !quieto.matches && 'IntersectionObserver' in window) {
+      new IntersectionObserver(
+        ([e]) => {
+          if (e.isIntersecting) {
+            if (video.preload === 'none') {
+              video.preload = 'auto';
+              video.load();
+            }
+            video.play().catch(() => {});
+          } else video.pause();
+        },
+        { rootMargin: '200px 0px' },
+      ).observe(video);
+    }
+  }
+
+  // El buque avanza con el scroll: sale cuando la ruta entra por abajo de la pantalla y
+  // llega al final cuando la ruta pasa del tercio superior.
+  const ruta = document.querySelector<HTMLElement>('[data-ruta-barco]');
+  const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (ruta && !quieto.matches) {
+    let pendiente = false;
+    const actualizar = () => {
+      pendiente = false;
+      const arriba = ruta.getBoundingClientRect().top;
+      const alto = window.innerHeight;
+      const desde = alto * 0.9;
+      const hasta = alto * 0.35;
+      const avance = Math.min(Math.max((desde - arriba) / (desde - hasta), 0), 1);
+      ruta.style.setProperty('--avance', avance.toFixed(4));
+    };
+    window.addEventListener('scroll', () => {
+      if (!pendiente) {
+        pendiente = true;
+        requestAnimationFrame(actualizar);
+      }
+    }, { passive: true });
+    window.addEventListener('resize', actualizar);
+    actualizar();
+  }
+</script>
