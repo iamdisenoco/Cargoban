@@ -6,3 +6,6 @@ dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Archivos temporales de wrangler (prueba local de Cloudflare)
+.wrangler/
