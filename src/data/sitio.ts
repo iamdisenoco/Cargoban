@@ -84,7 +84,8 @@ export const navegacion = [
   { etiqueta: 'Nosotros', href: '#nosotros' },
   { etiqueta: 'Servicios', href: '#servicios' },
   ...(clientes.length > 0 ? [{ etiqueta: 'Clientes', href: '#clientes' }] : []),
-  { etiqueta: 'Sostenibilidad', href: '#sostenibilidad' },
+  // «Fundación» en vez de «Sostenibilidad» (Jon, 26/11).
+  { etiqueta: 'Fundación', href: '#fundacion' },
   { etiqueta: 'Contacto', href: '#contacto' },
 ];
 
@@ -251,7 +252,7 @@ export const cifras = [
 ];
 
 /**
- * Fundación Cargoban (sección Sostenibilidad). El texto y las líneas de acción, con su
+ * Fundación Cargoban (sección Fundación de la portada). El texto y las líneas de acción, con su
  * página cada una, están en src/data/fundacion.ts.
  */
 export const fundacion = {

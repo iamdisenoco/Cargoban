@@ -28,7 +28,7 @@ export const navegacion = [
   { etiqueta: 'About us', href: '#nosotros' },
   { etiqueta: 'Services', href: '#servicios' },
   ...(es.clientes.length > 0 ? [{ etiqueta: 'Clients', href: '#clientes' }] : []),
-  { etiqueta: 'Sustainability', href: '#sostenibilidad' },
+  { etiqueta: 'Foundation', href: '#fundacion' },
   { etiqueta: 'Contact', href: '#contacto' },
 ];
 
