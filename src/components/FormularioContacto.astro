@@ -20,6 +20,7 @@ const { empresa, servicios, sedes } = contenido(idioma);
 const campo =
   'mt-2 block w-full rounded-xl border border-ink/20 bg-white px-4 py-3.5 text-ink placeholder:text-ink-soft/60 transition-colors focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/25';
 const etiqueta = 'block font-display text-sm font-semibold text-navy';
+const enlaceWhatsapp = `https://wa.me/${empresa.whatsapp.numero}?text=${encodeURIComponent(empresa.whatsapp.mensaje)}`;
 ---
 
 <form
@@ -29,6 +30,13 @@ const etiqueta = 'block font-display text-sm font-semibold text-navy';
   data-idioma={idioma}
   novalidate
 >
+  {/* Sin JavaScript el formulario no puede armar el mensaje: se ofrece WhatsApp directo. */}
+  <noscript>
+    <p class="rounded-xl border border-ink/15 px-5 py-4 text-ink-soft sm:col-span-2">
+      {t('Para enviar su solicitud, escríbanos por', 'To send your request, write to us on')}
+      <a href={enlaceWhatsapp} class="font-semibold text-navy underline">WhatsApp</a>.
+    </p>
+  </noscript>
   <div>
     <label for="fc-nombre" class={etiqueta}>{t('Nombre y apellido', 'Full name')} <span class="text-teal" aria-hidden="true">*</span></label>
     <input id="fc-nombre" name="nombre" type="text" autocomplete="name" required class={campo} />
@@ -78,7 +86,7 @@ const etiqueta = 'block font-display text-sm font-semibold text-navy';
       class={`${campo} resize-y`}
     ></textarea>
   </div>
-  <!-- PROVISIONAL: falta enlazar la política de tratamiento de datos de Cargoban. -->
+  {/* PROVISIONAL: falta enlazar la política de tratamiento de datos de Cargoban. */}
   <label class="flex gap-3 text-sm leading-relaxed text-ink-soft sm:col-span-2">
     <input name="autorizo" type="checkbox" required class="mt-1 size-4 shrink-0 accent-teal" />
     <span>

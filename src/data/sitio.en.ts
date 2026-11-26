@@ -36,15 +36,15 @@ export const servicios: typeof es.servicios = [
   {
     ...es.servicios[0],
     titulo: 'Port operations',
-    resumen: 'Lashing, unlashing and cargo handling on board and at the quay.',
+    resumen: 'Cargo lashing, unlashing and handling on board and at the quay.',
     detalle:
       'We operate directly at the quay with our own crews and established procedures, protecting the cargo in every move between the vessel and the yard.',
     items: [
       'Loading and discharge of general cargo and containers',
       'Stowage and unstowage in holds and on deck',
-      'Lashing and unlashing',
+      'Cargo lashing and unlashing',
       'Equipment lifting',
-      'Hatch cover handling',
+      'Moving hatch covers',
       'Vehicle handling on Ro‑Ro vessels',
       'Cargo tally and traceability',
       'Support during authority inspections',
@@ -87,7 +87,7 @@ export const servicios: typeof es.servicios = [
     detalle:
       'We inspect, prepare and move each container with the right equipment, and leave it inspected, clean and ready for its next voyage.',
     items: [
-      'Hooking and lifting',
+      'Container hooking and lifting',
       'Pre-check of loading equipment',
       'Inspection and monitoring',
       'Washing',
@@ -118,7 +118,7 @@ export const tiposDeCarga = [
   'Oversized cargo',
   'Machinery',
   'Vehicles',
-  'Bulk',
+  'Bulk cargo',
 ];
 
 export const razones: typeof es.razones = [

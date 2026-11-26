@@ -29,8 +29,8 @@ const palabras = servicio.titulo.split(' ');
 const tituloMarcado = [...palabras.slice(0, -1), `*${palabras.at(-1)}*`].join(' ');
 
 const mensaje = t(
-  `Hola, quiero información sobre el servicio de ${servicio.titulo.toLowerCase()} de Cargoban.`,
-  `Hello, I would like information about Cargoban’s ${servicio.titulo.toLowerCase()} service.`,
+  `Hola, quiero información sobre ${servicio.titulo.toLowerCase()} con Cargoban.`,
+  `Hello, I would like information about ${servicio.titulo.toLowerCase()} with Cargoban.`,
 );
 const enlaceWhatsapp = `https://wa.me/${empresa.whatsapp.numero}?text=${encodeURIComponent(mensaje)}`;
 const nuevaPestana = t('(se abre en una pestaña nueva)', '(opens in a new tab)');

@@ -319,4 +319,9 @@ export const sedes: {
 ];
 
 /** Para enlaces tel:, sin espacios ni paréntesis. */
-export const numeroMarcable = (n: string) => n.replace(/[^+\d]/g, '');
+// Los fijos se escriben sin indicativo, (604) 524 7028; para que marquen también desde
+// fuera de Colombia, el enlace tel: lleva siempre +57.
+export const numeroMarcable = (n: string) => {
+  const digitos = n.replace(/[^+\d]/g, '');
+  return digitos.startsWith('+') ? digitos : `+57${digitos}`;
+};
