@@ -156,13 +156,6 @@ export const cifras: typeof es.cifras = [
 export const fundacion = {
   ...es.fundacion,
   nombre: 'Cargoban Foundation',
-  lineas: [
-    'Entrepreneurship and handcrafted jewelry',
-    'Recreation, culture and sports',
-    'Community revitalization',
-    'Schools and community spaces',
-    'Environmental strengthening',
-  ],
 };
 
 export const fondecar = {

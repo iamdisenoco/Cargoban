@@ -1,0 +1,82 @@
+---
+/**
+ * Página de una línea de acción de la Fundación Cargoban (Jon, 26/11): se llega desde la
+ * tarjeta de la portada. Arriba la línea con su foto; abajo el texto completo y las demás
+ * líneas. Textos en src/data/fundacion.ts.
+ */
+import Base from '../layouts/Base.astro';
+import Titular from './Titular.astro';
+import { contenido } from '../data/contenido';
+import { lineasFundacion, rutaLinea } from '../data/fundacion';
+import { traductor, rutaInicio, type Idioma } from '../i18n/idioma';
+
+interface Props {
+  idioma: Idioma;
+  indice: number;
+}
+const { idioma, indice } = Astro.props;
+const t = traductor(idioma);
+const { fundacion } = contenido(idioma);
+const linea = lineasFundacion[indice];
+const rutas = { es: rutaLinea('es', indice), en: rutaLinea('en', indice) };
+const titulo = linea.titulo[idioma];
+
+// La última palabra del título en verde, como en los demás titulares.
+const palabras = titulo.split(' ');
+const tituloMarcado = [...palabras.slice(0, -1), `*${palabras.at(-1)}*`].join(' ');
+const [primero, ...resto] = linea.parrafos[idioma];
+---
+
+<Base idioma={idioma} rutas={rutas} titulo={`${titulo} · ${fundacion.nombre}`} descripcion={`${linea.lema[idioma]} ${primero}`}>
+  <section class="relative overflow-hidden bg-navy-950 pt-32 pb-20 text-white lg:pt-44 lg:pb-28">
+    <div id="centinela-cabecera" class="pointer-events-none absolute inset-x-0 top-0 h-20 lg:h-24" aria-hidden="true"></div>
+    <div class="contenedor grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-x-20">
+      <div class="lg:col-span-7">
+        <nav aria-label={t('Ruta de navegación', 'Breadcrumb')}>
+          <ol class="flex flex-wrap items-center gap-2 text-sm text-white/60">
+            <li><a href={rutaInicio[idioma]} class="hover:text-white">{t('Inicio', 'Home')}</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href={`${rutaInicio[idioma]}#sostenibilidad`} class="hover:text-white">{fundacion.nombre}</a></li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" class="text-white">{titulo}</li>
+          </ol>
+        </nav>
+        <Titular as="h1" texto={tituloMarcado} class="mt-12 text-white" style="font-size:var(--text-titulo)" />
+        <p class="revelar mt-8 max-w-xl text-white/75" style="font-size:var(--text-cuerpo-lg)">{linea.lema[idioma]}</p>
+      </div>
+      <figure class="foto-abre aspect-[4/5] max-h-[70svh] overflow-hidden rounded-2xl lg:col-span-5">
+        <img src={linea.foto} alt={linea.alt[idioma]} class="size-full object-cover" decoding="async" fetchpriority="high" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="bg-white py-24 text-ink lg:py-32">
+    <div class="contenedor grid gap-12 lg:grid-cols-12 lg:gap-x-20">
+      <p class="revelar font-display font-semibold text-navy lg:col-span-5" style="font-size:var(--text-subtitulo);line-height:1.25;letter-spacing:-0.02em">
+        {primero}
+      </p>
+      <div class="lg:col-span-7">
+        {resto.map((parrafo, i) => (
+          <p class:list={['revelar max-w-prose text-ink-soft', i > 0 && 'mt-6']} style="font-size:var(--text-cuerpo-lg)">{parrafo}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy-950 py-24 text-white lg:py-32">
+    <div class="contenedor">
+      <Titular texto={t('Otras líneas de *acción*', 'Other areas of *action*')} class="text-white" style="font-size:var(--text-seccion)" />
+      <ul class="mt-12 border-b border-white/12">
+        {lineasFundacion.map((otra, i) => i !== indice && (
+          <li class="revelar border-t border-white/12">
+            <a href={rutaLinea(idioma, i)} class="group grid gap-2 py-7 sm:grid-cols-12 sm:items-baseline sm:gap-8">
+              <span class="font-display text-2xl font-semibold transition-colors group-hover:text-green sm:col-span-5">{otra.titulo[idioma]}</span>
+              <span class="text-white/60 sm:col-span-6">{otra.lema[idioma]}</span>
+              <span class="hidden text-right text-xl text-white/40 transition-[color,translate] group-hover:translate-x-1 group-hover:text-green sm:col-span-1 sm:block" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
