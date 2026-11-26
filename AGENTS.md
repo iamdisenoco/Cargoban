@@ -15,7 +15,12 @@ Se escribe en español. Cada error que Jon corrige se anota aquí una vez como r
 - La contraseña se lee de la variable de entorno `JON_CLAVE`. Nunca se escribe en el repo.
 
 ## Stack
-- Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Hosting previsto: Cloudflare Pages.
+- Astro 7 + Tailwind CSS 4, sitio estático. Node 22. Alojamiento: Cloudflare, en la cuenta de
+  Cargoban (26/11), como Worker con archivos estáticos conectado a GitHub: cada cambio que se une
+  a `main` se publica solo. Cloudflare marca Pages como «legacy»; la configuración está en
+  `wrangler.jsonc` (sirve `dist/`, y lo que no existe responde `dist/404.html` con código 404).
+  Se prueba en local con `npx wrangler dev`. Vercel quedó suspendido: el plan gratis no admite
+  sitios comerciales.
 - Tipografía: Inter Variable con eje de tamaño óptico (`@fontsource-variable/inter/opsz.css`), una sola
   familia para titulares y texto, autoalojada. Jon la pidió «similar a la que usa Apple» (24/09).
 - `npm run dev` para desarrollar, `npm run build` compila a `dist/`, `npm run check` hace el chequeo de tipos.
